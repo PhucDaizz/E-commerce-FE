@@ -1,0 +1,14 @@
+.breadcrum {
+    min-height: 70px;
+    padding-top: 40px;
+    margin: 35px 150px;
+    gap: 8px;
+    color: #5e5e5e;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.breadcrum a {
+    text-decoration: none;
+    color: #5e5e5e;
+}

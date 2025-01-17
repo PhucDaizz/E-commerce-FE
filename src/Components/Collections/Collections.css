@@ -1,0 +1,25 @@
+.collections {
+    min-height: 300px;
+}
+
+.shop-product {
+    margin: 20px 170px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    row-gap: 20px;
+}
+
+.noresult {
+    display: flex; /* Sử dụng Flexbox để căn giữa */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    height: 200px; /* Đảm bảo chiều cao đủ để căn giữa */
+    text-align: center; /* Căn giữa văn bản */
+    width: 100%; /* Đảm bảo chiều rộng đầy đủ */
+    font-size: 18px; /* Kích thước chữ */
+    color: #555; /* Màu chữ */
+    background-color: #f9f9f9; /* Màu nền nhẹ để làm nổi bật thông báo */
+    border: 1px solid #ccc; /* Đường viền nhẹ */
+    border-radius: 5px; /* Bo góc nhẹ */
+    margin: 20px 0; /* Khoảng cách trên và dưới */
+}

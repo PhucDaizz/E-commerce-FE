@@ -1,0 +1,177 @@
+.productDisplay .img-fluid {
+    max-width: 100%;
+    height: auto;
+    width: 100%;
+    display: flex;
+    margin: 0px auto;
+    align-items: center;
+    justify-content: center;
+}
+  
+.productDisplay .swiper-slide {
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.productDisplay .mySwiper2 {
+    height: 70%;
+    width: 100%;
+}
+
+.mySwiper2 img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: contain; 
+}
+
+.mySwiper2 .swiper-slide {
+    display: flex; /* Căn giữa nội dung */
+    justify-content: center;
+    align-items: center;
+    height: 900px; /* Chiều cao cố định */
+}
+
+.productDisplay .mySwiper {
+    height: 20%;
+    box-sizing: border-box;
+    padding: 10px 0;
+}
+
+.productDisplay .mySwiper .swiper-slide {
+    width: 25%;
+    height: 100%;
+    opacity: 0.4;
+}
+
+.productDisplay .mySwiper .swiper-slide-thumb-active {
+    opacity: 1;
+}
+
+.productDisplay .swiper-slide img {
+    display: block;
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+}
+
+.color-circle { 
+    width: 30px; 
+    height: 30px; 
+    border-radius: 50%; 
+    margin: 0 10px; 
+    cursor: pointer; 
+    border: 2px solid transparent; 
+    transition: transform 0.3s, border-color 0.3s
+} 
+
+.color-circle.selected {
+    transform: scale(0.8); 
+    border-color: black; 
+} 
+
+.product-sizes { 
+    margin-top: 20px; 
+    margin-bottom: 20px;
+} 
+
+.size-button { 
+    margin: 5px; 
+    padding: 10px; 
+    border: 1px solid rgba(0, 0, 0, 0.148); 
+    background-color: white; 
+    cursor: pointer; 
+    transition: transform 0.3s, border-color 0.3s;
+    width: 100px;
+    height: 40px;
+} 
+
+.size-button.selected { 
+    border-color: black; 
+}
+
+.size-button.out-of-stock { 
+    background-color: lightgray; 
+    cursor: not-allowed; 
+    opacity: 0.5; 
+}
+
+.product-name {
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.product-price {
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.quantity-selector { 
+    display: flex; 
+    align-items: center; 
+    margin: 20px;
+    
+} 
+
+.quantity-selector button { 
+    width: 30px; 
+    height: 30px; 
+    border: 1px solid black; 
+    background-color: white; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+} 
+
+.quantity-selector button:hover { 
+    background-color: #f0f0f0; 
+} 
+
+.quantity-selector input { 
+    width: 50px; 
+    height: 30px; 
+    text-align: center; 
+    border: 1px solid #ced4da; 
+    margin: 0 10px; border-radius: 5px; 
+}
+
+.add-to-cart {
+    background-color: white;
+    border: 1px #fa2626 solid;
+    width: 100%;
+    height: 40px;
+    font-weight: 400;
+    position: relative; /* Để sử dụng cho pseudo-element */
+    overflow: hidden; /* Ẩn phần thừa ra ngoài */
+    transition: color 0.3s; /* Hiệu ứng chuyển đổi cho màu chữ */
+    z-index: 1;
+    border-radius: 6px;
+    margin-bottom: 30px;
+}
+
+.add-to-cart::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #b42424, #fa2626); 
+    transition: left 0.3s; 
+    z-index: 0; 
+}
+
+.add-to-cart:hover::before {
+    left: 0; 
+}
+
+.add-to-cart:hover {
+    color: white; 
+    z-index: 1; 
+}
+
+.add-to-cart span { 
+    position: relative; 
+    z-index: 2; 
+}
+
+  

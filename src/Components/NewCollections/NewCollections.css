@@ -1,0 +1,14 @@
+.title-newcollection {
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.custom-underline {
+    border: none;
+    height: 3px; /* Độ dày của gạch chân */
+    background-color: #000; /* Màu của gạch chân */
+    width: 90%; /* Độ rộng của gạch chân */
+    margin: 0 auto; /* Căn giữa gạch chân */
+}
+
+

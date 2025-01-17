@@ -1,0 +1,41 @@
+.item {
+    width: 100%;
+    border: #ffffff 1px solid;
+    border-radius: 14px;
+    overflow: hidden; /* Ẩn phần thừa ra ngoài */
+    position: relative; /* Để có thể sử dụng cho các phần tử con */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Thêm bóng cho phần tử */
+    transition: transform 0.3s, box-shadow 0.3s; /* Hiệu ứng chuyển đổi cho bóng */
+    background-color: #ffffff; /* Màu nền sáng hơn */
+}
+
+.item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Tăng độ bóng khi hover */
+}
+
+.item-image {
+    height: 300px;
+    width: 100%;
+    object-fit: cover; /* Đảm bảo hình ảnh được cắt đúng tỷ lệ */
+}
+
+.item p {
+    margin: 6px 0;
+}
+
+.item-name {
+    display: flex;
+    justify-content: center; /* Căn giữa tên sản phẩm */
+    gap: 20px;
+    font-weight: bold; /* Làm cho tên sản phẩm nổi bật hơn */
+    color: #333; /* Màu chữ tối hơn */
+}
+
+.item-price {
+    display: flex;
+    justify-content: center; /* Căn giữa giá sản phẩm */
+    color: #000000; /* Màu chữ cho giá sản phẩm */
+    font-size: 18px;
+    font-weight: 600;
+}

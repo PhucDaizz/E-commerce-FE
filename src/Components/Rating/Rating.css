@@ -1,0 +1,13 @@
+.rating-stars {
+    display: flex;
+    gap: 4px; /* Khoảng cách giữa các sao */
+}
+  
+.star {
+    font-size: 20px; /* Kích thước sao */
+    color: #ccc; /* Màu mặc định cho sao rỗng */
+}
+  
+.star.filled {
+    color: #f39c12; /* Màu vàng cho sao được tô */
+}

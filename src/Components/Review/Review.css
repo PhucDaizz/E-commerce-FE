@@ -1,0 +1,22 @@
+.review {
+    min-height: 500px;
+}
+
+.infor-review {
+    font-weight: 400;
+}
+
+.btn {
+    display: block;
+    margin-left: auto; /* Đẩy nút sang bên phải */
+}
+
+.review-item {
+    padding: 10px 40px;
+    font-size: 17px;
+    margin-bottom: 15px;
+}
+
+.review-body {
+    margin-left: 20px;
+}

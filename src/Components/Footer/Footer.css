@@ -1,0 +1,23 @@
+.footer {
+    min-height: 250px;
+    background-color: white;
+}
+
+.footer .title {
+    font-weight: 500;
+}
+
+.footer .detail ul{
+    list-style-type:none;
+}
+
+
+.detail i {
+    font-size: 25px;
+    margin-right: 20px;
+}
+
+.detail a {
+    text-decoration: none;
+    color: black;
+}
