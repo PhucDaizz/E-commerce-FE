@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './CSS/Login.css'
-import axios from 'axios'
+import axios from '../api/axios'
 import { useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 const Login = () => {
@@ -15,21 +15,22 @@ const Login = () => {
   }
 
   const apiLogin = (email, password) => {
-    axios.post('https://localhost:7295/api/Auth/Login', {email,password})
+    axios.post('/api/Auth/Login', {email,password})
       .then(res => {
         console.log('Login successful:', res.data);
-        const token = res.data.token
+        const token = res.data.token;
+        const refreshToken = res.data.refreshToken;
         localStorage.setItem('token', token);
-        const decodeToken = jwtDecode(token)
-        const roles = decodeToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-        console.log(roles)
+        localStorage.setItem('refreshToken', refreshToken);
+        const decodeToken = jwtDecode(token);
+        const roles = decodeToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
         if (roles.includes("Admin") || roles.includes("SuperAdmin")) {
-          navigate('/admin')
+          navigate('/admin');
         } else {
           window.location.reload();
         }
       })
-      .catch(err => console.log("Login failed: ", err))
+      .catch(err => console.log("Login failed: ", err));
 
   }
 

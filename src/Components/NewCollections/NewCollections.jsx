@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './NewCollections.css'
-import axios from 'axios'
+import axios from '../../api/axios'
 import Item from '../Item/Item'
 import 'swiper/css';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -10,7 +10,7 @@ const NewCollections = () => {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        axios.get('https://localhost:7295/api/Product?isDESC=true&page=1&itemInPage=10&sortBy=CreatedAt')
+        axios.get('/api/Product?isDESC=true&page=1&itemInPage=10&sortBy=CreatedAt')
         .then(res => setData(res.data.items))
         .catch(err => console.log(err))
     }, [])

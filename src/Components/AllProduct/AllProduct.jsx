@@ -1,7 +1,8 @@
-import axios from 'axios';
+// import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import Item from '../Item/Item';
 import Pagination from '../Pagination/Pagination';
+import axios from '../../api/axios';
 
 export const AllProduct = () => {
     const [data, setData] = useState([]);
@@ -15,7 +16,7 @@ export const AllProduct = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://localhost:7295/api/Product`, {
+                const response = await axios.get(`/api/Product`, {
                     params: {
                         isDESC: true,
                         page: page,

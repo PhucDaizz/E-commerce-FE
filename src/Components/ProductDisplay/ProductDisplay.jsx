@@ -7,12 +7,15 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import Rating from '../Rating/Rating';
+import { useAuth } from '../../Context/AuthContext';
+import { toast, ToastContainer } from 'react-toastify';
 
 const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating = 0 }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const {addToCart} = useAuth();
 
   const predefinedOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
@@ -32,6 +35,7 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
   };
 
   const handleSizeClick = (size) => { 
+    console.log(size)
     if (size.stock > 0) { 
       setSelectedSize(size); 
     } 
@@ -139,9 +143,9 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
 
             {selectedColor?.productSizes?.length > 0 && ( 
               <div className="product-sizes"> 
-                {sortSizes(selectedColor.productSizes).map((size, i) => ( 
+                {sortSizes(selectedColor.productSizes).map((size) => ( 
                   <button 
-                    key={i} 
+                    key={size.productColorID} 
                     className={`size-button ${size.stock === 0 ? 'out-of-stock' : ''} ${selectedSize === size ? 'selected' : ''}`} 
                     onClick={() => handleSizeClick(size)}
                     disabled={size.stock === 0} > 
@@ -158,8 +162,8 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
               <button onClick={() => handleQuantityChange(1)}>+</button> 
             </div>
 
-            <button className='add-to-cart'><span>THÊM VÀO GIỎ</span></button>
-
+            <button className='add-to-cart' onClick={() => addToCart(product.productID, quantity, selectedSize.productSizeID)}><span>THÊM VÀO GIỎ</span></button>
+            <ToastContainer/>
             <p>{product?.description || 'No description available'}</p>
           </div>
         </div>

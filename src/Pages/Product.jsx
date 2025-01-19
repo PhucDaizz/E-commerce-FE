@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Breadcrum from '../Components/Breadcrum/Breadcrum'
-import axios from 'axios'
+import axios from '../api/axios'
 import { useParams } from 'react-router-dom'
 import ProductDisplay from '../Components/ProductDisplay/ProductDisplay'
 import Review from '../Components/Review/Review'
@@ -15,7 +15,7 @@ const Product = () => {
   const [averageRating, setAverageRating] = useState(0);
 
   useEffect(() => {
-    axios.get(`https://localhost:7295/api/Product/Detail/${productId}`)
+    axios.get(`/api/Product/Detail/${productId}`)
     .then(res => {
       console.log(res.data)
       setCategory(res.data.category.categoryName)
@@ -26,7 +26,7 @@ const Product = () => {
     .catch(err => console.log(err))
     
     // call api review 
-    axios.get(`https://localhost:7295/api/ProductReview/${productId}`)
+    axios.get(`/api/ProductReview/${productId}`)
     .then(rv => {
       console.log(rv.data)
       if (rv.data.length > 0) { 

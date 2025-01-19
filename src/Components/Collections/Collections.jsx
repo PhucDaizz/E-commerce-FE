@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import './Collections.css'
-import axios from 'axios'
 import Item from '../Item/Item'
 import Pagination from '../Pagination/Pagination'
 import { useCategory } from '../../Context/CategoryContext'
 import { useSearch } from '../../Context/SearchContext'
-
+import axios from '../../api/axios'
 
 const Collections = () => {
     const [data, setData] = useState([])
@@ -17,7 +16,7 @@ const Collections = () => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await axios.get(`https://localhost:7295/api/Product`, {
+            const response = await axios.get(`/api/Product`, {
                 params: {
                     productName: searchQuery || '',
                     isDESC: true,
@@ -27,8 +26,6 @@ const Collections = () => {
                     categoryId: selectedCategory || ''
                 }
             })
-
-            console.log(response.data)
             setData(response.data.items);
             setTotalPages(response.data.pageSize);
           } catch (error) {

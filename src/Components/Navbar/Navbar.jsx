@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import './Navbar.css'
-import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import Login from '../../Pages/Login'
 import { useAuth } from '../../Context/AuthContext'
 import { useCategory } from '../../Context/CategoryContext'
 import { useSearch } from '../../Context/SearchContext'
+import axios from '../../api/axios'
 
 const Navbar = () => {
   const [data, setData] = useState([])
@@ -14,9 +14,9 @@ const Navbar = () => {
   const { handleCategoryChange } = useCategory();
   const { searchQuery, setSearchQuery } = useSearch();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
-    axios.get('https://localhost:7295/api/Category')
+    axios.get('/api/Category')
     .then(res => setData(res.data))
     .catch(err => console.log(err))
   },[])
@@ -85,10 +85,13 @@ const Navbar = () => {
           ) : (
             <div className="user-info ms-3">
               <span>Xin chào, User!</span>
-              <button className="auth-button" onClick={logout}>
+              <Link to={'/cart'}><i class="bi bi-bag ms-2"></i></Link>
+              <div className='cart-container'>
+                <span className='cart-count'>0</span>
+              </div>
+              <button className="auth-button logout" onClick={logout}>
                 Đăng xuất
               </button>
-              <i class="bi bi-bag ms-2"></i>
             </div>
           )}
         </div>
