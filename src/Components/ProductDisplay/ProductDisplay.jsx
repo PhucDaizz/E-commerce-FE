@@ -35,7 +35,6 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
   };
 
   const handleSizeClick = (size) => { 
-    console.log(size)
     if (size.stock > 0) { 
       setSelectedSize(size); 
     } 
@@ -145,7 +144,7 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
               <div className="product-sizes"> 
                 {sortSizes(selectedColor.productSizes).map((size) => ( 
                   <button 
-                    key={size.productColorID} 
+                    key={`${selectedColor.colorID}-${size.productSizeID}-${size.size}`} 
                     className={`size-button ${size.stock === 0 ? 'out-of-stock' : ''} ${selectedSize === size ? 'selected' : ''}`} 
                     onClick={() => handleSizeClick(size)}
                     disabled={size.stock === 0} > 

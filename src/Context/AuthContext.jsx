@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import axios from '../api/axios';
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { isAxiosError } from 'axios';
 
 const AuthContext =  createContext();
@@ -8,7 +8,16 @@ const AuthContext =  createContext();
 export const AuthProvider = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('token'));
     const [cart, setCart] = useState([]);
-    
+    const [itemInCart, setItemInCart] = useState(0);
+
+    useEffect(() => {
+        if (loggedIn) {
+            getCart();
+        } else {
+            setCart([]);
+            setItemInCart(0);
+        }
+    }, [loggedIn]);
 
     const header = (token) => {
         return  {
@@ -84,7 +93,6 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-
     const addToCart = async (productID, quantity, productSizeID) => { 
 
         try {
@@ -104,7 +112,22 @@ export const AuthProvider = ({ children }) => {
                 theme: "light" 
             });
 
-            console.log(cart);
+            await getCart();
+
+            // Cập nhật giỏ hàng ngay lập tức trong state
+            setCart(prevCart => {
+                const existingItem = prevCart.find(item => item.productID === productID && item.productSizeID === productSizeID);
+                if (existingItem) {
+                    return prevCart.map(item =>
+                        item.productID === productID && item.productSizeID === productSizeID
+                            ? { ...item, quantity: item.quantity + quantity }
+                            : item
+                    );
+                } else {
+                    return [...prevCart, { productID, productSizeID, quantity, cartItemID: response.data.cartItemID }];
+                }
+            });
+
         } catch(error) {
             console.error('Lỗi khi thêm vào giỏ: ', error)
         }
@@ -119,14 +142,20 @@ export const AuthProvider = ({ children }) => {
             });
 
             if (!Array.isArray(response.data)) {
-                setCart([])
+                setCart([]);
+                setItemInCart(0);
             }
             else{
                 setCart(response.data);
+                const totalItems = response.data.reduce((sum, item) => sum + item.quantity, 0);
+                setItemInCart(totalItems);
             }
+
+            console.log(cart)
         } catch (error) {
             console.error('Lỗi khi lấy giỏ hàng: ',error);
             setCart([]);
+            setItemInCart(0);
         }
     }
     
@@ -150,18 +179,39 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
         setLoggedIn(true);
+        getCart();
     }
 
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
         setLoggedIn(false);
+        
+        setCart([]);
+        setItemInCart(0);
     }
 
 
+    const handleUpdateItemCart = (cartItemID, productID, newQuantity, productSizeID) => {
+        updateItemCart(cartItemID, productID, newQuantity, productSizeID);
+    
+        // Cập nhật cart ngay lập tức để hiển thị thay đổi ngay
+        setCart(prevCart => prevCart.map(item =>
+            item.cartItemID === cartItemID
+                ? { ...item, quantity: newQuantity }
+                : item
+        ));
+    };
+
+    const handleRemoveItem = (cartItemID, productID, productSizeID) => {
+        updateItemCart(cartItemID, productID, 0, productSizeID); // Gửi API để xóa
+
+        // Cập nhật cart ngay lập tức
+        setCart(prevCart => prevCart.filter(item => item.cartItemID !== cartItemID));
+    };
 
     return (
-        <AuthContext.Provider value={{loggedIn, login, logout, addToCart, getCart, cart, updateItemCart}}>
+        <AuthContext.Provider value={{loggedIn, login, logout, addToCart, getCart, cart, updateItemCart, handleUpdateItemCart, handleRemoveItem, itemInCart}}>
             {children}
         </AuthContext.Provider>
     );

@@ -10,7 +10,7 @@ import axios from '../../api/axios'
 const Navbar = () => {
   const [data, setData] = useState([])
   const [menu, setMenu] = useState("")
-  const {loggedIn, logout } = useAuth();
+  const {loggedIn, logout, itemInCart } = useAuth();
   const { handleCategoryChange } = useCategory();
   const { searchQuery, setSearchQuery } = useSearch();
   const navigate = useNavigate();
@@ -85,9 +85,9 @@ const Navbar = () => {
           ) : (
             <div className="user-info ms-3">
               <span>Xin chào, User!</span>
-              <Link to={'/cart'}><i class="bi bi-bag ms-2"></i></Link>
+              <Link to={'/cart'}><i className="bi bi-bag ms-2"></i></Link>
               <div className='cart-container'>
-                <span className='cart-count'>0</span>
+                <span className='cart-count'>{itemInCart}</span>
               </div>
               <button className="auth-button logout" onClick={logout}>
                 Đăng xuất

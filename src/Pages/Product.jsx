@@ -17,7 +17,6 @@ const Product = () => {
   useEffect(() => {
     axios.get(`/api/Product/Detail/${productId}`)
     .then(res => {
-      console.log(res.data)
       setCategory(res.data.category.categoryName)
       setProduct(res.data.product)
       setImages(res.data.images)
@@ -28,7 +27,6 @@ const Product = () => {
     // call api review 
     axios.get(`/api/ProductReview/${productId}`)
     .then(rv => {
-      console.log(rv.data)
       if (rv.data.length > 0) { 
         const totalRating = rv.data.reduce((acc, curr) => acc + curr.rating, 0); 
         const avgRating = totalRating / rv.data.length; 
