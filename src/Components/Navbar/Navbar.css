@@ -65,6 +65,7 @@
     background-color: #717280; /* Màu nền cho icon */
     color: white; /* Màu chữ cho icon */
     border-radius: 4px 0 0 4px; /* Bo góc cho icon */
+    font-weight: 500;
   }
 
   .auth-buttons {

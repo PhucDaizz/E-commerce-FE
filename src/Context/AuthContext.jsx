@@ -2,6 +2,7 @@ import { toast } from 'react-toastify';
 import axios from '../api/axios';
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { isAxiosError } from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const AuthContext =  createContext();
 
@@ -191,6 +192,23 @@ export const AuthProvider = ({ children }) => {
         setItemInCart(0);
     }
 
+    const isAdminLogin = () => {
+        const token = localStorage.getItem('token');
+    
+        if (!token) return false; // Không logout ngay, chỉ trả về false
+    
+        try {
+            const decodeToken = jwtDecode(token);
+            let roles = decodeToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+    
+            roles = Array.isArray(roles) ? roles : [roles];
+            
+            return roles.includes("Admin") || roles.includes("SuperAdmin");
+        } catch (error) {
+            console.error("Invalid token:", error);
+            return false;
+        }
+    };
 
     const handleUpdateItemCart = (cartItemID, productID, newQuantity, productSizeID) => {
         updateItemCart(cartItemID, productID, newQuantity, productSizeID);
@@ -210,8 +228,21 @@ export const AuthProvider = ({ children }) => {
         setCart(prevCart => prevCart.filter(item => item.cartItemID !== cartItemID));
     };
 
+
+
     return (
-        <AuthContext.Provider value={{loggedIn, login, logout, addToCart, getCart, cart, updateItemCart, handleUpdateItemCart, handleRemoveItem, itemInCart}}>
+        <AuthContext.Provider value={{loggedIn, 
+            login, 
+            logout, 
+            addToCart, 
+            getCart, 
+            cart, 
+            updateItemCart, 
+            handleUpdateItemCart, 
+            handleRemoveItem, 
+            itemInCart, 
+            isAdminLogin
+        }}>
             {children}
         </AuthContext.Provider>
     );

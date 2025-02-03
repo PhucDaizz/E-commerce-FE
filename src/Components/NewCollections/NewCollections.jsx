@@ -10,7 +10,7 @@ const NewCollections = () => {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        axios.get('/api/Product?isDESC=true&page=1&itemInPage=10&sortBy=CreatedAt')
+        axios.get('/api/Product/GetAll?isDESC=true&page=1&itemInPage=10&sortBy=CreatedAt')
         .then(res => setData(res.data.items))
         .catch(err => console.log(err))
     }, [])

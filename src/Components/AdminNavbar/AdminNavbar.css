@@ -1,0 +1,39 @@
+.navbar {
+    background-color: #f8f9fa; /* Màu nền sáng */
+    padding: 8px 20px; /* Khoảng cách bên trong */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+  }
+  
+.navbar-container {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: space-between; /* Căn đều các phần tử */
+}
+
+
+.navbar-actions {
+    display: flex;
+    align-items: center; /* Căn giữa các nút hành động */
+}
+
+.search-container {
+    display: flex;
+    align-items: center; /* Căn giữa biểu tượng tìm kiếm và input */
+    margin-right: 8px; /* Khoảng cách giữa ô tìm kiếm và các nút */
+    border: 1px solid #ced4da; /* Đường viền cho container */
+    border-radius: 12px; /* Bo góc cho container */
+    overflow: hidden; /* Ẩn phần thừa ra ngoài */
+    font-size: smaller;
+}
+
+  .search-input {
+    padding: 8px; /* Khoảng cách bên trong */
+    border: none; /* Không có đường viền */
+    outline: none; /* Không có viền khi focus */
+    border-radius: 4px; /* Bo góc cho input */
+    flex-grow: 1; /* Chiếm không gian còn lại */
+  }
+
+  .bi-list {
+    font-size: 24px;
+  }

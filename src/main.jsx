@@ -7,13 +7,19 @@ import App from './App.jsx'
 import { AuthProvider } from './Context/AuthContext.jsx';
 import { CategoryProvider } from './Context/CategoryContext.jsx';
 import { SearchProvider } from './Context/SearchContext.jsx';
+import { AdminProvider } from './Context/AdminContext.jsx';
+import { ProductProvider } from './Context/ProductContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <CategoryProvider>
           <SearchProvider>
-            <App />
+              <AdminProvider>
+                <ProductProvider>
+                  <App />
+                </ProductProvider>
+              </AdminProvider>
           </SearchProvider>
       </CategoryProvider>
     </AuthProvider>

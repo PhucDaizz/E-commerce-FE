@@ -1,8 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Review.css';
 import Rating from '../Rating/Rating';
+import WriteReview from '../WriteReview/WriteReview';
 
 const Review = ({ reviews = [] }) => {
+  const [hideReview, setHideReview] = useState(true);
+  
+  useEffect(() => {
+    setHideReview(true);
+  }, []);
+
+  const handleHide = (hideReview) => {
+    if(hideReview === true) {
+      return setHideReview(false);
+    }
+    else {
+      return setHideReview(true);
+    }
+  } 
+
 
   const convertToYMD = (YMD) => { 
     const dateOnly = YMD.split("T")[0]; 
@@ -19,8 +35,16 @@ const Review = ({ reviews = [] }) => {
     <div className='review'>
       <div className="container">
         <h4 className='d-flex justify-content-center opacity-75'>Bài đánh giá của khách hàng</h4> 
-        <button className='btn btn-primary opacity-75'>Viết đánh giá</button>
+        <button onClick={() => handleHide(hideReview)} className='btn btn-primary opacity-75'>Viết đánh giá</button>
         <hr></hr>
+        <div> 
+          {
+            hideReview? 
+              (<div></div>) : 
+              (<WriteReview/>)
+          }
+          
+        </div>
         {
           reviews.map((item, i) => (
             <div key={i} className='review-item'>

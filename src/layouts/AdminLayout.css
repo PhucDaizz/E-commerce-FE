@@ -1,0 +1,21 @@
+.admin-layout {
+    display: flex;
+}
+  
+.sidebar-container {
+    width: 250px;  /* Kích thước mặc định của sidebar */
+    transition: width 0.3s ease-in-out;
+    background-color: white;
+}
+  
+.sidebar-container.collapsed {
+    width: 0;
+    overflow: hidden;
+}
+  
+.content-container {
+    flex-grow: 1; /* Chiếm hết phần còn lại của màn hình */
+    transition: margin-left 0.3s ease-in-out;
+    background-color: rgba(242,247,251,255);
+}
+  

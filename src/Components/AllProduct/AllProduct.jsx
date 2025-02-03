@@ -16,7 +16,7 @@ export const AllProduct = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`/api/Product`, {
+                const response = await axios.get(`/api/Product/GetAll`, {
                     params: {
                         isDESC: true,
                         page: page,

@@ -16,7 +16,7 @@ const Collections = () => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await axios.get(`/api/Product`, {
+            const response = await axios.get(`/api/Product/GetAll`, {
                 params: {
                     productName: searchQuery || '',
                     isDESC: true,

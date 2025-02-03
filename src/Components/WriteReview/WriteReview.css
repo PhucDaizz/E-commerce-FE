@@ -1,0 +1,21 @@
+.star-rating {
+    font-size: 1rem; /* Kích thước sao */
+    color: #ccc; /* Màu mặc định cho sao */
+    cursor: pointer; /* Con trỏ khi hover */
+}
+
+.star {
+    transition: color 0.2s; /* Hiệu ứng chuyển đổi màu */
+}
+
+.star.filled {
+    color: #ffcc00; /* Màu vàng cho sao đã được chọn */
+}
+
+.write-review .container { 
+    border-radius: 10px;
+}
+
+.write-review label {
+    font-size: 16px;
+}

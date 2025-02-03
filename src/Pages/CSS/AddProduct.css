@@ -1,0 +1,62 @@
+.add-product .title {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  
+  .border {
+    border-radius: 8px;
+  }
+  
+  .color-palette {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .color-box {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+  }
+  
+  .color-options button {
+    padding: 5px 10px;
+  }
+  
+  .color-picker {
+    width: 100px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .color-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid black;
+    margin: 5px;
+  }
+  
+  .color-options button {
+    padding: 5px 10px;
+  }
+  
+  .disabled-container {
+    opacity: 0.5; /* Làm mờ UI */
+    pointer-events: none; /* Ngăn chặn thao tác */
+  }
+  
+  .disabled-button {
+    pointer-events: none; /* Ngăn bấm vào button */
+    background-color: #ddd;
+  }
+  
+  .color-circle-container {
+    position: relative;
+    display: inline-block;
+    margin: 5px;
+  }
+  
