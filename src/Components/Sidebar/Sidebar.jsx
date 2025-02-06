@@ -40,6 +40,8 @@ const Sidebar = () => {
         {openMenus.ecommerce && (
           <div className="submenu">
             <Link to="/admin/products/add">Thêm sản phẩm</Link>
+            <Link to="/admin/products/list">DS sản phẩm</Link>
+            <Link to="/admin/products/edit">Sửa sản phẩm</Link>
             <Link to="/sales">💰 Sales</Link>
           </div>
         )}

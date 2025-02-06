@@ -17,6 +17,7 @@ export const CategoryProvider = ({ children }) => {
     try {
       const res = await axios.get('https://localhost:7295/api/Category');
       setCategories(res.data);
+      console.log(res.data)
     } catch (error) {
       console.error(error);
     }

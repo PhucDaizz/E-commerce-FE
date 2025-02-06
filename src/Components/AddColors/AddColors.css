@@ -2,8 +2,8 @@
     position: absolute;
     top: -5px;
     right: -5px;
-    background: rgb(252, 111, 111);
-    color: white;
+    background: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     border: none;
     border-radius: 80%;
     width: 20px;

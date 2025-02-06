@@ -152,7 +152,6 @@ export const AuthProvider = ({ children }) => {
                 setItemInCart(totalItems);
             }
 
-            console.log(cart)
         } catch (error) {
             console.error('Lỗi khi lấy giỏ hàng: ',error);
             setCart([]);

@@ -1,12 +1,16 @@
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 import { apiRequest, apiRequestIMG } from '../utils/apiHelper'
 import { data } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axios from '../api/axios';
 
 const ProductContext = createContext();
 
 
 export const ProductProvider  = ({children}) => {
+
+    const [listProduct, setListProduct] = useState([])
+
  
     const handleAddProduct = async (productName, categoryID, price, description) => {
         try {
@@ -94,6 +98,126 @@ export const ProductProvider  = ({children}) => {
         }
     }
 
+    const getAllProduct = async(page, itemInPage, sortBy, categoryId) => {
+        try {
+            const response = await axios.get(`/api/Product/GetAll`, {
+                params: {
+                    isDESC: true,
+                    page: page,
+                    itemInPage: itemInPage,
+                    sortBy: null,
+                    categoryId: categoryId
+                }
+            })
+            if(response.status === 200) {
+                setListProduct(response.data)
+                console.log(response.data)
+            }
+        } catch(error) {
+            console.error("Lỗi khi gọi ds sản phẩm:", error)
+        }
+    }
+    
+    const getAllProductAdmin = async (page, itemInPage, sortBy, categoryId) => {
+        try {
+            const response = await apiRequest({
+                method: 'get',
+                url: `/api/Product/GetAllAdmin`,
+                params: {
+                    isDESC: true,
+                    page: page,
+                    itemInPage: itemInPage,
+                    sortBy: sortBy,
+                    categoryId: categoryId
+                }
+            });
+            
+            if (response.status === 200) {
+                setListProduct(response.data);
+                console.log(response.data);
+            } else {
+                console.error("Lỗi khi gọi ds sản phẩm:", response.status);
+            }
+        } catch (error) {
+            console.error("Lỗi khi gọi ds sản phẩm:", error);
+        }
+    };
+    
+    const getDetailProduct = async(productID) => {
+        try {
+            const response = await axios.get(`/api/Product/Detail/${productID}`);
+            if(response.status === 200) {
+                return response.data;
+            }
+        } catch(error) {
+            console.error("Lỗi khi gọi chi tiết sản phẩm:", error)
+        }
+    }
+
+    function formatCurrency(amount) {
+        if (!amount || isNaN(amount)) return '0đ';
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ';
+    }
+    
+    const editProduct = async (productID, information) => {
+        try {
+            const response = await apiRequest({
+                method: 'put',
+                url : `/api/Product/edit/${productID}`,
+                data: information
+            })
+            if(response.status === 200) {
+                toast.success("Chỉnh sửa thông tin sản phẩm thành công")
+                return response;
+            }
+        } catch(error) {
+            console.error("Lỗi khi chỉnh sửa thông tin sản phẩm:", error)
+        }
+    }
+
+    const deleteColor = async (colorID) => {
+        try {
+            const response = await apiRequest({
+                method: 'delete',
+                url: `/api/ProductColor/${colorID}`
+            })
+
+            return response;
+        } catch(error) {
+            console.error('Lỗi khi xoá màu: ', error);
+        }
+    }
+
+    const deleteSize = async (colorID, size) => {
+        try {
+            const response = await apiRequest({
+                method: 'delete',
+                url: `/api/ProductSize/DeleteByColorAndSize/${colorID}?size=${size}`
+            })
+            if(response.status === 200) {
+                toast.success("Xoá màu thành công")
+            }
+        } catch(error) {
+            console.error("Lỗi khi xoá size:", error);
+        }
+        
+    }
+
+    const changeStatusProduct = async (productID) => {
+        try {
+            const response = await apiRequest({
+                method: 'post',
+                url: `/api/Product/ToPublic/${productID}`
+            });
+    
+            return response; // Trả về response để kiểm tra status
+    
+        } catch (error) {
+            console.log("Lỗi khi chuyển trạng thái SP: ", error);
+            throw error; // Ném lỗi để handleCheckboxChange có thể bắt được
+        }
+    };
+
     
     return (
         <ProductContext.Provider value={{
@@ -101,7 +225,17 @@ export const ProductProvider  = ({children}) => {
             handleAddProductColor,
             getAllColor,
             addRangeColors,
-            uploadImages
+            uploadImages,
+            getAllProduct,
+            listProduct,
+            formatCurrency,
+            getDetailProduct,
+            editProduct,
+            deleteColor,
+            deleteSize,
+            getAllProductAdmin,
+            changeStatusProduct,
+            setListProduct
         }}>
             {children}
         </ProductContext.Provider>

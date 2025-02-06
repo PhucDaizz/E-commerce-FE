@@ -1,5 +1,6 @@
 import React from 'react'
 import './AddColors.css'
+import { useProduct } from '../../Context/ProductContext';
 
 const AddColors = ({productID, 
                     selectedColor, 
@@ -9,9 +10,12 @@ const AddColors = ({productID,
                     handleAddColor, 
                     colors, 
                     handleRemoveColor, 
-                    handleAddColors
+                    handleAddColors,
+                    handleRemoveColorInData
                 }) => {
     
+    const {deleteColor}  = useProduct();
+
     const isColorInDatabase = (colorObj) => {
         return colorObj.productSizes && colorObj.productSizes.length > 0;
     };
@@ -53,21 +57,26 @@ const AddColors = ({productID,
                         {colors.map((colorObj) => (
                             <div key={colorObj.colorHex} className="color-circle-container">
                                 <div
-                                className="color-circle"
-                                style={{ backgroundColor: colorObj.colorHex }}
+                                    className="color-circle"
+                                    style={{ backgroundColor: colorObj.colorHex }}
                                 />
 
-                                {!isColorInDatabase(colorObj) && (
-                                <button 
-                                    className="remove-color-btn" 
-                                    onClick={() => handleRemoveColor(colorObj.colorHex)}
-                                >
-                                    ×
-                                </button>
-                            )}
-
-
-                                {/* <button className="remove-color-btn" onClick={() => handleRemoveColor(colorObj.colorHex)}>×</button> */}
+                                {/* Fix in here */}
+                                {isColorInDatabase(colorObj) ? (
+                                    <button
+                                        className="remove-color-btn bg-danger"
+                                        onClick={() => handleRemoveColorInData(colorObj.productColorID, colorObj.colorHex)}
+                                    >
+                                        ×
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="remove-color-btn"
+                                        onClick={() => handleRemoveColor(colorObj.colorHex)}
+                                    >
+                                        ×
+                                    </button>
+                                )}
                             </div>
                         ))}
                     </div>

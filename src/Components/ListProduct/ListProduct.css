@@ -1,0 +1,32 @@
+.list-product {
+  background-color: #ffffff; /* Màu nền nhẹ */
+  border-radius: 8px; /* Bo góc */
+}
+  
+.list-product .form-select,
+.list-product .form-control {
+  border-radius: 5px; /* Bo góc cho input và select */
+}
+  
+.list-product .btn {
+  border-radius: 5px; /* Bo góc cho nút */
+}
+
+.product-list {
+  padding: 10px;
+  background-color: #ffffff; /* Nền trắng cho danh sách sản phẩm */
+  border-radius: 5px; /* Bo góc cho danh sách sản phẩm */
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); Đổ bóng nhẹ */
+}
+
+.product-item .img-fluid {
+  max-width: 13%;
+}
+
+.btn-add a{
+  text-decoration: none;
+}
+
+.btn-link {
+  display: inline-block;
+}
