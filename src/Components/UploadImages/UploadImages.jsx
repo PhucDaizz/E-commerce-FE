@@ -6,13 +6,12 @@ import { toast, ToastContainer } from 'react-toastify';
 
 
 const UploadImages = ({productId, photos}) => {
-
     const [images, setImages] = useState([]);
     const [fileCount, setFileCount] = useState(0);
     const {uploadImages} = useProduct();
 
     useEffect(() => {
-      console.log(photos)
+      console.log(images)
     },[])
   
     const handleImageChange = (event) => {
@@ -63,12 +62,12 @@ const UploadImages = ({productId, photos}) => {
         const response = await uploadImages(productId, formData);
         if (response.status !== 200) throw new Error("Upload thất bại");
   
-        alert("Tải ảnh lên thành công!");
-        setImages([]); 
+        toast.success("Tải ảnh lên thành công!");
         setFileCount(0);
+        setImages(response.data)
       } catch (error) {
         console.error("Lỗi khi tải ảnh:", error);
-        alert("Có lỗi xảy ra khi tải ảnh!");
+        toast.error("Có lỗi xảy ra khi tải ảnh!");
       }
     };
   
@@ -93,7 +92,8 @@ const UploadImages = ({productId, photos}) => {
                   </div>
                 ))
               ) : (
-                <p>Không có hình ảnh nào</p>
+                <></>
+                // <p>Không có hình ảnh nào</p>
               )
             }
 

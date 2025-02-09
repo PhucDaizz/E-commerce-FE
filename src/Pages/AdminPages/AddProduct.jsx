@@ -14,7 +14,7 @@ const AddProducts = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
-    const [productID, setProductID] = useState(null);
+    const [productID, setProductID] = useState(11);
 
     const [colorName, setColorName] = useState('');
     const [selectedColor, setSelectedColor] = useState('#000000'); // Mặc định màu đen

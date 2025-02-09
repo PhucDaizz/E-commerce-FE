@@ -20,7 +20,7 @@ export const AllProduct = () => {
                     params: {
                         isDESC: true,
                         page: page,
-                        itemInPage: 5,
+                        itemInPage: 10,
                         sortBy: 'CreatedAt'
                     }
                 })

@@ -1,4 +1,4 @@
-.modal-backdrop {
+.product-dt-md .modal-backdrop {
     position: fixed;
     top: 0;
     left: 0;
@@ -6,4 +6,44 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5); /* Màu xám nhạt với độ trong suốt */
     z-index: 1040;
+}
+
+
+.product-dt-md .product-images-slider {
+    padding: 1rem;
+}
+
+.product-dt-md .mySwiper2 {
+    height: 400px;
+    width: 100%;
+}
+
+.product-dt-md .mySwiper2 .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+.product-dt-md .mySwiper {
+    height: 100px;
+    box-sizing: border-box;
+    padding: 10px 0;
+}
+
+.product-dt-md .mySwiper .swiper-slide {
+    width: 25%;
+    height: 100%;
+    opacity: 0.4;
+}
+
+.product-dt-md .mySwiper .swiper-slide-thumb-active {
+    opacity: 1;
+}
+
+.product-dt-md .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

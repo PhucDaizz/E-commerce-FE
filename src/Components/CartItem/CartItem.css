@@ -2,7 +2,6 @@
     background-color: #ffffff; /* Màu nền trắng cho giỏ hàng */
     padding: 20px; /* Khoảng cách bên trong */
     border-radius: 10px; /* Bo góc cho container */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
 }
 
 .cart-item h3 {
@@ -47,29 +46,21 @@
     justify-content: center; /* Căn giữa theo chiều ngang */
 }
 
-.cart-item button {
-    border: none; /* Không có đường viền */
-    background-color: #007bff; /* Màu nền cho nút */
-    color: white; /* Màu chữ cho nút */
-    padding: 5px 10px; /* Khoảng cách bên trong */
-    border-radius: 5px; /* Bo góc cho nút */
-    cursor: pointer; /* Con trỏ khi hover */
-    margin: 0 5px; /* Khoảng cách giữa các nút */
-    transition: background-color 0.3s; /* Hiệu ứng chuyển đổi cho nút */
-}
-
-.cart-item button:hover {
-    background-color: #0056b3; /* Màu nền khi hover */
-}
-
 .cart-item .btn-danger {
     background-color: #dc3545; /* Màu nền cho nút xóa */
 }
 
-.cart-item .btn-danger:hover {
-    background-color: #c82333; /* Màu nền khi hover cho nút xóa */
-}
-
 .cart-item .text-center {
     text-align: center; /* Căn giữa văn bản */
+}
+
+.title-info {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    margin: auto;
 }

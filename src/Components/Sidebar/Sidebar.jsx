@@ -41,18 +41,17 @@ const Sidebar = () => {
           <div className="submenu">
             <Link to="/admin/products/add">Thêm sản phẩm</Link>
             <Link to="/admin/products/list">DS sản phẩm</Link>
-            <Link to="/admin/products/edit">Sửa sản phẩm</Link>
             <Link to="/sales">💰 Sales</Link>
           </div>
         )}
 
         {/* Category */}
         <div className="menu-item" onClick={() => toggleMenu('category')}>
-          <span>📚 Category</span>
+          <span><i className="bi bi-archive"></i> Danh mục SP</span>
         </div>
         {openMenus.category && (
           <div className="submenu">
-            <Link to="/electronics">🔌 Electronics</Link>
+            <Link to="/admin/categories/list">Danh sách</Link>
             <Link to="/fashion">👗 Fashion</Link>
           </div>
         )}

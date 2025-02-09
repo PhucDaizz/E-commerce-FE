@@ -19,6 +19,8 @@ const ListProduct = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const [searchProduct, setSearchProduct] = useState(null);
+    const [clickSearch, setClickSearch] = useState(false);
     // Fetch categories on component mount
     useEffect(() => {
         getCategory();
@@ -26,8 +28,8 @@ const ListProduct = () => {
 
     // Fetch products when page, items per page, or category changes
     useEffect(() => {
-        getAllProductAdmin(currentPage, itemsPerPage, null, selectedCategory);
-    }, [currentPage, itemsPerPage, selectedCategory]);
+        getAllProductAdmin(currentPage, itemsPerPage, null, selectedCategory, searchProduct);
+    }, [currentPage, itemsPerPage, selectedCategory, clickSearch]);
 
     const handleItemsPerPageChange = (event) => {
         const newItemsPerPage = Number(event.target.value);
@@ -58,6 +60,12 @@ const ListProduct = () => {
     const toggleModal = () => {
         setIsModalOpen(!isModalOpen);
     };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            setClickSearch(!clickSearch)
+        }
+      }
 
     const handleCheckboxChange = async (productID) => {
         // Optimistic UI update - cập nhật UI ngay lập tức
@@ -147,8 +155,10 @@ const ListProduct = () => {
                         type="text" 
                         className='form-control d-inline-block w-50' 
                         placeholder='Tìm kiếm...' 
+                        onChange = {(e) => setSearchProduct(e.target.value)}
+                        onKeyDown={handleKeyDown}
                     />
-                    <button className="btn btn-outline-secondary ms-2">
+                    <button className="btn btn-outline-secondary ms-2" onClick={() => setClickSearch(!clickSearch)}>
                         <i className="bi bi-search"></i>
                     </button>
                 </div>
@@ -174,50 +184,55 @@ const ListProduct = () => {
 
             <table className="product-list mt-2 table table-hover">
                 <tbody>
-                    {listProduct.items && listProduct.items.map((product) => (
-                        <tr key={product.productID} className="row mb-2 p-2 product-item">
-                            <div className="col-5">
-                                <img 
-                                    src={`https://localhost:7295/Resources/${product.images[0].imageURL}`} 
-                                    alt="" 
-                                    className='img-fluid me-1'
-                                />
-                                {product.productName}
-                            </div>
-                            <div className="col d-flex align-items-center">{product.productID}</div>
-                            <div className="col d-flex align-items-center">{formatCurrency(product.price)}</div>
-                            <div className="col">{/* Số lượng */}</div>
-                            <div className="col d-flex align-items-center justify-content-center">
-                                <i 
-                                    className="bi bi-eye text-info fs-6 me-1 cursor-pointer"
-                                    onClick={() => handleViewProduct(product.productID)}
-                                ></i>
-                                <Link to={`/admin/products/edit/${product.productID}`}>
-                                    <i className="bi bi-pencil-fill text-success fs-6 me-1" onClick={<DetailProduct/>}></i>
-                                </Link>
-                                <i className="bi bi-trash3 text-danger fs-6"></i>
-                            </div>
-                            <div className="col-1">
-                                <div className="form-check form-switch ">
-                                    <input 
-                                        className="form-check-input" 
-                                        type="checkbox" 
-                                        role="switch" 
-                                        id="flexSwitchCheckDefault"
-                                        checked={product.isPublic}
-                                        onChange={() => handleCheckboxChange(product.productID)}
+                    {listProduct.items && listProduct.items.length > 0 ? (
+                        listProduct.items.map((product) => (
+                            <tr key={product.productID} className="row mb-2 p-2 product-item">
+                                <div className="col-5">
+                                    <img 
+                                        src={`https://localhost:7295/Resources/${product.images[0].imageURL}`} 
+                                        alt="" 
+                                        className='img-fluid me-1'
                                     />
-                                    <label className="form-check-label" htmlFor="flexSwitchCheckDefault">
-                                        
-                                    </label>
+                                    {product.productName}
                                 </div>
-                            </div>
-
+                                <div className="col d-flex align-items-center">{product.productID}</div>
+                                <div className="col d-flex align-items-center">{formatCurrency(product.price)}</div>
+                                <div className="col">{/* Số lượng */}</div>
+                                <div className="col d-flex align-items-center justify-content-center">
+                                    <i 
+                                        className="bi bi-eye text-info fs-6 me-1 cursor-pointer p-1"
+                                        onClick={() => handleViewProduct(product.productID)}
+                                    ></i>
+                                    <Link to={`/admin/products/edit/${product.productID}`}>
+                                        <i className="bi bi-pencil-fill text-success fs-6 me-1 p-1"></i>
+                                    </Link>
+                                    <i className="bi bi-trash3 text-danger fs-6 p-1"></i>
+                                </div>
+                                <div className="col-1 ">
+                                    <div className="form-check form-switch ">
+                                        <input 
+                                            className="form-check-input" 
+                                            type="checkbox" 
+                                            role="switch" 
+                                            id="flexSwitchCheckDefault"
+                                            checked={product.isPublic}
+                                            onChange={() => handleCheckboxChange(product.productID)}
+                                        />
+                                        <label className="form-check-label" htmlFor="flexSwitchCheckDefault">
+                                            
+                                        </label>
+                                    </div>
+                                </div>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="5" className="text-center">Không có sản phẩm</td>
                         </tr>
-                    ))}
-
+                    )}
                 </tbody>
             </table>
+
             <hr />
             {/* Pagination component */}
             <div className="d-flex justify-content-center mt-3">

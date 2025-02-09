@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
-import { useProduct } from '../../Context/ProductContext'; // Adjust import path as needed
-import './ProductDetailModal.css'
+import { useProduct } from '../../Context/ProductContext';
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import 'swiper/css/navigation';
+import 'swiper/css/thumbs';
+// Import required modules
+import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+import './ProductDetailModal.css';
 
 const ProductDetailModal = ({ product, isOpen, toggle }) => {
     const { formatCurrency } = useProduct();
+    const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
     if (!product) return null;
 
     return (
-        <div>
-            {/* Overlay background */}
+        <div className='product-dt-md'>
             {isOpen && <div className="modal-backdrop show" />}
             
             <div className={`modal ${isOpen ? 'show' : ''}`} style={{ display: isOpen ? 'block' : 'none' }} tabIndex="-1" role="dialog">
@@ -23,45 +32,52 @@ const ProductDetailModal = ({ product, isOpen, toggle }) => {
                         </div>
                         <div className="modal-body">
                             <div className="row">
-                                {/* Images Section */}
+                                {/* Images Section with Swiper */}
                                 <div className="col-md-5">
-                                    <div id="productImageCarousel" className="carousel slide" data-bs-ride="carousel">
-                                        <div className="carousel-inner">
-                                            {product.images.map((image, index) => (
-                                                <div
-                                                    key={image.imageID}
-                                                    className={`carousel-item ${index === 0 ? 'active' : ''}`}
-                                                >
+                                    <div className="product-images-slider">
+                                        <Swiper
+                                            style={{
+                                                '--swiper-navigation-color': '#000',
+                                                '--swiper-pagination-color': '#000',
+                                            }}
+                                            spaceBetween={10}
+                                            navigation={true}
+                                            thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+                                            modules={[FreeMode, Navigation, Thumbs]}
+                                            className="mySwiper2"
+                                        >
+                                            {product.images.map((image) => (
+                                                <SwiperSlide key={image.imageID}>
                                                     <img
                                                         src={`https://localhost:7295/Resources/${image.imageURL}`}
-                                                        className="d-block w-100"
-                                                        alt={`Product image ${index + 1}`}
+                                                        alt={`Product view ${image.imageID}`}
+                                                        style={{ width: '100%', height: 'auto' , position: 'absolute', top: '0px'}}
+                                                        
                                                     />
-                                                </div>
+                                                </SwiperSlide>
                                             ))}
-                                        </div>
-                                        {product.images.length > 1 && (
-                                            <>
-                                                <button
-                                                    className="carousel-control-prev"
-                                                    type="button"
-                                                    data-bs-target="#productImageCarousel"
-                                                    data-bs-slide="prev"
-                                                >
-                                                    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                    <span className="visually-hidden">Previous</span>
-                                                </button>
-                                                <button
-                                                    className="carousel-control-next"
-                                                    type="button"
-                                                    data-bs-target="#productImageCarousel"
-                                                    data-bs-slide="next"
-                                                >
-                                                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                                                    <span className="visually-hidden">Next</span>
-                                                </button>
-                                            </>
-                                        )}
+                                        </Swiper>
+
+                                        {/* Thumbnail Swiper */}
+                                        <Swiper
+                                            onSwiper={setThumbsSwiper}
+                                            spaceBetween={10}
+                                            slidesPerView={4}
+                                            freeMode={true}
+                                            watchSlidesProgress={true}
+                                            modules={[FreeMode, Navigation, Thumbs]}
+                                            className="mySwiper mt-3"
+                                        >
+                                            {product.images.map((image) => (
+                                                <SwiperSlide key={image.imageID}>
+                                                    <img
+                                                        src={`https://localhost:7295/Resources/${image.imageURL}`}
+                                                        alt={`Thumbnail ${image.imageID}`}
+                                                        style={{ width: '100%', height: 'auto', cursor: 'pointer' }}
+                                                    />
+                                                </SwiperSlide>
+                                            ))}
+                                        </Swiper>
                                     </div>
                                 </div>
 

@@ -5,6 +5,9 @@ import AdminLayout from '../layouts/AdminLayout'
 import AddProduct from '../Pages/AdminPages/AddProduct'
 import ListProducts from '../Pages/AdminPages/ListProducts'
 import EditProduct from '../Pages/AdminPages/EditProduct'
+import ListCategory from '../Pages/AdminPages/ListCategory'
+import AddCategory from '../Pages/AdminPages/AddCategory'
+import EditCategory from '../Pages/AdminPages/EditCategory'
 
 const AdminRoutes = () => {
   return (
@@ -17,6 +20,13 @@ const AdminRoutes = () => {
                 <Route path='edit' element={<EditProduct/>}>
                   <Route path=':productID' element={<EditProduct/>}></Route>
                 </Route>
+            </Route>
+            <Route path='/categories'>
+              <Route path='list' element={<ListCategory/>}></Route>
+              <Route path='add' element={<AddCategory/>}></Route>
+              <Route path='edit' element={<EditCategory/>}>
+                <Route path=':categoryID' element={<EditCategory/>}></Route>
+              </Route> 
             </Route>
         </Routes>
     </AdminLayout>

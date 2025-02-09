@@ -118,7 +118,7 @@ export const ProductProvider  = ({children}) => {
         }
     }
     
-    const getAllProductAdmin = async (page, itemInPage, sortBy, categoryId) => {
+    const getAllProductAdmin = async (page, itemInPage, sortBy, categoryId, searchQuery) => {
         try {
             const response = await apiRequest({
                 method: 'get',
@@ -128,7 +128,8 @@ export const ProductProvider  = ({children}) => {
                     page: page,
                     itemInPage: itemInPage,
                     sortBy: sortBy,
-                    categoryId: categoryId
+                    categoryId: categoryId,
+                    productName: searchQuery? searchQuery : ''
                 }
             });
             
@@ -218,6 +219,19 @@ export const ProductProvider  = ({children}) => {
         }
     };
 
+
+    const deleteImage = async (imageID) => {
+        try {
+            const response =  apiRequest({
+                method: 'delete', 
+                url: `/api/ProductImage/${imageID}`
+            })
+            return response;
+        } catch(error) {
+            console.log("Lỗi khi xoá ảnh: ", error);
+            throw error;
+        }
+    }
     
     return (
         <ProductContext.Provider value={{
@@ -235,7 +249,8 @@ export const ProductProvider  = ({children}) => {
             deleteSize,
             getAllProductAdmin,
             changeStatusProduct,
-            setListProduct
+            setListProduct,
+            deleteImage
         }}>
             {children}
         </ProductContext.Provider>

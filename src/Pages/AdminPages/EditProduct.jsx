@@ -4,8 +4,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useProduct } from '../../Context/ProductContext';
 import { useCategory } from '../../Context/CategoryContext';
 import AddColors from '../../Components/AddColors/AddColors';
-import UploadImages from '../../Components/UploadImages/UploadImages';
 import Confirmation from '../../Components/Confirmation/Confirmation';
+import UploadImagesAdmin from '../../Components/UploadImagesAdmin/UploadImagesAdmin';
 
 const EditProduct = () => {
     const { productID } = useParams();
@@ -34,12 +34,9 @@ const EditProduct = () => {
     useEffect(() => {
         getCategory();
         handleGetDetailProduct(productID);
+        console.log(data);
     }, [productID]);
 
-
-    useEffect(() => {
-      console.log(selectedSizes)
-    }, [selectedSizes])
     
     const handleGetDetailProduct = async(productID) => {
         const response = await getDetailProduct(productID);
@@ -98,6 +95,7 @@ const EditProduct = () => {
     
     useEffect(()=> {
         console.log(colors);
+        console.log(data);
     }, [JSON.stringify(colors)])
     
     const handleRemoveColor = (colorHex) => {
@@ -240,13 +238,7 @@ const EditProduct = () => {
       <div className="row">
         <div className="d-flex justify-content-between align-content-center">
           <span className="title">Sửa sản phẩm</span>
-          {
-            productID !== null && (
-              <div className='d-flex'>
-                <Confirmation productID = {productID} setProductID={setProductEdit} setColors={setColors}/>
-              </div>
-            )
-          }
+          <span>Mã sản phẩm bạn đang chỉnh là: {productID}</span>
         </div>
       </div>
       <div className="row">
@@ -386,7 +378,7 @@ const EditProduct = () => {
       </div>
         {/* Thêm ảnh sản phẩm */}
         <div className="row">
-          <UploadImages productId={productID} photos={data.images}/>
+          <UploadImagesAdmin productId={productID} photos={data.images}/>
         </div>
     </div>
     );

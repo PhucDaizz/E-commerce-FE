@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import axios from '../api/axios';
+import { apiRequest } from '../utils/apiHelper';
+import { toast } from 'react-toastify';
 
 // Tạo Context
 const CategoryContext = createContext();
@@ -17,14 +19,81 @@ export const CategoryProvider = ({ children }) => {
     try {
       const res = await axios.get('https://localhost:7295/api/Category');
       setCategories(res.data);
-      console.log(res.data)
     } catch (error) {
       console.error(error);
     }
   };
 
+
+  const addCategory = async (categoryName, description) => {
+    try {
+      const response = await apiRequest({
+        method : 'post',
+        url: 'api/Category',
+        data: {
+          categoryName: categoryName,
+          description: description
+        }
+      });
+      if (response.status === 200) {
+        toast.success('Thêm danh mục thành công')
+      }
+    } catch (error) {
+      console.error('Lỗi khi thêm mục sản phẩm:', error);
+    }
+  }
+
+  const editCategory = async (categoryID, categoryName, description) => {
+    try {
+      const response = await apiRequest({
+        method: 'put',
+        url: `/api/Category/${categoryID}`,
+        data: {
+          categoryName: categoryName,
+          description: description
+        }
+      })
+      if(response.status === 200) {
+        toast.success('Chỉnh sửa mục sp thành công')
+      }
+    } catch (error) {
+      console.log('Lỗi khi thêm mục sp:', error)
+    }
+  } 
+
+  const getDetailCategory = async(categoryID) => {
+    try {
+      const response = await axios.get(`https://localhost:7295/api/Category/${categoryID}`)
+      return response.data
+    } catch(error) {
+      console.error("Lỗi khi lấy thông tin muc sp: ",error)
+    }
+  }
+
+  const deleteCategory = async(categoryID) => {
+    try {
+      const response = await apiRequest({
+        method: 'delete',
+        url: `/api/Category/${categoryID}`
+      })
+      return response;
+    } catch (error) {
+      console.error('Lỗi khi xoá mục:' ,error);
+    }
+  }
+
   return (
-    <CategoryContext.Provider value={{ selectedCategory, handleCategoryChange , categories, getCategory}}>
+    <CategoryContext.Provider value={{ 
+                  selectedCategory, 
+                  handleCategoryChange , 
+                  categories, 
+                  getCategory,
+                  setCategories,
+                  addCategory,
+                  editCategory,
+                  getDetailCategory,
+                  deleteCategory
+    }}>
       {children}
     </CategoryContext.Provider>
   );

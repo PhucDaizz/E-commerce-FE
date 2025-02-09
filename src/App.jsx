@@ -9,6 +9,7 @@
   import Shop from './Pages/Shop'
 import AdminRoutes from './routes/AdminRoutes'
 import AdminNavbar from './Components/AdminNavbar/AdminNavbar'
+import Checkout from './Pages/Checkout'
   
 function AppContent() { // Tạo một component mới để sử dụng useLocation()
   const location = useLocation();
@@ -26,6 +27,7 @@ function AppContent() { // Tạo một component mới để sử dụng useLoca
           <Route path=':productId' element={<Product />} />
         </Route>
         <Route path='/cart' element={<Cart />} />
+        <Route path='/checkout' element={<Checkout/>}></Route>
         <Route path='/login' element={<Login />} />
         <Route path='/admin/*' element={<AdminRoutes />} />
       </Routes>

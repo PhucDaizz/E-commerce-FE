@@ -228,6 +228,20 @@ export const AuthProvider = ({ children }) => {
     };
 
 
+    const getInforUser = async() => {
+        try {
+            const response = await apiRequest({
+                method: 'get',
+                url: '/api/Auth/GetnInfo'
+            });
+            if(response.status === 200){
+                return response.data;
+            }
+        } catch(error) {
+            console.error("Lỗi khi lấy thông tin người dùng:", error);
+        }
+    }
+
 
     return (
         <AuthContext.Provider value={{loggedIn, 
@@ -240,7 +254,8 @@ export const AuthProvider = ({ children }) => {
             handleUpdateItemCart, 
             handleRemoveItem, 
             itemInCart, 
-            isAdminLogin
+            isAdminLogin,
+            getInforUser
         }}>
             {children}
         </AuthContext.Provider>

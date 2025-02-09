@@ -1,151 +1,146 @@
 .navbar {
-    background-color: #f8f9fa; /* Màu nền sáng */
-    padding: 10px 20px; /* Khoảng cách bên trong */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
-  }
-  
-  .navbar-container {
-    display: flex;
-    align-items: center; /* Căn giữa theo chiều dọc */
-    justify-content: space-between; /* Căn đều các phần tử */
-  }
-  
-  .navbar-logo {
-    display: flex;
-    align-items: center; /* Căn giữa logo */
-  }
-  
-  .navimg {
-    height: 40px; /* Chiều cao của logo */
-    margin-left: 10px; /* Khoảng cách giữa biểu tượng và logo */
-  }
-  
-  .navbar-categories {
-    display: flex;
-    flex-grow: 1; /* Chiếm không gian còn lại */
-    justify-content: center; /* Căn giữa các danh mục */
-    font-size: 16px;
-  }
-  
-  .category-item {
-    margin: 0 15px; /* Khoảng cách giữa các danh mục */
-    cursor: pointer; /* Con trỏ khi hover */
-    font-size: 20px;
-  }
-  
-  .category-item a {
-    color: #000;
-  }
-  
-  .navbar-actions {
-    display: flex;
-    align-items: center; /* Căn giữa các nút hành động */
-  }
-  
-  .search-container {
-    display: flex;
-    align-items: center; /* Căn giữa biểu tượng tìm kiếm và input */
-    margin-right: 8px; /* Khoảng cách giữa ô tìm kiếm và các nút */
-    border: 1px solid #ced4da; /* Đường viền cho container */
-    border-radius: 12px; /* Bo góc cho container */
-    overflow: hidden; /* Ẩn phần thừa ra ngoài */
-    font-size: smaller;
-  }
-  
-  .search-input {
-    padding: 8px; /* Khoảng cách bên trong */
-    border: none; /* Không có đường viền */
-    outline: none; /* Không có viền khi focus */
-    border-radius: 4px; /* Bo góc cho input */
-    flex-grow: 1; /* Chiếm không gian còn lại */
-  }
-  
-  .search-container i {
-    padding: 10px; /* Khoảng cách bên trong cho icon */
-    background-color: #717280; /* Màu nền cho icon */
-    color: white; /* Màu chữ cho icon */
-    border-radius: 4px 0 0 4px; /* Bo góc cho icon */
-    font-weight: 500;
-  }
+  background-color: #f8f9fa;
+  padding: 10px 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-  .auth-buttons {
-    display: flex;
-  }
-  
-  .auth-button {
-    border: 1px solid black; /* Đường viền */
-    background-color: transparent; /* Nền trong suốt */
-    color: black; /* Màu chữ */
-    padding: 5px 10px; /* Khoảng cách bên trong */
-    border-radius: 9px; /* Bo góc */
-    cursor: pointer; /* Con trỏ khi hover */
-    margin-left: 10px; /* Khoảng cách giữa các nút */
-    transition: background-color 0.3s, color 0.3s; /*Hiệu ứng chuyển đổi */
-  }
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-  .auth-button:hover {
-    background-color: black; /* Màu nền khi hover */
-    color: white; /* Màu chữ khi hover */
-  }
+.navbar-logo {
+  display: flex;
+  align-items: center;
+}
 
-  .category-item hr {
-    border: none;
-    width: 95%;
-    height: 3px;
-    border-radius: 10px;
-    background-color: black;
-    margin: 0;
-  }
+.navimg {
+  height: 40px;
+  margin-left: 10px;
+}
 
-  .login-container {
-    position: relative;
-    display: inline-block; /* Đảm bảo các thành phần giữ vị trí gần nhau */
-  }
+.navbar-categories {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  font-size: 16px;
+}
 
-  .login-form-popup {
-    position: absolute;
-    display: none;
-    top: 58px; /* Đẩy form xuống dưới nút */
-    right: 0px;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    z-index: 1000;
-  }
+.category-item {
+  margin: 0 15px;
+  cursor: pointer;
+  font-size: 20px;
+}
 
-  .login-container:hover .login-form-popup {
-    display: block;
-  }
+.category-item a {
+  color: #000;
+}
 
-  .haha {
-    width: 100px; /* Mặc định cầu nối nhỏ */
-    height: 40px; /* Không chiếm chỗ */
-    position: absolute;
-    top: -30px; /* Đặt phía trên form */
-    right: 0px; /* Căn giữa theo chiều ngang */
-    z-index: 1001;
-  }
+.navbar-actions {
+  display: flex;
+  align-items: center;
+}
 
-  .cart-container { 
-    position: relative; 
-    display: flex; 
-    align-items: center; 
-  }
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: smaller;
+}
 
-  .cart-count {
-    position: absolute; 
-    top: -30px; 
-    right: -12px; 
-    background-color: rgb(0, 0, 0); 
-    color: rgb(255, 255, 255); 
-    border-radius: 50%; 
-    padding: 2px 7px; 
-    font-size: 10px;
-    border: 1px #000 solid;
-  }
+.search-input {
+  padding: 8px;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  flex-grow: 1;
+}
 
-  .logout {
-    font-size: 10px;
-  }
+.search-container i {
+  padding: 10px;
+  background-color: #717280;
+  color: white;
+  border-radius: 4px 0 0 4px;
+  font-weight: 500;
+}
+
+.auth-buttons {
+  display: flex;
+}
+
+.auth-button {
+  border: 1px solid black;
+  background-color: transparent;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.auth-button:hover {
+  background-color: black;
+  color: white;
+}
+
+.category-item hr {
+  border: none;
+  width: 95%;
+  height: 3px;
+  border-radius: 10px;
+  background-color: black;
+  margin: 0;
+}
+
+.login-container {
+  position: relative;
+  display: inline-block;
+}
+
+.login-form-popup {
+  position: absolute;
+  top: 58px;
+  right: 0px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  z-index: 9999;
+}
+
+.haha {
+  width: 100px;
+  height: 40px;
+  position: absolute;
+  top: -30px;
+  right: 0px;
+  z-index: 1001;
+}
+
+.cart-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cart-count {
+  position: absolute;
+  top: -30px;
+  right: -12px;
+  background-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  border-radius: 50%;
+  padding: 2px 7px;
+  font-size: 10px;
+  border: 1px #000 solid;
+}
+
+.logout {
+  font-size: 10px;
+}

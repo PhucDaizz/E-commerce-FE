@@ -21,7 +21,7 @@ const Collections = () => {
                     productName: searchQuery || '',
                     isDESC: true,
                     page: page,
-                    itemInPage: 5,
+                    itemInPage: 10,
                     sortBy: 'CreatedAt',
                     categoryId: selectedCategory || ''
                 }
