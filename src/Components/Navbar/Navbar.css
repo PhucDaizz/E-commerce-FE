@@ -83,8 +83,16 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
+.auth-link {
+  color: black;
+}
+
 .auth-button:hover {
   background-color: black;
+  color: white;
+}
+
+.auth-link:hover {
   color: white;
 }
 

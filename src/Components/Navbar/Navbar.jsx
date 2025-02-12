@@ -84,24 +84,26 @@ const Navbar = () => {
 
           {!loggedIn ? (
             <div className="auth-buttons">
-              <button className="auth-button">Đăng ký</button>
+              <Link to={'/register'}>
+                <button className="auth-button">Đăng ký</button>
+              </Link>
               <div 
                 className="login-container"
                 onMouseEnter={() => setIsLoginHovered(true)}
                 onMouseLeave={() => setIsLoginHovered(false)}
               >
-                <button className="auth-button">Đăng nhập</button>
+                <button className="auth-button"><Link to={'/login'} className='auth-link' style={{textDecoration: 'none' }}>Đăng nhập</Link></button>
                 {isLoginHovered && (
                   <div className="login-form-popup">
                     <div className='haha'></div>
-                    <Login />
+                    <Login onPage={false}/>
                   </div>
                 )}
               </div>
             </div>
           ) : (
             <div className="user-info ms-3">
-              <span>Xin chào, User!</span>
+              <span><Link to='/account' className=' text-black' style={{textDecoration: 'none'}}>Xin chào, User!</Link></span>
               <Link to={'/cart'}>
                 <i className="bi bi-bag ms-2"></i>
                 <div className='cart-container'>

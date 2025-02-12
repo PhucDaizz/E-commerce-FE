@@ -1,0 +1,28 @@
+.Register {
+    position: relative;
+    overflow: hidden;
+    min-height: 700px;
+  }
+  
+  .register-content {
+    position: absolute;
+    width: 100%;
+    transition: transform 0.5s ease-in-out;
+    left: 0;
+  }
+  
+  .register-content.slide-out {
+    transform: translateX(-100%);
+  }
+  
+  .login-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 100%;
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .login-content.slide-in {
+    transform: translateX(0%);
+  }

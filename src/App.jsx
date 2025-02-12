@@ -10,6 +10,10 @@
 import AdminRoutes from './routes/AdminRoutes'
 import AdminNavbar from './Components/AdminNavbar/AdminNavbar'
 import Checkout from './Pages/Checkout'
+import Register from './Pages/Register'
+import VerifyEmail from './Components/VerifyEmail/VerifyEmail'
+import ResetPassword from './Components/ResetPassword/ResetPassword'
+import Account from './Components/Account/Account'
   
 function AppContent() { // Tạo một component mới để sử dụng useLocation()
   const location = useLocation();
@@ -28,7 +32,12 @@ function AppContent() { // Tạo một component mới để sử dụng useLoca
         </Route>
         <Route path='/cart' element={<Cart />} />
         <Route path='/checkout' element={<Checkout/>}></Route>
-        <Route path='/login' element={<Login />} />
+        <Route path='/login' element={<Login onPage={true}/>} />
+        <Route path='/register' element={<Register/>}></Route>
+        <Route path='/verifyemail' element={<VerifyEmail/>}></Route>
+        <Route path='/account' element={<Account/>}>
+          <Route path='reset' element={<ResetPassword/>}></Route>
+        </Route>
         <Route path='/admin/*' element={<AdminRoutes />} />
       </Routes>
       <Footer />

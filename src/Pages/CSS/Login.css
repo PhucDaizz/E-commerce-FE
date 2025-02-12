@@ -42,3 +42,11 @@
   color: red;
   margin-bottom: 10px;
 }
+
+.icon-link-hv i {
+  transition: transform 0.2s ease; /* Thêm hiệu ứng chuyển tiếp */
+}
+
+.icon-link-hv:hover i {
+  transform: translateX(-5px); /* Di chuyển biểu tượng sang trái 5px khi hover */
+}

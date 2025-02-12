@@ -3,6 +3,7 @@ import axios from '../api/axios';
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { isAxiosError } from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext =  createContext();
 
@@ -175,6 +176,27 @@ export const AuthProvider = ({ children }) => {
     }
 
 
+    const handleLogin = async(email, password) => {
+        try {
+            const response = await axios.post('/api/Auth/Login', {email,password})
+            if(response.status === 200) {
+                const token = response.data.token;
+                const refreshToken = response.data.refreshToken;
+                localStorage.setItem('token', token);
+                localStorage.setItem('refreshToken', refreshToken);
+                const decodeToken = jwtDecode(token);
+                const roles = decodeToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+                if (roles.includes("Admin") || roles.includes("SuperAdmin")) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+            }
+        } catch (error) {
+            console.log('Lỗi khi đăng nhập: ',error);
+        }
+    }
+
     const login = (token, refreshToken) => {
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
@@ -242,6 +264,58 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const register = async(data) => {
+        try {
+            const response = await axios.post('/api/Auth/RegisterUser', data);
+            if (response.status === 200) {
+                toast.success('Đăng ký thành công');
+                return response;
+            }
+        } catch (error) {
+            console.error("Lỗi khi đăng ký: ", error);
+        }
+    }
+
+    const verifyEmail = async(userId, token) => {
+        try {
+            const response = await axios.get(`/api/Auth/email-confirmation?userId=${userId}&token=${token}`)
+            if(response.status === 200) {
+                return "success"
+            }
+            return 'error'
+        } catch (error) {
+            console.error("Lỗi xác nhận email: ", error);
+            return 'error'
+        }
+    }
+
+    const forgotPassword = (email) => {
+        try {
+            const data = {
+                email: email,
+                clientUrl: 'http://localhost:5173/account/reset'
+            }
+            const response = axios.post('/api/Auth/forgotpassword', data)
+            if(response.status === 200) {
+                return toast.success('Vui lòng check mail của bạn thể thay đổi mật mã')
+            }
+            return response;
+        } catch (error) {
+            console.error("Lỗi khi đặt lại mật mã:" , error)
+        }
+    }
+
+    const resetPassword = async(data) => {
+        try {
+            const response = await axios.post('/api/Auth/resetpassword', data);
+            if (response.status === 200) {
+                return toast.success('Đặt lại mât khẩu thành công')
+            }
+            return response;
+        } catch (error) {
+            console.log('Lỗi khi resetPassword:' , error);
+        }
+    }
 
     return (
         <AuthContext.Provider value={{loggedIn, 
@@ -255,7 +329,12 @@ export const AuthProvider = ({ children }) => {
             handleRemoveItem, 
             itemInCart, 
             isAdminLogin,
-            getInforUser
+            getInforUser,
+            register,
+            handleLogin,
+            verifyEmail,
+            forgotPassword,
+            resetPassword
         }}>
             {children}
         </AuthContext.Provider>
