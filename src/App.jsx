@@ -1,19 +1,20 @@
-  import './App.css'
-  import {Route, Routes, BrowserRouter, useLocation} from 'react-router-dom'
-  import Navbar from './Components/Navbar/Navbar'
-  import Home from './Pages/Home'
-  import Footer from './Components/Footer/Footer'
-  import Cart from './Pages/Cart'
-  import Login from './Pages/Login'
-  import Product from './Pages/Product'
-  import Shop from './Pages/Shop'
+import './App.css'
+import {Route, Routes, BrowserRouter, useLocation} from 'react-router-dom'
+import Navbar from './Components/Navbar/Navbar'
+import Home from './Pages/Home'
+import Footer from './Components/Footer/Footer'
+import Cart from './Pages/Cart'
+import Login from './Pages/Login'
+import Product from './Pages/Product'
+import Shop from './Pages/Shop'
 import AdminRoutes from './routes/AdminRoutes'
 import AdminNavbar from './Components/AdminNavbar/AdminNavbar'
 import Checkout from './Pages/Checkout'
 import Register from './Pages/Register'
 import VerifyEmail from './Components/VerifyEmail/VerifyEmail'
 import ResetPassword from './Components/ResetPassword/ResetPassword'
-import Account from './Components/Account/Account'
+import Account from './Pages/Account'
+import UpdateInfor from './Components/UpdateInfor/UpdateInfor'
   
 function AppContent() { // Tạo một component mới để sử dụng useLocation()
   const location = useLocation();
@@ -37,6 +38,7 @@ function AppContent() { // Tạo một component mới để sử dụng useLoca
         <Route path='/verifyemail' element={<VerifyEmail/>}></Route>
         <Route path='/account' element={<Account/>}>
           <Route path='reset' element={<ResetPassword/>}></Route>
+          <Route path='update' element={<UpdateInfor/>}></Route>
         </Route>
         <Route path='/admin/*' element={<AdminRoutes />} />
       </Routes>

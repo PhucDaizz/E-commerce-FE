@@ -228,10 +228,55 @@ export const ProductProvider  = ({children}) => {
             })
             return response;
         } catch(error) {
-            console.log("Lỗi khi xoá ảnh: ", error);
+            console.error("Lỗi khi xoá ảnh: ", error);
             throw error;
         }
     }
+
+    const getListOrder = async() => {
+        try {
+            const response =await apiRequest({
+                method: 'get',
+                url: '/api/Order/ListOrders'
+            })
+            if(response.data == 'Your order is empty'){
+                response.data = [];
+            }
+            return response;
+        } catch (error) {
+            console.error('Lỗi khi gọi danh sách đặt hàng: ', error)
+        }
+    }
+
+    const getOrderDetail = async(orderID) => {
+        try {
+            const response = apiRequest({
+                method: 'get',
+                url: `/api/OrderDetail/getdetail/${orderID}`
+            })
+            return response;
+        } catch (error) {
+            console.error('Lỗi khi xem chi tiết đơn hàng: ', error)
+        }
+    }
+
+    const applyCoupon = async (coupon) => {
+        try {
+            const response = await apiRequest({
+                method: 'get',
+                url: `api/Discount/GetDiscountByCode/${coupon}`
+            });
+    
+            if (response.status === 200) {
+                toast.success("Áp mã thành công");
+                return response;
+            }
+        } catch (error) {
+            console.log('Lỗi khi dùng mã giảm: ', error);
+            return null; // Trả về null khi có lỗi
+        }
+    };
+    
     
     return (
         <ProductContext.Provider value={{
@@ -250,7 +295,10 @@ export const ProductProvider  = ({children}) => {
             getAllProductAdmin,
             changeStatusProduct,
             setListProduct,
-            deleteImage
+            deleteImage,
+            getListOrder,
+            getOrderDetail,
+            applyCoupon
         }}>
             {children}
         </ProductContext.Provider>

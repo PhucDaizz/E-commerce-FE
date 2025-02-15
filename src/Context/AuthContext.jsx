@@ -3,7 +3,7 @@ import axios from '../api/axios';
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { isAxiosError } from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 
 const AuthContext =  createContext();
 
@@ -313,12 +313,43 @@ export const AuthProvider = ({ children }) => {
             }
             return response;
         } catch (error) {
-            console.log('Lỗi khi resetPassword:' , error);
+            console.error('Lỗi khi resetPassword:' , error);
+        }
+    }
+
+    const confirmEmail = async() => {
+        try {
+            const response = await apiRequest({
+                method: 'post',
+                url: '/api/Auth/confirmemail' 
+            })
+            return response;
+        } catch (error) {
+            console.error('Lỗi khi xác nhận email:' , error);
+        }
+    }
+
+    const updateUserInfor = async(data) => {
+        try {
+            const dataSend = {
+                "phoneNumber": data.phoneNumber,
+                "address": data.address,
+                "gender": data.gender === '' ? null : data.gender
+            }
+            const response = await apiRequest({
+                method: 'post',
+                url: '/api/Auth/updateinfor',
+                data: dataSend
+            });
+            return response;
+        } catch (error) {
+            console.error("Lỗi khi cập nhật thông tin cá nhân: ",error);
         }
     }
 
     return (
-        <AuthContext.Provider value={{loggedIn, 
+        <AuthContext.Provider value={{
+            loggedIn, 
             login, 
             logout, 
             addToCart, 
@@ -334,7 +365,9 @@ export const AuthProvider = ({ children }) => {
             handleLogin,
             verifyEmail,
             forgotPassword,
-            resetPassword
+            resetPassword,
+            confirmEmail,
+            updateUserInfor
         }}>
             {children}
         </AuthContext.Provider>
