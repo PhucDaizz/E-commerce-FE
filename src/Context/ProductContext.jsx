@@ -271,11 +271,43 @@ export const ProductProvider  = ({children}) => {
                 toast.success("Áp mã thành công");
                 return response;
             }
+            toast.error('Mã giảm đã hết hạn hoặc bạn đã dùng rồi')
         } catch (error) {
             console.log('Lỗi khi dùng mã giảm: ', error);
             return null; // Trả về null khi có lỗi
         }
     };
+
+    const processBankingPay = async()=> {
+        
+        try {
+            const resonse = apiRequest({
+                method: 'get',
+                url: '/api/Payment/IpnAction'
+            })
+            return resonse;
+        } catch (error) {
+            console.log('Lỗi khi thanh toán: ', error);
+        }
+    }
+
+    const createURLPayment = async (amount, description, discountId) => {
+        try {
+            const url = discountId 
+                ? `/api/Payment/CreatePaymentUrl?moneyToPay=${amount}&description=${description}&discountId=${discountId}`
+                : `/api/Payment/CreatePaymentUrl?moneyToPay=${amount}&description=${description}`;
+    
+            const response = await apiRequest({
+                method: 'get',
+                url: url
+            });
+            return response;
+        } catch (error) {
+            console.log('Lỗi khi tạo URL thanh toán:', error);
+        }
+    };
+    
+    
     
     
     return (
@@ -298,7 +330,9 @@ export const ProductProvider  = ({children}) => {
             deleteImage,
             getListOrder,
             getOrderDetail,
-            applyCoupon
+            applyCoupon,
+            processBankingPay,
+            createURLPayment
         }}>
             {children}
         </ProductContext.Provider>

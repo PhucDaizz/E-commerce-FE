@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import './CartItem.css'
+import React, { useEffect, useState } from 'react';
+import './CartItem.css';
 import { useAuth } from '../../Context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 
 const CartItem = () => {
     const [totalCost, setTotalCost] = useState(0);
-    const {cart, getCart, handleUpdateItemCart, handleRemoveItem} = useAuth();
-    const navigate  = useNavigate();
+    const { cart, getCart, handleUpdateItemCart, handleRemoveItem } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         getCart();
-    },[]);
+    }, []);
 
     useEffect(() => {
         let cost = 0;
@@ -24,82 +24,108 @@ const CartItem = () => {
     const handleCheckout = () => {
         if (totalCost === 0) {
             toast.error('Giỏ hàng của bạn đang trống');
+        } else {
+            navigate('/checkout');
         }
-        else {
-            navigate('/checkout')
-        }
-    }
+    };
 
     function formatCurrency(amount) {
         if (!amount || isNaN(amount)) return '0đ';
         return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ';
-      }
+    }
 
-    
     return (
-        <div className='cart-item mb-5'>
-            <div className='container mt-5 border rounded shadow-sm'>
-                <h3 className='text-center mb-4'>Giỏ hàng</h3>
-                <div className='border rounded'>
-                    <div className='row bg-light text-dark fw-bold'>
-                        <div className='col-1'></div>
-                        <div className="col-5">Tên sản phẩm</div>
-                        <div className="col">Số lượng</div>
-                        <div className='col'>Đơn giá</div>
-                        <div className="col">Thao tác</div>
-                    </div>
-                    {cart.length === 0 ? (
-                        <div className='row text-center'>
-                            <p className='col-12'>Giỏ hàng trống</p>
-                        </div>
-                    ) : (
-                    cart.map((item) => (
-                        <div key={item.cartItemID} className="row py-2 align-items-center text-center">
-                            <div className="col-1 d-flex justify-content-center">
-                                <img className="img-fluid rounded"    
-                                    src={`https://localhost:7295/Resources/${item.productDTO.images[0].imageURL}`} 
-                                    alt="Product"
-                                />
-                            </div>
-                            <div className="col-5 d-flex align-items-center">
-                                <Link to={`/product/${item.productID}`} className="text-decoration-none text-black">
-                                    {item.productDTO.productName}
-                                </Link>
-                            </div>
-                            <div className="col d-flex justify-content-center align-items-center">
-                                <button className="btn btn-outline-primary me-2"
-                                    onClick={() => handleUpdateItemCart(item.cartItemID, item.productID, item.quantity - 1, item.productSizeID)}
-                                >-</button>
-                                <span className="mx-2">{item.quantity}</span>
-                                <button className="btn btn-outline-primary ms-2"
-                                    onClick={() => handleUpdateItemCart(item.cartItemID, item.productID, item.quantity + 1, item.productSizeID)}
-                                >+</button>
-                            </div>
-                            <div className="col d-flex justify-content-center">{formatCurrency(item.productDTO.price)}</div>
-                            <div className="col d-flex justify-content-center">
-                                <button 
-                                    onClick={() => handleRemoveItem(item.cartItemID, item.productID, item.productSizeID)} 
-                                    className="btn btn-danger btn-sm"
-                                >
-                                    Xóa
-                                </button>
-                            </div>
-                        </div>
-                    )))}
+        <div className="cart-item container mt-5 mb-5" style={{minHeight: '70vh'}}>
+            <div className="card shadow-sm p-4">
+                <h3 className="text-center mb-4 ">Giỏ hàng của bạn</h3>
+                
+                {/* Header */}
+                <div className="table-responsive">
+                    <table className="table text-center align-middle">
+                        <thead className="bg-light fw-bold">
+                            <tr>
+                                <th>Ảnh</th>
+                                <th className="text-start">Tên sản phẩm</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {cart.length === 0 ? (
+                                <tr>
+                                    <td colSpan="5" className="text-center py-3">
+                                        <p className="text-muted">Giỏ hàng trống</p>
+                                    </td>
+                                </tr>
+                            ) : (
+                                cart.map(item => (
+                                    <tr key={item.cartItemID}>
+                                        {/* Ảnh sản phẩm */}
+                                        <td>
+                                            <img 
+                                                src={`https://localhost:7295/Resources/${item.productDTO.images[0].imageURL}`} 
+                                                alt="Product" 
+                                                className="img-fluid rounded"
+                                                style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                                            />
+                                        </td>
+                                        {/* Tên sản phẩm */}
+                                        <td className="text-start">
+                                            <Link to={`/product/${item.productID}`} className="text-decoration-none text-dark ">
+                                                {item.productDTO.productName}
+                                            </Link>
+                                        </td>
+                                        {/* Số lượng */}
+                                        <td>
+                                        <div className="col d-flex justify-content-center align-items-center gap-3">
+                                            <button className=" d-flex m-auto justify-content-center align-content-center btn btn-outline-primary px-2"
+                                                style={{ minWidth: "30px" }}
+                                                onClick={() => handleUpdateItemCart(item.cartItemID, item.productID, item.quantity - 1, item.productSizeID)}
+                                            >-</button>
+                                            <span className="">{item.quantity}</span>
+                                            <button className="d-flex m-auto justify-content-center align-content-center btn btn-outline-primary px-2 "
+                                                style={{ minWidth: "30px" }}
+                                                onClick={() => handleUpdateItemCart(item.cartItemID, item.productID, item.quantity + 1, item.productSizeID)}
+                                            >+</button>
+                                        </div>
+                                        </td>
+                                        {/* Giá tiền */}
+                                        <td className="">{formatCurrency(item.productDTO.price)}</td>
+                                        {/* Xóa sản phẩm */}
+                                        <td>
+                                        <div className="col d-flex justify-content-center align-items-center">
+                                            <button 
+                                                onClick={() => handleRemoveItem(item.cartItemID, item.productID, item.productSizeID)} 
+                                                className="d-flex m-auto btn btn-outline-danger btn-sm"
+                                            >
+                                                Xóa
+                                            </button>
+                                        </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
-                <div className='total-cost row'>
-                    <div className="col title-info mt-2">Thông tin đơn hàng</div>
+
+                {/* Thông tin tổng tiền */}
+                <div className="mt-4 p-3 border-top text-end">
+                    <h5 className="">Tổng tiền: <span className=" text-black">{formatCurrency(totalCost)}</span></h5>
+                    <button 
+                        onClick={handleCheckout} 
+                        className="btn btn-outline-dark  mt-2"
+                        style={{ padding: '10px 20px' }}
+                    >
+                        Thanh Toán
+                    </button>
                 </div>
-                <div>
-                    <div className=' d-flex justify-content-center align-items-center flex-column'>
-                        <p className='mt-4'>Tổng tiền: {formatCurrency(totalCost)}</p> 
-                        <button onClick={handleCheckout} className='btn btn-outline-danger center'>Thanh Toán</button>
-                        <ToastContainer/>
-                    </div>
-                </div>
+
+                <ToastContainer />
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default CartItem
+export default CartItem;

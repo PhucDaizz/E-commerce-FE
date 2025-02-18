@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import './CSS/Checkout.css';
-import axios from '../api/axios';
 import { useAuth } from '../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import CartCheckout from '../Components/CartCheckout/CartCheckout';
@@ -10,12 +9,13 @@ const Checkout = () => {
     const navigation = useNavigate();
 
     const [selectedMethod, setSelectedMethod] = useState("cod");
-    
+    const [dataCoupon, setDataCoupon] = useState({});
   
     const [detailLocaton, setDetailLocaton] = useState('');
     const [isFillFull, setIsFillFull] = useState(false);
 
     const [inforUser, setInforUser] = useState({});
+    const [note, setNote] = useState(null);
     
     useEffect(() => {
         getInfor()
@@ -39,6 +39,18 @@ const Checkout = () => {
         return null;
     }
 
+    const handleNoteChange = (e) => {
+        setNote(e.target.value);
+    };
+
+    // const handlePayment = async() => {
+    //     if (selectedMethod === 'vnpay') {
+
+    //     }
+
+    // }
+    
+
     return (
         <div className='checkout container m-4 me-0 row' style={{minHeight: '80vh'}}>
             <div className="col">
@@ -61,7 +73,11 @@ const Checkout = () => {
 
                 <div className="mb-3">
                     <label className="form-label">Ghi chú (tùy chọn)</label>
-                    <textarea className="form-control" placeholder="Nhập ghi chú nếu có"></textarea>
+                    <textarea className="form-control" 
+                            placeholder="Nhập ghi chú nếu có" 
+                            onChange={handleNoteChange}
+                            value={note}
+                    ></textarea>
                 </div>
 
                 <div className="mb-3">
@@ -142,7 +158,12 @@ const Checkout = () => {
                 </div>
             </div>
             <div className="col">
-                <CartCheckout/>
+                <CartCheckout 
+                    dataCoupon={dataCoupon}  
+                    setDataCoupon={setDataCoupon} 
+                    selectedMethod={selectedMethod} 
+                    note={note} 
+                />
             </div>
         </div>
     );

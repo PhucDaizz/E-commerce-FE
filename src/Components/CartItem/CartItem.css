@@ -40,27 +40,24 @@
     border-radius: 5px; /* Bo góc cho hình ảnh */
 }
 
-.cart-item .col {
-    display: flex; /* Sử dụng flexbox để căn giữa nội dung */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    justify-content: center; /* Căn giữa theo chiều ngang */
-}
 
-.cart-item .btn-danger {
-    background-color: #dc3545; /* Màu nền cho nút xóa */
-}
 
-.cart-item .text-center {
-    text-align: center; /* Căn giữa văn bản */
-}
-
-.title-info {
-    font-size: 20px;
-    font-weight: 400;
-}
-
-.center {
-    display: flex;
-    justify-content: center;
+.cart-item .card {
+    max-width: 1100px;
     margin: auto;
+    border-radius: 10px;
 }
+
+.cart-item table th, 
+.cart-item table td {
+    vertical-align: middle;
+}
+
+.cart-item button {
+    transition: all 0.3s ease-in-out;
+}
+
+.cart-item button:hover {
+    transform: scale(1.05);
+}
+

@@ -21,6 +21,7 @@ useEffect(() => {
 
 // State to hold form data
 const [formData, setFormData] = useState({
+    userName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -40,35 +41,50 @@ const handleChange = (event) => {
 const validateForm = () => {
     const newErrors = {};
 
+    // Kiểm tra họ tên
+    const userNameRegex = /^[a-zA-Z\s]+$/;
+    if (!formData.userName) {
+        newErrors.userName = 'Họ tên là bắt buộc';
+    } else if (!userNameRegex.test(formData.userName)) {
+        newErrors.userName = 'Họ tên chỉ được chứa chữ cái và khoảng trắng';
+    }
+
     // Kiểm tra email
     if (!formData.email) {
-    newErrors.email = 'Email là bắt buộc';
+        newErrors.email = 'Email là bắt buộc';
     }
 
     // Kiểm tra mật khẩu
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!formData.password) {
-    newErrors.password = 'Mật khẩu là bắt buộc';
+        newErrors.password = 'Mật khẩu là bắt buộc';
     } else if (!passwordRegex.test(formData.password)) {
-    newErrors.password = 'Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ in hoa, 1 chữ số và 1 ký tự đặc biệt';
+        newErrors.password = 'Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ in hoa, 1 chữ số và 1 ký tự đặc biệt';
     }
 
     // Kiểm tra nhập lại mật khẩu
     if (formData.password !== formData.confirmPassword) {
-    newErrors.confirmPassword = 'Mật khẩu không khớp';
+        newErrors.confirmPassword = 'Mật khẩu không khớp';
     }
 
     // Kiểm tra số điện thoại
     const phoneRegex = /^0\d{9}$/;
     if (!formData.phone) {
-    newErrors.phone = 'Số điện thoại là bắt buộc';
+        newErrors.phone = 'Số điện thoại là bắt buộc';
     } else if (!phoneRegex.test(formData.phone)) {
-    newErrors.phone = 'Số điện thoại phải có 10 số và bắt đầu bằng số 0';
+        newErrors.phone = 'Số điện thoại phải có 10 số và bắt đầu bằng số 0';
+    }
+
+    // Kiểm tra trùng lặp email và tên người dùng
+    if (formData.email === formData.userName) {
+        newErrors.userName = 'Tên người dùng và email không được trùng nhau';
+        newErrors.email = 'Tên người dùng và email không được trùng nhau';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Trả về true nếu không có lỗi
 };
+
 
 
 // Handle form submission
@@ -78,6 +94,7 @@ const handleSubmit = async(event) => {
 
     // Here you can handle the form submission, e.g., send data to an API
     const dataSend = {
+        "userName": formData.userName,
         "email": formData.email,
         "password": formData.password,
         "phoneNumber": formData.phone
@@ -87,6 +104,7 @@ const handleSubmit = async(event) => {
 
     if(response.status === 200) {
         setFormData({
+            userName: '',
             email: '',
             password: '',
             confirmPassword: '',
@@ -127,6 +145,17 @@ return (
                 !hideRegister && (
                     <div className="col">
                         <form onSubmit={handleSubmit} className=" mb-4 mt-5 p-4">
+                            <div className='mb-3'>
+                                <label htmlFor="" className='form-label'>Họ tên:</label>
+                                <input 
+                                    type="text" 
+                                    name='userName'
+                                    className='form-control'
+                                    value={formData.userName}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            {errors.userName && <div className="text-danger">{errors.userName}</div>}
                             <div className="mb-3">
                             <label className='form-label'>Email:</label>
                             <input

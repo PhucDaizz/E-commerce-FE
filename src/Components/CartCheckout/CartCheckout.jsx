@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { useProduct } from '../../Context/ProductContext';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
-const CartCheckout = () => {
-    const { getCart, cart } = useAuth();
-    const { formatCurrency, applyCoupon } = useProduct();
+const CartCheckout = ({dataCoupon, setDataCoupon, selectedMethod, note}) => {
+    const { getCart, cart, getInforUser } = useAuth();
+    const { formatCurrency, applyCoupon, createURLPayment } = useProduct();
     const [coupon, setCoupon] = useState('');
-    const [dataCoupon, setDataCoupon] = useState({});
     const [couponError,  setCouponError] = useState(false); 
     const [totalCost, setTotalCost] = useState(0);
     const navigate = useNavigate();
@@ -27,10 +26,6 @@ const CartCheckout = () => {
         });
         setTotalCost(cost);
     }, [cart]);
-
-    useEffect(()=> {
-        console.log(dataCoupon)
-    },[dataCoupon])
 
     const handleChange = (e) => {
         setCoupon(e.target.value);
@@ -51,6 +46,21 @@ const CartCheckout = () => {
         }
     };
     
+
+    const handleGetUrlPayment = async(amount, selectedMethod, note) => {
+        if(selectedMethod === "vnpay") {
+            const isFillFullInfor = await getInforUser();
+            if(isFillFullInfor.phoneNumber === null || isFillFullInfor.address === null) {
+                toast.error('Bạn chưa điền đầy đủ thông tin');
+            }
+            else {
+                const response = await createURLPayment(amount, note, dataCoupon?.discountID);
+                if (response?.data) {
+                    window.location.href = response.data; // Chuyển hướng đến VNPay
+                }
+            }
+        }
+    }
 
     return (
         <div className='cartcheckout bg-light p-2' style={{minHeight: '80vh'}}>
@@ -136,7 +146,7 @@ const CartCheckout = () => {
                     >
                         <i className="bi bi-chevron-left small" ></i>Quay về giỏ hàng
                     </p>
-                    <button className='btn btn-primary'>Đặt hàng</button>
+                    <button className='btn btn-primary' onClick={() => handleGetUrlPayment(totalCost, selectedMethod, note)}>Đặt hàng</button>
                 </div>
             </div>
         </div>

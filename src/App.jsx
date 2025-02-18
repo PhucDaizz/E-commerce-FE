@@ -15,6 +15,7 @@ import VerifyEmail from './Components/VerifyEmail/VerifyEmail'
 import ResetPassword from './Components/ResetPassword/ResetPassword'
 import Account from './Pages/Account'
 import UpdateInfor from './Components/UpdateInfor/UpdateInfor'
+import ResultPayment from './Components/ResultPayment/ResultPayment'
   
 function AppContent() { // Tạo một component mới để sử dụng useLocation()
   const location = useLocation();
@@ -36,6 +37,7 @@ function AppContent() { // Tạo một component mới để sử dụng useLoca
         <Route path='/login' element={<Login onPage={true}/>} />
         <Route path='/register' element={<Register/>}></Route>
         <Route path='/verifyemail' element={<VerifyEmail/>}></Route>
+        <Route path='/resultpayment' element={<ResultPayment/>}></Route>
         <Route path='/account' element={<Account/>}>
           <Route path='reset' element={<ResetPassword/>}></Route>
           <Route path='update' element={<UpdateInfor/>}></Route>

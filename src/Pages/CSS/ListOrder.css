@@ -1,0 +1,28 @@
+.status {
+    font-size: 13px;
+}
+
+.bg-error {
+    background-color: rgb(253, 212, 212);
+}
+
+.bg-pending {
+    background-color: rgb(254, 254, 186);
+}
+
+.bg-succ {
+    background-color: rgb(211, 255, 211);
+}
+
+.bg-cancel {
+    background-color: rgba(186, 181, 181, 0.105);
+}
+
+.status-container {
+    width: 80%; /* Đặt chiều rộng cố định */
+    height: 70%; /* Đặt chiều cao cố định */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}

@@ -48,7 +48,7 @@ const Account = () => {
   }
 
   const statusMapping = {
-    0: 'Lỗi',
+    0: 'Đăng đóng gói hàng',
     1: 'Chưa giải quyết',
     2: 'Confirmed',
     3: 'Cancelled',
@@ -56,7 +56,7 @@ const Account = () => {
   };
 
   const paymentMethod = {
-    1: 'Tiền mặt', 
+    1: 'VnPay', 
     2: 'VnPay',
     3: 'PayPal',
   }

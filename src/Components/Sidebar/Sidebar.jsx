@@ -58,11 +58,11 @@ const Sidebar = () => {
 
         {/* Order */}
         <div className="menu-item" onClick={() => toggleMenu('order')}>
-          <span>📑 Order</span>
+          <span><i className="bi bi-journal-text"></i> Hoá đơn</span>
         </div>
         {openMenus.order && (
           <div className="submenu">
-            <Link to="/pending-orders">⏳ Pending Orders</Link>
+            <Link to="/admin/orders/list">Danh sách</Link>
             <Link to="/completed-orders">✅ Completed Orders</Link>
           </div>
         )}

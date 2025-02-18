@@ -11,3 +11,20 @@ export const axiosPrivate = axios.create({
     headers: { 'Content-Type': 'application/json' },
     withCredentials: true
 })
+
+
+export const ghnApi = axios.create({
+    baseURL: 'https://online-gateway.ghn.vn/shiip/public-api',
+    timeout: 10000,
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
+
+export const ghnApiDev = axios.create({
+    baseURL: 'https://dev-online-gateway.ghn.vn/shiip/public-api',
+    timeout: 10000,
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
