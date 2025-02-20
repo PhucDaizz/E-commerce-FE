@@ -48,7 +48,7 @@ const Account = () => {
   }
 
   const statusMapping = {
-    0: 'Đăng đóng gói hàng',
+    0: 'Đang đóng gói hàng',
     1: 'Chưa giải quyết',
     2: 'Confirmed',
     3: 'Cancelled',

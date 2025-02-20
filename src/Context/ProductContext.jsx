@@ -260,11 +260,11 @@ export const ProductProvider  = ({children}) => {
         }
     }
 
-    const applyCoupon = async (coupon) => {
+    const applyCoupon = async (coupon, totalCost) => {
         try {
             const response = await apiRequest({
                 method: 'get',
-                url: `api/Discount/GetDiscountByCode/${coupon}`
+                url: `api/Discount/GetDiscountByCode/${coupon}/${totalCost}`
             });
     
             if (response.status === 200) {
@@ -277,6 +277,20 @@ export const ProductProvider  = ({children}) => {
             return null; // Trả về null khi có lỗi
         }
     };
+
+
+    const getInforCoupon = async(discountId) => {
+        try {
+            const response = await apiRequest({
+                method: 'get',
+                url: `/api/Discount/${discountId}`
+            })
+            return response;
+        } catch (error) {
+            console.log('Lỗi khi tìm mã giảm: ', error);
+            return null;
+        }
+    }
 
     const processBankingPay = async()=> {
         
@@ -332,7 +346,8 @@ export const ProductProvider  = ({children}) => {
             getOrderDetail,
             applyCoupon,
             processBankingPay,
-            createURLPayment
+            createURLPayment,
+            getInforCoupon
         }}>
             {children}
         </ProductContext.Provider>

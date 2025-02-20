@@ -9,6 +9,7 @@ import ListCategory from '../Pages/AdminPages/ListCategory'
 import AddCategory from '../Pages/AdminPages/AddCategory'
 import EditCategory from '../Pages/AdminPages/EditCategory'
 import ListOrder from '../Pages/AdminPages/ListOrder'
+import DetailOrder from '../Components/DetailOrder/DetailOrder'
 
 const AdminRoutes = () => {
   return (
@@ -31,6 +32,7 @@ const AdminRoutes = () => {
             </Route>
             <Route path='/orders'>
               <Route path='list' element={<ListOrder/>}></Route>
+              <Route path=':orderId' element={<DetailOrder/>}></Route>
             </Route>
         </Routes>
     </AdminLayout>

@@ -52,7 +52,7 @@ const Checkout = () => {
     
 
     return (
-        <div className='checkout container m-4 me-0 row' style={{minHeight: '80vh'}}>
+        <div className='checkout container m-4  row justify-content-center' style={{minHeight: '80vh'}}>
             <div className="col">
                 <h5 className="mb-3">Thông tin nhận hàng</h5>
 
