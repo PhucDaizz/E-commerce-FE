@@ -1,0 +1,11 @@
+.trend-chart .MuiCardHeader-root {
+    padding: 1rem 1.5rem !important;
+}
+
+/* Responsive cho ảnh */
+@media (max-width: 600px) {
+    .trend-chart img {
+        width: 40px !important;
+        height: 40px !important;
+    }
+}

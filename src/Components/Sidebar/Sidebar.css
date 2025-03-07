@@ -5,59 +5,57 @@
 
 .fit-img {
     width: 100%;
-    height: 100px; /* Chiều cao cố định mà bạn mong muốn */
-    object-fit: contain; /* Hoặc 'cover' tùy thuộc vào nhu cầu hiển thị */
+    height: 60px;
+    object-fit: contain;
 }
 
 .sidebar {
     width: 250px;
     height: 100vh;
-    background: #f8f9fa;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
-  }
-  
-  .sidebar.hide {
-    transform: translateX(-100%); /* Trượt sidebar ra ngoài màn hình */
-  }
+    overflow-y: auto;
+    /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
+}
 
-  .sidebar-header {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .menu-item {
-    padding: 10px;
-    font-size: 18px;
+.sidebar.hide {
+    transform: translateX(-100%);
+}
+
+.sidebar-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.cursor-pointer {
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: background 0.3s;
-  }
-  
-  .menu-item:hover {
-    background: #e9ecef;
-  }
-  
-  .submenu {
-    padding-left: 20px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .submenu a {
-    text-decoration: none;
-    color: #333;
-    padding: 5px 10px;
-    font-size: 16px;
-    transition: color 0.3s;
-  }
-  
-  .submenu a:hover {
-    color: #007bff;
-  }
-  
+}
+
+.hover-icon:hover {
+    color: #0d6efd;
+    transform: scale(1.1);
+    transition: color 0.2s, transform 0.2s;
+}
+
+.menu-item {
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.hover-bg:hover {
+    background-color: #e9ecef;
+}
+
+.submenu {
+    transition: max-height 0.3s ease-in-out;
+}
+
+.submenu a {
+    font-size: 0.95rem;
+    transition: color 0.2s, padding-left 0.2s;
+}
+
+.hover-link:hover {
+    color: #0d6efd !important;
+    padding-left: 10px;
+}

@@ -4,13 +4,13 @@ import { useCategory } from '../../Context/CategoryContext';
 import { useProduct } from '../../Context/ProductContext';
 import { Link } from 'react-router-dom';
 import DetailProduct from '../ProductDetailModal/ProductDetailModal';
-import Pagination from '../Pagination/Pagination'; // Assuming Pagination is in the same directory
+import Pagination from '../Pagination/Pagination';
 import ProductDetailModal from '../ProductDetailModal/ProductDetailModal';
 import { toast, ToastContainer } from 'react-toastify';
 
 const ListProduct = () => {
     const { getCategory, categories } = useCategory();
-    const { getAllProductAdmin, listProduct, formatCurrency, getDetailProduct, changeStatusProduct, setListProduct } = useProduct();
+    const { getAllProductAdmin, listProduct, formatCurrency, getDetailProduct, changeStatusProduct, setListProduct, pauseSaleProduct } = useProduct();
 
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -21,6 +21,7 @@ const ListProduct = () => {
 
     const [searchProduct, setSearchProduct] = useState(null);
     const [clickSearch, setClickSearch] = useState(false);
+
     // Fetch categories on component mount
     useEffect(() => {
         getCategory();
@@ -34,13 +35,13 @@ const ListProduct = () => {
     const handleItemsPerPageChange = (event) => {
         const newItemsPerPage = Number(event.target.value);
         setItemsPerPage(newItemsPerPage);
-        setCurrentPage(1); // Reset to first page when changing items per page
+        setCurrentPage(1);
     };
 
     const handleCategoryChange = (event) => {
         const newCategory = event.target.value;
         setSelectedCategory(newCategory);
-        setCurrentPage(1); // Reset to first page when changing category
+        setCurrentPage(1);
     };
 
     const handlePageChange = (newPage) => {
@@ -57,6 +58,15 @@ const ListProduct = () => {
         }
     };
 
+    const handlePauseSaleProduct = async (productId) => {
+        try {
+            const product = await pauseSaleProduct(productId);
+            console.log(product);
+        } catch (error) {
+            console.error('Error pausale product:', error);
+        }
+    }
+
     const toggleModal = () => {
         setIsModalOpen(!isModalOpen);
     };
@@ -65,10 +75,10 @@ const ListProduct = () => {
         if (e.key === 'Enter') {
             setClickSearch(!clickSearch)
         }
-      }
+    }
 
     const handleCheckboxChange = async (productID) => {
-        // Optimistic UI update - cập nhật UI ngay lập tức
+        // Optimistic UI update
         setListProduct(prevData => ({
             ...prevData,
             items: prevData.items.map(product =>
@@ -79,13 +89,11 @@ const ListProduct = () => {
         }));
     
         try {
-            // Gọi API để cập nhật trạng thái
             const response = await changeStatusProduct(productID);
             
             if (response.status === 200) {
                 toast.success('Cập nhật trạng thái thành công');
             } else {
-                // Nếu API thất bại, hoàn tác UI về trạng thái cũ
                 setListProduct(prevData => ({
                     ...prevData,
                     items: prevData.items.map(product =>
@@ -97,7 +105,6 @@ const ListProduct = () => {
                 toast.error("Cập nhật trạng thái thất bại!");
             }
         } catch (error) {
-            // Nếu có lỗi, hoàn tác UI về trạng thái cũ
             setListProduct(prevData => ({
                 ...prevData,
                 items: prevData.items.map(product =>
@@ -110,143 +117,223 @@ const ListProduct = () => {
             console.error("Lỗi khi cập nhật trạng thái:", error);
         }
     };
-    
-    
-
 
     return (
-        <div className='list-product border shadow-sm mt-3 p-3'>
+        <div className='modern-product-list'>
             <ToastContainer/>
-            <div className="row container mt-2 align-items-center">
-                <div className="col-7 d-flex align-items-center">
-                    <label htmlFor='hide' className='me-2 mb-0 w-25'>Hiển thị</label>
-                    <select 
-                        id='hide' 
-                        name='hide' 
-                        className='form-select d-inline-block w-auto me-2' 
-                        value={itemsPerPage}
-                        onChange={handleItemsPerPageChange}
-                    >
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                    </select>
-
-                    <label htmlFor='category' className='ms-3 me-1 mb-0 w-25'>Loại SP</label>
-                    <select 
-                        id='category' 
-                        name='category' 
-                        className='form-select d-inline-block w-auto' 
-                        value={selectedCategory || ''}
-                        onChange={handleCategoryChange}
-                    >
-                        <option value="">All</option>
-                        {categories.map((item) => (
-                            <option key={item.categoryID} value={item.categoryID}>
-                                {item.categoryName}
-                            </option>
-                        ))}
-                    </select>
-
-                    <label htmlFor="find" className='ms-4 me-2 mb-0'>Mục</label>
-                    <input 
-                        id='find' 
-                        name='find' 
-                        type="text" 
-                        className='form-control d-inline-block w-50' 
-                        placeholder='Tìm kiếm...' 
-                        onChange = {(e) => setSearchProduct(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                    />
-                    <button className="btn btn-outline-secondary ms-2" onClick={() => setClickSearch(!clickSearch)}>
-                        <i className="bi bi-search"></i>
+            
+            {/* Header Section */}
+            <div className="product-header">
+                <div className="header-title">
+                    <h2 className="page-title">
+                        <i className="bi bi-box-seam me-2"></i>
+                        Quản lý sản phẩm
+                    </h2>
+                    <p className="page-subtitle">Danh sách và quản lý tất cả sản phẩm</p>
+                </div>
+                <Link to={'/admin/products/add'} className='add-product-btn'>
+                    <button className='btn btn-primary btn-modern'>
+                        <i className="bi bi-plus-circle me-2"></i>
+                        Thêm sản phẩm mới
                     </button>
-                </div>
-                <div className="col text-end btn-add">
-                    <Link to={'/admin/products/add'} className='btn-link'>
-                        <button className='btn btn-outline-primary'>
-                            <i className="bi bi-plus"></i> Thêm mới
-                        </button>
-                    </Link>
+                </Link>
+            </div>
+
+            {/* Filters Section */}
+            <div className="filters-card">
+                <div className="filters-row">
+                    <div className="filter-group">
+                        <label className="filter-label">
+                            <i className="bi bi-list-ul me-1"></i>
+                            Hiển thị
+                        </label>
+                        <select 
+                            className='form-select select-modern' 
+                            value={itemsPerPage}
+                            onChange={handleItemsPerPageChange}
+                        >
+                            <option value="10">10 sản phẩm</option>
+                            <option value="20">20 sản phẩm</option>
+                            <option value="30">30 sản phẩm</option>
+                        </select>
+                    </div>
+
+                    <div className="filter-group">
+                        <label className="filter-label">
+                            <i className="bi bi-tag me-1"></i>
+                            Danh mục
+                        </label>
+                        <select 
+                            className='form-select select-modern' 
+                            value={selectedCategory || ''}
+                            onChange={handleCategoryChange}
+                        >
+                            <option value="">Tất cả danh mục</option>
+                            {categories.map((item) => (
+                                <option key={item.categoryID} value={item.categoryID}>
+                                    {item.categoryName}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="filter-group search-group">
+                        <label className="filter-label">
+                            <i className="bi bi-search me-1"></i>
+                            Tìm kiếm
+                        </label>
+                        <div className="search-container">
+                            <input 
+                                type="text" 
+                                className='form-control search-input' 
+                                placeholder='Nhập tên sản phẩm, mã sản phẩm...' 
+                                onChange={(e) => setSearchProduct(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                            />
+                            <button 
+                                className="btn search-btn" 
+                                onClick={() => setClickSearch(!clickSearch)}
+                            >
+                                <i className="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div className="product-list mt-3 bg-light">
-                <div className="row d-flex align-content-center">
-                    <div className="col-5">Sản phẩm</div>
-                    <div className="col">Mã sản phẩm</div>
-                    <div className="col">Giá</div>
-                    <div className="col">Số lượng</div>
-                    <div className="col d-flex justify-content-center">Thao tác</div>
-                    <div className="col-1">Công khai</div>
+            {/* Products Table */}
+            <div className="products-table-container">
+                <div className="table-header">
+                    <div className="table-stats">
+                        <span className="total-items">
+                            <i className="bi bi-archive me-1"></i>
+                            Tổng cộng:  <strong className='ps-1 pe-1'>{listProduct.totalCount || 0}</strong> sản phẩm
+                        </span>
+                    </div>
                 </div>
-            </div>
 
-            <table className="product-list mt-2 table table-hover">
-                <tbody>
-                    {listProduct.items && listProduct.items.length > 0 ? (
-                        listProduct.items.map((product) => (
-                            <tr key={product.productID} className="row mb-2 p-2 product-item">
-                                <div className="col-5">
-                                    <img 
-                                        src={`https://localhost:7295/Resources/${product.images[0].imageURL}`} 
-                                        alt="" 
-                                        className='img-fluid me-1'
-                                    />
-                                    {product.productName}
-                                </div>
-                                <div className="col d-flex align-items-center">{product.productID}</div>
-                                <div className="col d-flex align-items-center">{formatCurrency(product.price)}</div>
-                                <div className="col">{/* Số lượng */}</div>
-                                <div className="col d-flex align-items-center justify-content-center">
-                                    <i 
-                                        className="bi bi-eye text-info fs-6 me-1 cursor-pointer p-1"
-                                        onClick={() => handleViewProduct(product.productID)}
-                                    ></i>
-                                    <Link to={`/admin/products/edit/${product.productID}`}>
-                                        <i className="bi bi-pencil-fill text-success fs-6 me-1 p-1"></i>
-                                    </Link>
-                                    <i className="bi bi-trash3 text-danger fs-6 p-1"></i>
-                                </div>
-                                <div className="col-1 ">
-                                    <div className="form-check form-switch ">
-                                        <input 
-                                            className="form-check-input" 
-                                            type="checkbox" 
-                                            role="switch" 
-                                            id="flexSwitchCheckDefault"
-                                            checked={product.isPublic}
-                                            onChange={() => handleCheckboxChange(product.productID)}
-                                        />
-                                        <label className="form-check-label" htmlFor="flexSwitchCheckDefault">
-                                            
-                                        </label>
+                <div className="modern-table">
+                    <div className="table-header-row">
+                        <div className="col-product">Sản phẩm</div>
+                        <div className="col-id">Mã SP</div>
+                        <div className="col-price">Giá bán</div>
+                        <div className="col-quantity">Số lượng</div>
+                        <div className="col-actions">Thao tác</div>
+                        <div className="col-status">Trạng thái</div>
+                    </div>
+
+                    <div className="table-body">
+                        {listProduct.items && listProduct.items.length > 0 ? (
+                            listProduct.items.map((product) => (
+                                <div key={product.productID} className="product-row">
+                                    <div className="col-product">
+                                        <div className="product-info">
+                                            <div className="product-image">
+                                                <img 
+                                                    src={product.images?.[0]?.imageURL 
+                                                            ? `https://localhost:7295/Resources/${product.images[0].imageURL}` 
+                                                            : 'https://via.placeholder.com/80x80?text=No+Image'}  
+                                                    alt={product.productName}
+                                                    className='product-img'
+                                                />
+                                            </div>
+                                            <div className="product-details">
+                                                <h6 className="product-name">{product.productName}</h6>
+                                                <span className="product-category">
+                                                    {categories.find(cat => cat.categoryID === product.categoryID)?.categoryName || 'N/A'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="col-id">
+                                        <span className="product-id">#{product.productID}</span>
+                                    </div>
+                                    
+                                    <div className="col-price">
+                                        <span className="price-value">{formatCurrency(product.price)}</span>
+                                    </div>
+                                    
+                                    <div className="col-quantity">
+                                        <span className="quantity-badgee">{product.totalQuantity}</span>
+                                    </div>
+                                    
+                                    <div className="col-actions">
+                                        <div className="action-buttons">
+                                            <button 
+                                                className="action-btn view-btn"
+                                                onClick={() => handleViewProduct(product.productID)}
+                                                title="Xem chi tiết"
+                                            >
+                                                <i className="bi bi-eye"></i>
+                                            </button>
+                                            <Link to={`/admin/products/edit/${product.productID}`}>
+                                                <button className="action-btn edit-btn" title="Chỉnh sửa">
+                                                    <i className="bi bi-pencil"></i>
+                                                </button>
+                                            </Link>
+                                            <button 
+                                                className="action-btn delete-btn"
+                                                onClick={() => handlePauseSaleProduct(product.productID)}
+                                                title="Tạm ngưng bán"
+                                            >
+                                                <i className="bi bi-pause-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="col-status">
+                                        <div className="status-toggle">
+                                            <label className="switch">
+                                                <input 
+                                                    type="checkbox"
+                                                    checked={product.isPublic}
+                                                    onChange={() => handleCheckboxChange(product.productID)}
+                                                />
+                                                <span className="slider"></span>
+                                            </label>
+                                            <span className={`status-text ${product.isPublic ? 'active' : 'inactive'}`}>
+                                                {product.isPublic ? 'Công khai' : 'Ẩn'}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="5" className="text-center">Không có sản phẩm</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
-
-            <hr />
-            {/* Pagination component */}
-            <div className="d-flex justify-content-center mt-3">
-                <Pagination 
-                    currentPage={listProduct.page} 
-                    totalPages={listProduct.pageSize} 
-                    onPageChange={handlePageChange}
-                />
+                            ))
+                        ) : (
+                            <div className="empty-state">
+                                <div className="empty-icon">
+                                    <i className="bi bi-inbox"></i>
+                                </div>
+                                <h5>Không có sản phẩm nào</h5>
+                                <p>Hiện tại chưa có sản phẩm nào trong danh sách</p>
+                                <Link to={'/admin/products/add'}>
+                                    <button className="btn btn-primary">
+                                        <i className="bi bi-plus-circle me-2"></i>
+                                        Thêm sản phẩm đầu tiên
+                                    </button>
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
+
+            {/* Pagination */}
+            {listProduct.items && listProduct.items.length > 0 && (
+                <div className="pagination-container">
+                    <Pagination 
+                        currentPage={listProduct.page} 
+                        totalPages={listProduct.pageSize} 
+                        onPageChange={handlePageChange}
+                    />
+                </div>
+            )}
 
             <ProductDetailModal 
                 product={selectedProduct}
                 isOpen={isModalOpen}
                 toggle={toggleModal}
+                setListProduct={setListProduct}
             />
         </div>
     );

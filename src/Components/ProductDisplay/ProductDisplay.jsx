@@ -72,7 +72,7 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
       <div className="container">
         <div className="row">
           {/* Hình ảnh chính */}
-          <div className="col-7 product-image">
+          <div className="col-7 product-imagee">
             {images.length > 0 ? (
               <>
                 {/* Swiper cho hình ảnh lớn */}

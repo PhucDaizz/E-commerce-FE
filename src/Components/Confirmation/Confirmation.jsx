@@ -1,54 +1,69 @@
-import React, { useState } from 'react'
-import './Confirmation.css'
+import React, { useState } from 'react';
+import './Confirmation.css';
 
-const Confirmation = ({ productID, setProductID, setColors }) => {
-
+const Confirmation = ({ productID, setProductID, setColors, setIsEditingProduct }) => {
     const [showConfirm, setShowConfirm] = useState(false);
 
     const handleEndEditing = () => {
-        setShowConfirm(true); // Hiện hộp xác nhận
+        setShowConfirm(true);
     };
 
     const handleConfirmEnd = () => {
-        setProductID(null); // Xóa productID (ẩn UI chỉnh sửa)
+        setProductID(null);
         setColors([]);
-        setShowConfirm(false); // Ẩn hộp xác nhận
+        setShowConfirm(false);
+        setIsEditingProduct(false);
     };
 
     const handleCancelEnd = () => {
-        setShowConfirm(false); // Ẩn hộp xác nhận
+        setShowConfirm(false);
     };
 
-
     return (
-        <>
+        <div className="confirmation-container">
             {productID !== null && (
-                <div className="d-flex align-items-center">
-                <span className="me-3">Mã sản phẩm bạn đang chỉnh là: {productID}</span>
-                <button className="btn btn-primary" onClick={handleEndEditing}>
-                    Kết thúc thêm sản phẩm này
-                </button>
+                <div className="editing-info">
+                    <span className="product-id-badge">
+                        Mã sản phẩm: <span className="id-value">{productID}</span>
+                    </span>
+                    <button 
+                        className="end-editing-btn"
+                        onClick={handleEndEditing}
+                    >
+                        <i className="fas fa-check-circle"></i> Kết thúc chỉnh sửa
+                    </button>
                 </div>
             )}
 
-            {/* Hộp xác nhận */}
             {showConfirm && (
-                <div className="confirm-overlay">
-                <div className="confirm-tab">
-                    <p className="mb-3">Bạn có chắc chắn muốn kết thúc không?</p>
-                    <div className="d-flex gap-2">
-                    <button className="btn btn-danger w-100" onClick={handleConfirmEnd}>
-                        Có
-                    </button>
-                    <button className="btn btn-secondary w-100" onClick={handleCancelEnd}>
-                        Không
-                    </button>
+                <div className="confirmation-modal">
+                    <div className="confirmation-dialog">
+                        <div className="confirmation-header">
+                            <h3>Xác nhận</h3>
+                        </div>
+                        <div className="confirmation-body">
+                            <p>Bạn có chắc chắn muốn kết thúc chỉnh sửa sản phẩm này?</p>
+                            <p className="text-muted">Mọi thay đổi chưa lưu sẽ bị mất.</p>
+                        </div>
+                        <div className="confirmation-footer">
+                            <button 
+                                className="confirm-btn"
+                                onClick={handleConfirmEnd}
+                            >
+                                <i className="fas fa-check"></i> Đồng ý
+                            </button>
+                            <button 
+                                className="cancel-btn"
+                                onClick={handleCancelEnd}
+                            >
+                                <i className="fas fa-times"></i> Hủy bỏ
+                            </button>
+                        </div>
                     </div>
                 </div>
-                </div>
             )}
-    </>
-    )
-}
+        </div>
+    );
+};
 
-export default Confirmation
+export default Confirmation;

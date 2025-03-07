@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useProduct } from '../../Context/ProductContext';
+import { toast } from 'react-toastify'; // Thêm import toast
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
@@ -11,9 +12,55 @@ import 'swiper/css/thumbs';
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
 import './ProductDetailModal.css';
 
-const ProductDetailModal = ({ product, isOpen, toggle }) => {
-    const { formatCurrency } = useProduct();
+const ProductDetailModal = ({ product, isOpen, toggle, setListProduct }) => {
+    const { formatCurrency, deleteProduct } = useProduct();
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDeleteProduct = async (productId) => {
+        if (window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')) {
+            setIsDeleting(true);
+            try {
+                await deleteProduct(productId);
+                
+                setListProduct(prevData => ({
+                    ...prevData,
+                    items: prevData.items.filter(item => item.productID !== productId),
+                    totalCount: prevData.totalCount - 1
+                }));
+                
+                toast.success('Xóa sản phẩm thành công!');
+                
+                setTimeout(() => {
+                    toggle();
+                }, 1000); 
+                
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                
+                if (error.response) {
+                    const status = error.response.status;
+                    const message = error.response.data || error.response.statusText;
+                    
+                    if (status === 400) {
+                        toast.error(`Không thể xóa sản phẩm: ${message}`);
+                    } else if (status === 404) {
+                        toast.error('Sản phẩm không tồn tại!');
+                    } else if (status === 403) {
+                        toast.error('Bạn không có quyền xóa sản phẩm này!');
+                    } else {
+                        toast.error(`Lỗi server: ${message}`);
+                    }
+                } else if (error.request) {
+                    toast.error('Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng!');
+                } else {
+                    toast.error('Xóa sản phẩm thất bại! Vui lòng thử lại.');
+                }
+            } finally {
+                setIsDeleting(false);
+            }
+        }
+    }
 
     if (!product) return null;
 
@@ -26,6 +73,18 @@ const ProductDetailModal = ({ product, isOpen, toggle }) => {
                     <div className="modal-content">
                         <div className="modal-header d-flex justify-content-lg-evenly">
                             <h5 className="modal-title">Chi tiết sản phẩm: {product.product.productName}</h5>
+                             <button 
+                                className={`delete-btn ${isDeleting ? 'deleting' : ''} ms-3`}
+                                onClick={() => handleDeleteProduct(product.product.productID)}
+                                disabled={isDeleting}
+                                title="Xóa sản phẩm"
+                            >
+                                {isDeleting ? (
+                                    <i className="bi bi-hourglass-split"></i>
+                                ) : (
+                                    <i className="bi bi-trash3"></i>
+                                )}
+                            </button>
                             <button type="button" className="close btn btn-lg" onClick={toggle} aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

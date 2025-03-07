@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDashboard } from '../Context/DashboardContext';
 import { useProduct } from '../Context/ProductContext';
 import './CSS/Admin.css'; // Thêm file CSS riêng
+import TrendChart from '../Components/TrendChart/TrendChart';
 
 const Admin = () => {
     const { getTotalRevenue, getReportOrder, getReportInventory, getReportUser } = useDashboard();
@@ -61,6 +62,7 @@ const Admin = () => {
         <div className="admin-dashboard container-fluid py-4">
             <div className="row g-4">
                 {/* Báo cáo doanh thu */}
+                <h2 className=' fw-bold'>Thống kế bán hàng </h2>
                 <div className="col-md-6 col-lg-3">
                     <div className="card h-100 shadow-sm border-0 revenue-card">
                         <div className="card-body p-4">
@@ -126,7 +128,7 @@ const Admin = () => {
                                 <h5 className="card-title mb-0 fw-bold">Tồn Kho</h5>
                             </div>
                             <p className="display-6 fw-bold text-dark mb-2">{dataReportInventory.totalInventory}</p>
-                            <small className="text-muted">Đang cập nhật...</small>
+                            <small className="text-muted">Có <span className=' fw-bold'>{dataReportInventory.totalProductActive}/{dataReportInventory.totalProduct}</span> sản phẩm đang hoạt động</small>
                         </div>
                     </div>
                 </div>
@@ -139,7 +141,6 @@ const Admin = () => {
                                 <h5 className="card-title mb-0 fw-bold">Khách Hàng</h5>
                             </div>
                             <p className="display-6 fw-bold text-dark mb-2">{dataReportUser.totalUser}</p>
-                            <small className="text-muted">Đang cập nhật...</small>
                         </div>
                     </div>
                 </div>
@@ -150,9 +151,9 @@ const Admin = () => {
                 <div className="col-12">
                     <div className="card shadow-sm border-0">
                         <div className="card-body p-4">
-                            <h5 className="fw-bold mb-3">Xu hướng Doanh Thu</h5>
-                            <div className="chart-placeholder">
-                                <p className="text-muted text-center">Biểu đồ xu hướng sẽ được thêm ở đây</p>
+                            {/* <h5 className="fw-bold mb-3">Xu hướng Doanh Thu</h5> */}
+                            <div className="chart-placeholder p-2">
+                                <TrendChart/>
                             </div>
                         </div>
                     </div>

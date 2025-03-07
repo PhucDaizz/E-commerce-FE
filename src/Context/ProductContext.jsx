@@ -98,6 +98,26 @@ export const ProductProvider  = ({children}) => {
         }
     }
 
+    const deleteProduct = async(productId) => {
+        try {
+            const response = await apiRequest({
+                method: 'delete',
+                url: `/api/Product/delete/${productId}`
+            })
+            if (response.status === 200) {
+                toast.success(`Xoá sản phẩm #${productId} thành công`)
+                return response;
+            }
+            else{
+                toast.error('Sản phẩm này đã được người dùng mua. Không thể xoá');
+                return response;
+            }
+
+        } catch (error) {
+            console.log('Lỗi khi xoá sản phẩm   : ', error);
+        }
+    }
+
     const getAllProduct = async(page, itemInPage, sortBy, categoryId) => {
         try {
             const response = await axios.get(`/api/Product/GetAll`, {
@@ -218,6 +238,20 @@ export const ProductProvider  = ({children}) => {
             throw error; // Ném lỗi để handleCheckboxChange có thể bắt được
         }
     };
+
+    const pauseSaleProduct = async (productID) => {
+        try {
+            const resonse = await apiRequest({
+                method: 'post',
+                url: `api/Product/pausesale/${productID}`
+            });
+            return resonse;
+        } catch (error) {
+            console.log("Lỗi khi xoá sản phẩm: ",error);
+            throw error;
+        }
+    }
+
 
 
     const deleteImage = async (imageID) => {
@@ -384,7 +418,9 @@ export const ProductProvider  = ({children}) => {
             getInforCoupon,
             processPaymentCOD,
             getAllVoucher,
-            formatDateTime
+            formatDateTime,
+            pauseSaleProduct,
+            deleteProduct
         }}>
             {children}
         </ProductContext.Provider>

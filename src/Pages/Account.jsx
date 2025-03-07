@@ -32,7 +32,11 @@ const Account = () => {
       }
     };
     fetchData();
-  }, [getInforUser, getListOrder]);
+  }, [getListOrder]);
+
+  useEffect(()=> {
+    console.log(dataOrder)
+  },[])
 
   if (error) return <div>Error: {error.message}</div>;
   if (!inforUser || !dataOrder) return <div>Loading...</div>;
@@ -101,7 +105,7 @@ const Account = () => {
                           {order.orderID}
                         </div>
                         <div className="col">{formatDateTime(order.orderDate)}</div>
-                        <div className="col"></div>
+                        <div className="col">{order.shipping.shippingAddress}</div>
                         <div className="col">{order.totalAmount}</div>
                         <div className="col">{paymentMethod[order.paymentMethodID]}</div>
                         <div className="col">{statusMapping[order.status]}</div>

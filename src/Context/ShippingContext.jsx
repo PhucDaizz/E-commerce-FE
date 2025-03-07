@@ -130,7 +130,7 @@ export const ShippingProvider = ({children}) => {
                 height: dimensions.height,
                 weight: dimensions.weight,
                 cod_failed_amount: 20000,
-                deliver_sation_id: null,
+                deliver_station_id: null,
                 insurance_value: data.totalAmount,
                 service_type_id: 2,
                 coupon: couponShip,

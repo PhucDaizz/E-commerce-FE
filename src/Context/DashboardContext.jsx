@@ -53,6 +53,18 @@ export const DashboardProvider = ({children}) => {
         }
     }
 
+    const getReportTopSelling = async(item) => {
+        try {
+            const response = await apiRequest({
+                method: 'get',
+                url: `/api/Dashboard/TopSellingProducts?items=${item}`
+            })
+            return response;
+        } catch (error) {
+            console.error("Lỗi khi gọi thống sản phẩm bán chạy:", error)
+        }
+    }
+
 
 
     return (
@@ -61,7 +73,8 @@ export const DashboardProvider = ({children}) => {
                 getTotalRevenue,
                 getReportOrder,
                 getReportInventory,
-                getReportUser
+                getReportUser,
+                getReportTopSelling
             }}
         >
             {children}

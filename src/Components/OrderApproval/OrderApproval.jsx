@@ -66,9 +66,8 @@ const OrderApproval = ({ dataOrder, orderDetail, onOrderApproved }) => {
                 toast.error("Đơn hàng này đã được gửi trước đó!");
                 return { success: false, message: "Đơn hàng đã được gửi" };
             }
-
             if (!dataOrder || !dataUser || !dataUserSend?.address || !requiredNote) {
-                toast.error("Lỗi: Thiếu dữ liệu cần thiết để tạo đơn hàng");
+                toast.error("Lỗi: Thiếu dữ liệu cần thiết để tạo đơn hàng. Vui lòng cập nhập thông tin của bạn (nhấn vào userName kế nút đăng xuất)");
                 return { success: false, message: "Thiếu dữ liệu cần thiết để tạo đơn hàng" };
             }
 

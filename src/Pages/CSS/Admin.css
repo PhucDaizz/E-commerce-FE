@@ -81,11 +81,11 @@
 }
 
 .admin-dashboard .chart-placeholder {
-    height: 200px;
+    /* height: 200px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    background-color: #e9ecef;
+    justify-content: center; */
+    /* background-color: #e9ecef; */
     border-radius: 8px;
 }
 

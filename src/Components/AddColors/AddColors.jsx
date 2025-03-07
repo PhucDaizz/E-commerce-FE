@@ -1,20 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './AddColors.css'
 import { useProduct } from '../../Context/ProductContext';
 
-const AddColors = ({productID, 
-                    selectedColor, 
-                    setSelectedColor, 
-                    colorName, 
-                    setColorName, 
-                    handleAddColor, 
-                    colors, 
-                    handleRemoveColor, 
-                    handleAddColors,
-                    handleRemoveColorInData
-                }) => {
-    
-    const {deleteColor}  = useProduct();
+const AddColors = ({
+    productID,
+    selectedColor,
+    setSelectedColor,
+    colorName,
+    setColorName,
+    handleAddColor,
+    colors,
+    handleRemoveColor,
+    handleAddColors,
+    handleRemoveColorInData
+}) => {
+    const { deleteColor } = useProduct();
 
     const isColorInDatabase = (colorObj) => {
         return colorObj.productSizes && colorObj.productSizes.length > 0;
@@ -24,70 +24,127 @@ const AddColors = ({productID,
         return colors.filter(color => !isColorInDatabase(color)).length;
     };
 
+    useEffect(() => {
+        console.log(productID)
+    }, [])
 
     return (
-        <div>
-            
-                {/* Chọn màu */}
-                <div className="border ms-1 shadow-sm bg-white p-3">
-                    <p>Màu sản phẩm: (nhấp vào bảng màu để chọn)</p>
-                    <input
-                        type="color"
-                        value={selectedColor}
-                        onChange={(e) => setSelectedColor(e.target.value)}
-                        className="color-picker"
-                        disabled={productID === null}
-                    />
-                    <input
-                        type="text"
-                        className="form-control mt-2"
-                        placeholder="Nhập tên màu"
-                        value={colorName}
-                        onChange={(e) => setColorName(e.target.value)}
-                        disabled={productID === null}
-                    />
-                    <button className="btn btn-success mt-2" 
-                        onClick={handleAddColor} 
-                        disabled={productID === null}
-                    >
-                        Thêm màu
-                    </button>
+        <div className="add-colors-container">
+            <div className="color-section-card">
+                <div className="section-header">
+                    <h5 className="section-title">
+                        <i className="fas fa-palette me-2"></i>
+                        Màu sản phẩm
+                    </h5>
+                    <p className="section-subtitle">Nhấp vào bảng màu để chọn màu sắc</p>
+                </div>
 
-                    <div className="selected-colors mt-2">
-                        {colors.map((colorObj) => (
-                            <div key={colorObj.colorHex} className="color-circle-container">
-                                <div
-                                    className="color-circle"
-                                    style={{ backgroundColor: colorObj.colorHex }}
-                                />
-
-                                {/* Fix in here */}
-                                {isColorInDatabase(colorObj) ? (
-                                    <button
-                                        className="remove-color-btn bg-danger"
-                                        onClick={() => handleRemoveColorInData(colorObj.productColorID, colorObj.colorHex)}
-                                    >
-                                        ×
-                                    </button>
-                                ) : (
-                                    <button
-                                        className="remove-color-btn"
-                                        onClick={() => handleRemoveColor(colorObj.colorHex)}
-                                    >
-                                        ×
-                                    </button>
-                                )}
-                            </div>
-                        ))}
+                <div className="color-input-group">
+                    <div className="color-picker-wrapper">
+                        <label className="color-picker-label">Chọn màu:</label>
+                        <input
+                            type="color"
+                            value={selectedColor}
+                            onChange={(e) => setSelectedColor(e.target.value)}
+                            className="color-picker-input"
+                            disabled={productID === null}
+                        />
+                        <div 
+                            className="color-preview" 
+                            style={{ backgroundColor: selectedColor }}
+                        ></div>
                     </div>
-                
-                    <div className={`btn btn-light border ${productID === null ? 'disabled-button' : ''}`} 
-                        onClick={() => productID !== null && handleAddColors(colors)}
-                    >
-                        Đồng ý thêm {countNewColors()} màu
+
+                    <div className="color-name-wrapper">
+                        <label className="color-name-label">Tên màu:</label>
+                        <input
+                            type="text"
+                            className="color-name-input"
+                            placeholder="Nhập tên màu (vd: Xanh dương, Đỏ cherry...)"
+                            value={colorName}
+                            onChange={(e) => setColorName(e.target.value)}
+                            disabled={productID === null}
+                        />
                     </div>
                 </div>
-             
+
+                <button 
+                    className={`add-color-btn ${productID === null ? 'disabled' : ''}`}
+                    onClick={handleAddColor}
+                    disabled={productID === null}
+                >
+                    <i className="fas fa-plus me-2"></i>
+                    Thêm màu
+                </button>
+
+                {colors.length > 0 && (
+                    <div className="selected-colors-section">
+                        <div className="colors-header">
+                            <h6 className="colors-title">Màu đã chọn ({colors.length})</h6>
+                        </div>
+                        
+                        <div className="colors-grid">
+                            {colors.map((colorObj) => (
+                                <div key={colorObj.colorHex} className="color-item">
+                                    <div className="color-circle-wrapper">
+                                        <div
+                                            className="color-circle"
+                                            style={{ backgroundColor: colorObj.colorHex }}
+                                            title={colorObj.colorName || colorObj.colorHex}
+                                        />
+                                        
+                                        {isColorInDatabase(colorObj) ? (
+                                            <button
+                                                className="remove-color-btn database-color"
+                                                onClick={() => handleRemoveColorInData(colorObj.productColorID, colorObj.colorHex)}
+                                                title="Xóa màu từ cơ sở dữ liệu"
+                                            >
+                                                <i className="fas fa-times"></i>
+                                            </button>
+                                        ) : (
+                                            <button
+                                                className="remove-color-btn new-color"
+                                                onClick={() => handleRemoveColor(colorObj.colorHex)}
+                                                title="Xóa màu mới"
+                                            >
+                                                <i className="fas fa-times"></i>
+                                            </button>
+                                        )}
+                                    </div>
+                                    
+                                    <div className="color-info">
+                                        <span className="color-name">{colorObj.colorName || 'Không tên'}</span>
+                                        <span className="color-hex">{colorObj.colorHex}</span>
+                                        {isColorInDatabase(colorObj) && (
+                                            <span className="color-status">Đã lưu</span>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {countNewColors() > 0 && (
+                    <div className="submit-section">
+                        <button 
+                            className={`submit-colors-btn ${productID === null ? 'disabled' : ''}`}
+                            onClick={() => productID !== null && handleAddColors(colors)}
+                            disabled={productID === null}
+                        >
+                            <i className="fas fa-check me-2"></i>
+                            Đồng ý thêm {countNewColors()} màu mới
+                        </button>
+                    </div>
+                )}
+
+                {productID === null && (
+                    <div className="warning-message">
+                        <i className="fas fa-exclamation-triangle me-2"></i>
+                        Vui lòng chọn sản phẩm trước khi thêm màu
+                    </div>
+                )}
+            </div>
         </div>
     )
 }
