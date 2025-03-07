@@ -1,77 +1,140 @@
 import React, { useEffect, useState } from 'react';
-import './DetailOrder.css'
+import './DetailOrder.css';
 import { useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { useAdmin } from '../../Context/AdminContext';
 import { useProduct } from '../../Context/ProductContext';
-import { apiRequest } from '../../utils/apiHelper';
+import OrderApproval from '../OrderApproval/OrderApproval';
+import { useShipping } from '../../Context/ShippingContext';
 
 const DetailOrder = () => {
-  const { orderId } = useParams();
-  const { getDetailOrder } = useAdmin();
-  const { formatCurrency, getInforCoupon } = useProduct();
-  const [dataOrder, setDataOrder] = useState({});
-  const [orderDetail, setOrderDetail] = useState([]);
-  const [dataCoupon, setDataCoupon] = useState({});
+const { orderId } = useParams();
+const { getDetailOrder } = useAdmin();
+const { formatCurrency, getInforCoupon } = useProduct();
+const { printBillOfLading } = useShipping();
 
-  const handleGetDataDetailOrder = async () => {
+const [showTab, setShowTab] = useState(false);
+const [dataOrder, setDataOrder] = useState({});
+const [orderDetail, setOrderDetail] = useState([]);
+const [dataCoupon, setDataCoupon] = useState({});
+const [showDropdown, setShowDropdown] = useState(false);
+const [isOrderProcessing, setIsOrderProcessing] = useState(false);
+
+const isApproved = dataOrder?.shippingDTO?.length > 0 && dataOrder.shippingDTO[0]?.shippingServicesID;
+
+const handleGetDataDetailOrder = async () => {
     const response = await getDetailOrder(orderId);
     if (response.status === 200) {
-      setDataOrder(response.data);
-      setOrderDetail(response.data.getOrderDetailDTO)
-      console.log(response.data);
+        setDataOrder(response.data);
+        setOrderDetail(response.data.getOrderDetailDTO);
+        console.log(response.data);
     }
-  };
+};
 
-  const handlegetDataCoupon = async () => {
+const handlegetDataCoupon = async () => {
     try {
-      if (!dataOrder.discountID) return null;
-      const response = await getInforCoupon(dataOrder.discountID);
-      return response;
+        if (!dataOrder.discountID) return null;
+        const response = await getInforCoupon(dataOrder.discountID);
+        return response;
     } catch (error) {
-      console.error("Lỗi khi lấy thông tin mã giảm giá:", error);
-      return null;
+        console.error("Lỗi khi lấy thông tin mã giảm giá:", error);
+        return null;
     }
-  };  
+};
 
-  const subtotal = () => {
-    let total = 0
+const handlePrintBill = async (paperSize) => {
+    const url = await printBillOfLading(dataOrder.shippingDTO[0].shippingServicesID, paperSize);
+    if (url) {
+        window.open(url, '_blank');
+    }
+};
+
+const handleToggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+};
+
+const subtotal = () => {
+    let total = 0;
     orderDetail.forEach(element => {
-      total += (element.unitPrice * element.quantity)
+        total += (element.unitPrice * element.quantity);
     });
     return total;
-  }
+};
 
-  const methodPayment = {
+const methodPayment = {
     '1': 'Chuyển khoản ngân hàng',
     '2': 'COD'
-  };
+};
 
-  useEffect(() => {
+const handleToggleTab = () => {
+    setShowTab(!showTab);
+};
+
+const handleOrderApproved = async () => {
+    setIsOrderProcessing(true);
+    setShowTab(false);
+    toast.success("Đơn hàng đã được duyệt thành công!");
+    await handleGetDataDetailOrder(); // Cập nhật dữ liệu ngay lập tức
+    setIsOrderProcessing(false);
+};
+
+useEffect(() => {
     handleGetDataDetailOrder();
-  }, [orderId]);
+}, [orderId]);
 
-  useEffect(() => {
+useEffect(() => {
     const fetchCoupon = async () => {
-      if (dataOrder.discountID) {
-        const response = await handlegetDataCoupon();
-        if (response.status === 200) {
-          setDataCoupon(response.data);
-          console.log("Coupon data loaded:", response.data);
-        } else {
-          console.error("Không thể lấy thông tin mã giảm giá");
+        if (dataOrder.discountID) {
+            const response = await handlegetDataCoupon();
+            if (response.status === 200) {
+                setDataCoupon(response.data);
+                console.log("Coupon data loaded:", response.data);
+            } else {
+                console.error("Không thể lấy thông tin mã giảm giá");
+            }
         }
-      }
     };
-  
     fetchCoupon();
-  }, [dataOrder.discountID]);
-  
+}, [dataOrder.discountID]);
 
-  return (
-    <div className='detail-order container'>
+return (
+  <div className='detail-order container mb-3'>
       <ToastContainer />
-      <h4 className='mt-4 mb-3 fw-bold'>Đơn hàng: {orderId}</h4>
+      <div className='d-flex justify-content-between w-100'>
+        <h4 className='mt-4 mb-3 fw-bold'>Đơn hàng: {orderId}</h4>
+        <div className='d-flex'>
+          <button
+              className={isApproved || isOrderProcessing ? 'btn btn-secondary m-3' : 'btn btn-outline-primary m-3'}
+              onClick={handleToggleTab}
+              disabled={isApproved || isOrderProcessing}
+          >
+              {showTab ? "Đóng" : "Duyệt đơn"}
+          </button>
+          {isApproved && (
+              <div className='dropdown-container'>
+                  <button className='btn btn-success m-3' onClick={handleToggleDropdown}>
+                      In vận đơn <i className="bi bi-chevron-down" style={{ fontSize: '10px' }}></i>
+                  </button>
+                  {showDropdown && (
+                      <div className='print-order'>
+                          <button className='dropdown-item' onClick={() => handlePrintBill('A5')}>A5</button>
+                          <button className='dropdown-item' onClick={() => handlePrintBill('80x80')}>80x80</button>
+                          <button className='dropdown-item' onClick={() => handlePrintBill('52x70')}>52x70</button>
+                      </div>
+                  )}
+              </div>
+          )}
+        </div>
+      </div>
+
+      {showTab && !isOrderProcessing && (
+          <div className="order-approval-overlay" onClick={handleToggleTab}>
+              <div className="order-approval-tab" onClick={(e) => e.stopPropagation()}>
+                  <OrderApproval dataOrder={dataOrder} orderDetail={orderDetail} onOrderApproved={handleOrderApproved} />
+              </div>
+          </div>
+      )}
+
       <div className="row">
         <div className="col">
           {/* Chi tiết sản phẩm */}
@@ -85,7 +148,7 @@ const DetailOrder = () => {
                 <div key={index} className={`d-flex align-items-center p-3 mb-2 rounded ${index % 2 === 0 ? "bg-light" :""}`}>
                   {/* Hình ảnh sản phẩm */}
                   <img
-                    src={`https://localhost:7295/Resources/${item.productDTO.image}` || "https://via.placeholder.com/60"}
+                    src={`https://localhost:7295/Resources/${item.productDTO.images[0].imageURL}` || "https://via.placeholder.com/60"}
                     alt={item.productDTO.productName}
                     className="rounded me-3"
                     width="60"
@@ -116,8 +179,7 @@ const DetailOrder = () => {
             ) : (
               <p className="text-center text-muted">Không có sản phẩm nào</p>
             )}
-
-            </div>
+          </div>
 
             {/* Thông tin giỏ hàng */}
             <div className='mt-3 border shadow-sm border-0 d-flex flex-column p-3 bg-white'>
@@ -155,8 +217,6 @@ const DetailOrder = () => {
                 )
               }
 
-
-
               <div className='p-3 d-flex'>
                 <span className='w-75 fw-bold'>Tổng cộng</span>
                 <span className='fw-bold' style={{color:'red'}}>{formatCurrency(dataOrder.totalAmount)}</span>
@@ -179,8 +239,19 @@ const DetailOrder = () => {
 
           {/* Đ/C vận chuyển */}
           <div className='border bg-white p-3 mt-3'>
-            <p className='fw-bold'>Địa chỉ vận chuyển:</p>
-            <p>Chưa làm tới cái này dfhdjkf fdsljkfdsf fdsfds dskld</p>
+          <span className='fw-bold'>Thông tin vận chuyển</span>
+            <div className="row mt-2">
+              <p className='col-5'>Địa chỉ vận chuyển:</p>
+              {dataOrder.shippingDTO && dataOrder.shippingDTO.length > 0 && (
+                <p className='col'>{dataOrder.shippingDTO[0].shippingAddress}</p>
+              )}
+            </div>
+            <div className="row">
+              <p className='col-5'>SĐT: </p>
+              {dataOrder.shippingDTO && dataOrder.shippingDTO.length > 0 && (
+                <p className='col'>{dataOrder.shippingDTO[0].trackingNumber}</p>
+              )}
+            </div>
           </div>
 
           {/* PP thanh toán */}
@@ -191,8 +262,15 @@ const DetailOrder = () => {
 
           {/* Shipping */}
           <div className='border bg-white p-3 mt-3'>
-            <p className='fw-bold'>Ngày giao hàng dự kiến</p>
-            <p className='fw-bold tx-succ'>7/4/2025 (chưa làm)</p>
+            <p className='fw-bold'>Ngày vận chuyển dự kiến</p>
+            {dataOrder.shippingDTO && dataOrder.shippingDTO.length > 0 && (
+                <p className='fw-bold tx-succ'>
+                    {(dataOrder.shippingDTO[0].actualDeliveryDate && dataOrder.shippingDTO[0].actualDeliveryDate !== "0001-01-01T00:00:00") 
+                        ? dataOrder.shippingDTO[0].actualDeliveryDate 
+                        : dataOrder.shippingDTO[0].estimatedDeliveryDate}
+                </p>
+            )}
+            
             <p className='btn btn-outline-primary fw-bolder'><i className="bi bi-truck me-2 fw-bolder"></i>Theo dõi đơn</p>
           </div>
         </div>

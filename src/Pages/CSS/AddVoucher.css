@@ -1,0 +1,96 @@
+.add-voucher {
+    position: relative;
+    font-family: 'Roboto', 'Segoe UI', sans-serif;
+}
+
+.add-voucher .card {
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.add-voucher .card-header {
+    border-bottom: none;
+    background: linear-gradient(135deg, #4a6bff, #2541b2);
+}
+
+.add-voucher .form-label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 0.3rem;
+}
+
+.add-voucher .form-control,
+.add-voucher .form-select,
+.add-voucher .input-group-text {
+    font-size: 14px;
+    border-radius: 6px;
+    padding: 10px 15px;
+    border-color: #e0e0e0;
+    transition: all 0.2s;
+}
+
+.add-voucher .input-group-text {
+    color: #666;
+}
+
+.add-voucher .form-control:focus,
+.add-voucher .form-select:focus {
+    box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+    border-color: #4a6bff;
+}
+
+.add-voucher .form-check-input:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.add-voucher .card .form-switch .form-check-input {
+    height: 20px;
+    width: 40px;
+}
+
+.add-voucher small.text-muted {
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
+
+.add-voucher .btn {
+    padding: 10px 20px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.add-voucher .btn-primary {
+    background: linear-gradient(135deg, #4a6bff, #2541b2);
+    border: none;
+}
+
+.add-voucher .btn-primary:hover {
+    background: linear-gradient(135deg, #3a5bef, #1531a2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-voucher .btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Hover states */
+.add-voucher .input-group:hover .input-group-text {
+    background-color: #f0f4ff;
+}
+
+/* Animation for switch */
+.add-voucher .form-switch .form-check-input {
+    transition: background-position 0.15s ease-in-out, background-color 0.2s ease;
+}
+
+@media (max-width: 768px) {
+    .add-voucher .card-body {
+        padding: 20px 15px;
+    }
+}

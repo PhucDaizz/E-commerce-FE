@@ -57,6 +57,16 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
     return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ';
   }
 
+  const handleAddToCart = (product, quantity, selectedSize) => {
+    if( quantity <= selectedSize.stock) {
+      addToCart(product.productID, quantity, selectedSize.productSizeID);
+    }
+    else{
+      toast.error("Xin lỗi bạn số lượng trong kho không đủ 😓")
+    }
+  }
+
+
   return (
     <div className="productDisplay">
       <div className="container">
@@ -161,7 +171,7 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
               <button onClick={() => handleQuantityChange(1)}>+</button> 
             </div>
 
-            <button className='add-to-cart' onClick={() => addToCart(product.productID, quantity, selectedSize.productSizeID)}><span>THÊM VÀO GIỎ</span></button>
+            <button className='add-to-cart' onClick={() => handleAddToCart(product, quantity, selectedSize)}><span>THÊM VÀO GIỎ</span></button>
             <ToastContainer/>
             <p>{product?.description || 'No description available'}</p>
           </div>

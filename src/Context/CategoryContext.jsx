@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from '../api/axios';
 import { apiRequest } from '../utils/apiHelper';
 import { toast } from 'react-toastify';
@@ -23,6 +23,10 @@ export const CategoryProvider = ({ children }) => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    getCategory();
+  }, [])
 
 
   const addCategory = async (categoryName, description) => {

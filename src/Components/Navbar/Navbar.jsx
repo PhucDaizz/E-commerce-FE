@@ -8,19 +8,12 @@ import './Navbar.css';
 import Login from '../../Pages/Login'
 
 const Navbar = () => {
-  const [data, setData] = useState([]);
   const [menu, setMenu] = useState("");
   const [isLoginHovered, setIsLoginHovered] = useState(false);
-  const { loggedIn, logout, itemInCart } = useAuth();
-  const { handleCategoryChange } = useCategory();
+  const { loggedIn, logout, itemInCart, inforUser } = useAuth();
+  const { handleCategoryChange, categories } = useCategory();
   const { searchQuery, setSearchQuery } = useSearch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    axios.get('/api/Category')
-      .then(res => setData(res.data))
-      .catch(err => console.log(err));
-  }, []);
 
   const handleSearch = () => {
     navigate('/shop');
@@ -31,6 +24,10 @@ const Navbar = () => {
       handleSearch();
     }
   };
+
+  useEffect(() => {
+    console.log(inforUser);
+  }, [inforUser])
 
   return (
     <nav className='navbar'>
@@ -52,7 +49,7 @@ const Navbar = () => {
               <strong>Shop</strong> {menu === "shop" && <hr/>}
             </Link>
           </p>
-          {data.map((d) => (
+          {categories.map((d) => (
             <p 
               onClick={() => {
                 setMenu(d.categoryName); 
@@ -103,7 +100,7 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="user-info ms-3">
-              <span><Link to='/account' className=' text-black' style={{textDecoration: 'none'}}>Xin chào, User!</Link></span>
+              <span><Link to='/account' className=' text-black' style={{textDecoration: 'none', fontSize: '14px'}}>Xin chào, {inforUser.userName}!</Link></span>
               <Link to={'/cart'}>
                 <i className="bi bi-bag ms-2"></i>
                 <div className='cart-container'>

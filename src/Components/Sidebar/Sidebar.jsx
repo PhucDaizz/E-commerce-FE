@@ -30,18 +30,17 @@ const Sidebar = () => {
       <div className="menu">
         {/* Dashboard */}
         <div className="menu-item" onClick={() => toggleMenu('dashboard')}>
-          <span>📊 Dashboard</span>
+          <Link to="/admin">Dashboard</Link>
         </div>
 
         {/* Ecommerce */}
         <div className="menu-item" onClick={() => toggleMenu('ecommerce')}>
-        <i className="bi bi-cart me-1"></i> <span>Sản phẩm</span>
+        <i className="bi bi-cart"></i><span> Sản phẩm</span>
         </div>
         {openMenus.ecommerce && (
           <div className="submenu">
             <Link to="/admin/products/add">Thêm sản phẩm</Link>
             <Link to="/admin/products/list">DS sản phẩm</Link>
-            <Link to="/sales">💰 Sales</Link>
           </div>
         )}
 
@@ -52,7 +51,6 @@ const Sidebar = () => {
         {openMenus.category && (
           <div className="submenu">
             <Link to="/admin/categories/list">Danh sách</Link>
-            <Link to="/fashion">👗 Fashion</Link>
           </div>
         )}
 
@@ -63,18 +61,28 @@ const Sidebar = () => {
         {openMenus.order && (
           <div className="submenu">
             <Link to="/admin/orders/list">Danh sách</Link>
-            <Link to="/completed-orders">✅ Completed Orders</Link>
           </div>
         )}
 
         {/* User */}
         <div className="menu-item" onClick={() => toggleMenu('user')}>
-          <span>👤 User</span>
+          <span><i className="bi bi-person"></i> Người dùng</span>
         </div>
         {openMenus.user && (
           <div className="submenu">
-            <Link to="/user-list">📋 User List</Link>
-            <Link to="/roles">🔑 Roles</Link>
+            <Link to="/admin/user/list">DS người dùng</Link>
+            <Link to="/admin/user/add-admin">Thêm Admin</Link>
+          </div>
+        )}
+
+        {/* Voucher */}
+        <div className="menu-item" onClick={() => toggleMenu('voucher')}>
+          <span><i className="bi bi-ticket-perforated"></i> Mã giảm</span>
+        </div>
+        {openMenus.voucher && (
+          <div className="submenu">
+            <Link to="/admin/voucher/list">DS mã giảm</Link>
+            <Link to="/admin/voucher/add">Thêm mã giảm</Link>
           </div>
         )}
 

@@ -40,6 +40,7 @@
 .navbar-actions {
   display: flex;
   align-items: center;
+  gap: 15px;
 }
 
 .search-container {
@@ -50,6 +51,7 @@
   border-radius: 12px;
   overflow: hidden;
   font-size: smaller;
+  margin-right: 0;
 }
 
 .search-input {
@@ -133,8 +135,12 @@
 
 .cart-container {
   position: relative;
-  display: flex;
+  display: inline-flex; 
   align-items: center;
+}
+
+.cart-container i {
+  font-size: 20px; 
 }
 
 .cart-count {
@@ -149,6 +155,54 @@
   border: 1px #000 solid;
 }
 
+.user-info {
+  display: flex;
+  align-items: center; /* Căn giữa dọc */
+  gap: 5px; /* Khoảng cách giữa các phần tử */
+}
+
 .logout {
-  font-size: 10px;
+  font-size: 14px; /* Tăng kích thước để đồng nhất với "Xin chào..." */
+  padding: 5px 10px; /* Giữ kích thước nút hợp lý */
+}
+
+
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column; /* Xếp dọc trên màn hình nhỏ */
+    align-items: flex-start;
+  }
+
+  .navbar-categories {
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0;
+  }
+
+  .category-item {
+    margin: 5px 0;
+    font-size: 16px; /* Giảm kích thước chữ */
+  }
+
+  .navbar-actions {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .auth-buttons, .user-info {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .login-form-popup {
+    width: 100%; /* Chiếm toàn bộ chiều rộng trên mobile */
+    top: 40px; /* Giảm khoảng cách từ nút Đăng nhập */
+  }
+
+  .cart-count {
+    top: -20px; /* Điều chỉnh vị trí số lượng giỏ hàng */
+  }
 }

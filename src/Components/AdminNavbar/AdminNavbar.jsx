@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './AdminNavbar.css'
 import { useAdmin } from '../../Context/AdminContext';
 import { useAuth } from '../../Context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const AdminNavbar = () => {
     const navigate = useNavigate();
@@ -63,7 +63,7 @@ const AdminNavbar = () => {
 
             </div>
             <div className="profile">
-                <span>Phucs Dai</span>
+                <span onClick={() => navigate('/admin/account')} style={{cursor: 'pointer'}}>Phucs Dai</span>
                 <button className="auth-button logout" onClick={() => handleLogout()}>
                     Đăng xuất
                 </button>

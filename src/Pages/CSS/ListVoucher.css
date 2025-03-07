@@ -1,0 +1,20 @@
+.list-voucher .voucher-header {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.list-voucher .row.text-center {
+    align-items: center;
+}
+
+.list-voucher .row.text-center > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 40px; /* Đảm bảo chiều cao đồng đều */
+}
+
+/* Điều chỉnh khi không có voucher */
+.list-voucher .container.d-flex {
+    text-align: center;
+}
+

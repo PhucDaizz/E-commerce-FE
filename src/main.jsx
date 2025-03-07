@@ -10,6 +10,7 @@ import { SearchProvider } from './Context/SearchContext.jsx';
 import { AdminProvider } from './Context/AdminContext.jsx';
 import { ProductProvider } from './Context/ProductContext.jsx';
 import { ShippingProvider } from './Context/ShippingContext.jsx';
+import { DashboardProvider } from './Context/DashboardContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -19,7 +20,9 @@ createRoot(document.getElementById('root')).render(
               <AdminProvider>
                 <ProductProvider>
                   <ShippingProvider>
-                    <App />
+                    <DashboardProvider>
+                      <App />
+                    </DashboardProvider>
                   </ShippingProvider>
                 </ProductProvider>
               </AdminProvider>

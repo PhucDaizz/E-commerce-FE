@@ -1,0 +1,35 @@
+.cancel {
+    cursor: pointer;
+    color: rgba(128, 128, 128, 0.495);
+}
+
+.cancel:hover {
+    color: rgb(128, 128, 128);
+}
+
+/* Lớp phủ mờ để ngăn thao tác bên ngoài */
+.cart-item-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Màu nền tối mờ */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Hiển thị trên tất cả */
+}
+
+/* Modal hiển thị ở giữa màn hình */
+.cart-item-modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 600px; /* Điều chỉnh kích thước modal */
+    max-height: 80vh; /* Tránh tràn màn hình */
+    overflow-y: auto; /* Cuộn nếu nội dung quá dài */
+    z-index: 1001; /* Cao hơn overlay */
+}
+

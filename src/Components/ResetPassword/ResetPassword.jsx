@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
+import './ResetPassword.css'; // Import CSS nếu dùng
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
@@ -38,10 +39,10 @@ const ResetPassword = () => {
       <ToastContainer />
       <div className='container w-100'>
         <div className='row justify-content-center'>
-          <div className='col-md-6 col-lg-4'>
+          <div className='col-md-8 col-lg-6'> {/* Kích thước lớn hơn */}
             <form className='border p-4 rounded shadow bg-white' onSubmit={handleResetPassword}>
               <h4 className='text-center mb-3'>Đặt lại mật khẩu</h4>
-              <p className=''>Mật khẩu mới</p>
+              <p className='mb-1'>Mật khẩu mới</p>
               <input 
                 type="password" 
                 className='form-control mb-3'
@@ -51,7 +52,7 @@ const ResetPassword = () => {
                 required 
               />
 
-              <p className=''>Xác nhận lại mật khẩu</p>
+              <p className='mb-1'>Xác nhận lại mật khẩu</p>
               <input 
                 type="password" 
                 className='form-control mb-3'
@@ -61,7 +62,7 @@ const ResetPassword = () => {
                 required 
               />
 
-              <button className='btn btn-outline-dark w-100 mt-3'>Đặt lại mật khẩu</button>
+              <button className='btn btn-outline-dark w-100 mt-3 btn-lg'>Đặt lại mật khẩu</button>
             </form>
           </div>
         </div>

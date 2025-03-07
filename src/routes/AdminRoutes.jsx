@@ -10,6 +10,12 @@ import AddCategory from '../Pages/AdminPages/AddCategory'
 import EditCategory from '../Pages/AdminPages/EditCategory'
 import ListOrder from '../Pages/AdminPages/ListOrder'
 import DetailOrder from '../Components/DetailOrder/DetailOrder'
+import Profile from '../Pages/AdminPages/Profile'
+import ListUser from '../Pages/AdminPages/ListUser'
+import RegisterAdmin from '../Components/RegisterAdmin/RegisterAdmin'
+import ListVoucher from '../Pages/AdminPages/ListVoucher'
+import AddVoucher from '../Pages/AdminPages/AddVoucher'
+import EditVoucher from '../Pages/AdminPages/EditVoucher'
 
 const AdminRoutes = () => {
   return (
@@ -33,6 +39,20 @@ const AdminRoutes = () => {
             <Route path='/orders'>
               <Route path='list' element={<ListOrder/>}></Route>
               <Route path=':orderId' element={<DetailOrder/>}></Route>
+            </Route>
+            <Route>
+              <Route path='/account' element={<Profile/>}></Route>
+            </Route>
+            <Route path='/user'>
+              <Route path='list' element={<ListUser/>}></Route>
+              <Route path='add-admin' element={<RegisterAdmin/>}></Route>
+            </Route>
+            <Route path='/voucher'>
+              <Route path='list' element={<ListVoucher/>}></Route>
+              <Route path='add' element={<AddVoucher/>}></Route>
+              <Route path='edit'>
+                <Route path=':voucherId' element={<EditVoucher/>}></Route>
+              </Route>
             </Route>
         </Routes>
     </AdminLayout>

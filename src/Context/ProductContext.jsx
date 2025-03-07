@@ -321,8 +321,42 @@ export const ProductProvider  = ({children}) => {
         }
     };
     
+    const processPaymentCOD = async(discountId) => {
+        try {
+            const response = await apiRequest({
+                method: 'post',
+                url: '/api/Payment/PaymentCOD',
+                data: discountId
+            })
+            return response;
+        } catch (error) {
+            console.error('Lỗi khi xử lý thanh toán COD: ',error);
+        }
+    } 
+
+    const getAllVoucher = async(page, itemsPerPage, sortBy, desc) => {
+        try {
+            const response = apiRequest({
+                method: 'get',
+                url: `/api/Discount/GetAll?page=${page}&itemsInPage=${itemsPerPage}&sortBy=${sortBy}&isDESC=${desc}`
+            })
+            return response;
+        } catch (error) {
+            console.error('Lỗi khi lấy danh sách voucher:', error);
+        }
+    }
     
+    const formatDateTime = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 vì tháng bắt đầu từ 0
+        const year = date.getFullYear();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
     
+        return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+    };    
     
     return (
         <ProductContext.Provider value={{
@@ -347,7 +381,10 @@ export const ProductProvider  = ({children}) => {
             applyCoupon,
             processBankingPay,
             createURLPayment,
-            getInforCoupon
+            getInforCoupon,
+            processPaymentCOD,
+            getAllVoucher,
+            formatDateTime
         }}>
             {children}
         </ProductContext.Provider>

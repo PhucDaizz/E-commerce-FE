@@ -1,0 +1,100 @@
+.admin-dashboard {
+    background-color: #f5f7fa;
+    min-height: 100vh;
+}
+
+.admin-dashboard h2 {
+    color: #2c3e50;
+    font-size: 2rem;
+}
+
+.admin-dashboard .card {
+    border-radius: 12px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.admin-dashboard .card:hover {
+    transform: translateY(-5px);
+}
+
+.admin-dashboard .revenue-card {
+    background: linear-gradient(135deg, #007bff, #00c4ff);
+    color: white;
+}
+
+.admin-dashboard .orders-card {
+    background: linear-gradient(135deg, #28a745, #7ed957);
+}
+
+.admin-dashboard .inventory-card {
+    background: linear-gradient(135deg, #ffc107, #ffda6a);
+}
+
+.admin-dashboard .customers-card {
+    background: linear-gradient(135deg, #17a2b8, #5bcce4);
+}
+
+.admin-dashboard .revenue-card .card-title,
+.admin-dashboard .revenue-card .display-6,
+.admin-dashboard .revenue-card .text-success,
+.admin-dashboard .revenue-card .text-danger,
+.admin-dashboard .revenue-card small {
+    color: white !important;
+}
+
+.admin-dashboard .orders-card .card-title,
+.admin-dashboard .orders-card .display-6,
+.admin-dashboard .orders-card .text-success,
+.admin-dashboard .orders-card .text-danger,
+.admin-dashboard .orders-card small {
+    color: white !important;
+}
+.admin-dashboard .inventory-card .card-title,
+.admin-dashboard .inventory-card .display-6,
+.admin-dashboard .inventory-card .text-success,
+.admin-dashboard .inventory-card .text-danger,
+.admin-dashboard .inventory-card small {
+    color: white !important;
+}
+.admin-dashboard .customers-card .card-title,
+.admin-dashboard .customers-card .display-6,
+.admin-dashboard .customers-card .text-success,
+.admin-dashboard .customers-card .text-danger,
+.admin-dashboard .customers-card small {
+    color: white !important;
+}
+
+.admin-dashboard .card-title {
+    font-size: 1.1rem;
+    color: #34495e;
+}
+
+.admin-dashboard .display-6 {
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.admin-dashboard .text-success,
+.admin-dashboard .text-danger {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.admin-dashboard .chart-placeholder {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e9ecef;
+    border-radius: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-dashboard .display-6 {
+        font-size: 1.5rem;
+    }
+    .admin-dashboard .card-title {
+        font-size: 1rem;
+    }
+}

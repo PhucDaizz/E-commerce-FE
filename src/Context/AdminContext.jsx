@@ -48,6 +48,60 @@ export const AdminProvider = ({ children }) => {
         }
     }
 
+    const changeStatusDiscount = async(discountId) => {
+        try {
+            const response = await apiRequest({
+                method: 'put',
+                url : `/api/Discount/ChangeStatus/${discountId}`
+            })
+            return response;
+        } catch (error) {
+            console.error("Lỗi khi thay đổi trạng thái discount:", error)
+        }
+    }
+
+    const addVoucher = async(data) => {
+        try {
+            const response = apiRequest({
+                method: 'post',
+                url: '/api/Discount',
+                data: data
+            })
+            return response;
+        } catch (error) {
+            console.error("Lỗi khi thêm discount:", error);
+            return error.response;
+        }
+    }
+
+    const deleteVoucher = async(voucherId) => {
+        try {
+            const response = await apiRequest({
+                method: 'delete',
+                url: `/api/Discount/${voucherId}`
+            })
+            return response;
+        } catch (error) {
+            console.error('Lỗi khi xoá voucher:', error);
+            return error.response;
+        }
+    }
+ 
+    const editVoucher = async(discountId,data) => {
+        try {
+            const response = apiRequest({
+                method: 'put',
+                url: `api/Discount/Update/${discountId}`,
+                data: data
+            })
+            return response;
+        } catch (error) {
+            console.error('Lỗi khi sửa voucher:', error)
+            return error.response;
+        }
+    }
+
+    
 
 
     return (
@@ -56,7 +110,11 @@ export const AdminProvider = ({ children }) => {
                 hideSideBar,
                 handleHideSideBar,
                 getListOrder,
-                getDetailOrder
+                getDetailOrder,
+                changeStatusDiscount,
+                addVoucher,
+                deleteVoucher,
+                editVoucher
             }}
         >
             {children}

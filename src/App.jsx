@@ -42,6 +42,7 @@ function AppContent() { // Tạo một component mới để sử dụng useLoca
           <Route path='reset' element={<ResetPassword/>}></Route>
           <Route path='update' element={<UpdateInfor/>}></Route>
         </Route>
+        <Route path='/resetpassword' element={<ResetPassword/>}/>
         <Route path='/admin/*' element={<AdminRoutes />} />
       </Routes>
       <Footer />

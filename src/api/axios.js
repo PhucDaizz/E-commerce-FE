@@ -14,17 +14,17 @@ export const axiosPrivate = axios.create({
 
 
 export const ghnApi = axios.create({
-    baseURL: 'https://online-gateway.ghn.vn/shiip/public-api',
+    baseURL: 'https://dev-online-gateway.ghn.vn',
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json'
     }
 });
 
-export const ghnApiDev = axios.create({
-    baseURL: 'https://dev-online-gateway.ghn.vn/shiip/public-api',
-    timeout: 10000,
-    headers: {
-        'Content-Type': 'application/json'
-    }
-});
+// export const ghnApiDev = axios.create({
+//     baseURL: 'https://dev-online-gateway.ghn.vn/shiip/public-api',
+//     timeout: 10000,
+//     headers: {
+//         'Content-Type': 'application/json'
+//     }
+// });

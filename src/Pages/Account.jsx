@@ -16,7 +16,6 @@ const Account = () => {
   const navigate = useNavigate();
 
   const hiddenRoutes = [
-    '/account/reset',
     '/account/update'
   ];
   const isHidden = hiddenRoutes.includes(location.pathname);
@@ -57,7 +56,7 @@ const Account = () => {
 
   const paymentMethod = {
     1: 'VnPay', 
-    2: 'VnPay',
+    2: 'COD',
     3: 'PayPal',
   }
 

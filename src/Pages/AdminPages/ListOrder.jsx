@@ -44,10 +44,11 @@ const ListOrder = () => {
     };
 
     const statusOrder = {
-        '0': { label: 'Lỗi', className: 'text-danger fw-bold status-container border border-0 bg-error' },
-        '1': { label: 'Chưa giải quyết', className: 'text-warning fw-bold status-container border border-0 bg-pending' },
+        '0': { label: 'Chờ duyệt', className: 'text-warning fw-bold status-container border border-0 bg-pending' },
+        '1': { label: 'Lỗi', className: 'text-danger fw-bold status-container border border-0 bg-error' },
         '2': { label: 'Hoàn tất', className: 'text-success fw-bold status-container border border-0 bg-succ' },
-        '3': { label: 'Huỷ', className: 'text-secondary fw-bold status-container border border-0 bg-cancel' }
+        '3': { label: 'Huỷ', className: 'text-secondary fw-bold status-container border border-0 bg-cancel' },
+        '4': { label: 'Đã duyệt', className: ' text-white fw-bold status-container border border-0 bg-confirmed'}
     };
 
     const handleItemsPerPageChange = (event) => {
@@ -105,7 +106,8 @@ const ListOrder = () => {
                         >
                             <option value="orderdate">Ngày đặt</option>
                             <option value="error">TT Đơn: Lỗi</option>
-                            <option value="pending">TT Đơn: Chưa giải quyết</option>
+                            <option value="pending">TT Đơn: Chờ duyệt</option>
+                            <option value="confirmed">TT Đơn: Đã duyệt</option>
                             <option value="completed">TT Đơn: Hoàn tất</option>
                             <option value="cancel">TT Đơn: Huỷ</option>
                         </select>
@@ -130,8 +132,8 @@ const ListOrder = () => {
                     <p className="text-danger">{error}</p>
                 ) : (
                     <>
-                        <div style={{ overflowX: 'auto' }}>
-                            <div className='row title mt-3 p-2 bg-light border border-0 fw-bold'>
+                        <div style={{ overflowX: 'auto', fontSize: '14px' }}>
+                            <div className='row title mt-3 p-3 bg-light border border-0 fw-bold mb-3'>
                                 <div className="col-2 text-center">Mã đơn hàng</div>
                                 <div className="col-1 text-center">Giá</div>
                                 <div className="col-1 text-center">Ngày đặt</div>
@@ -143,8 +145,8 @@ const ListOrder = () => {
                             {listOrder.length > 0 ? 
                                 (
 
-                                    listOrder.map((order) => (
-                                        <div key={order.orderID} className='row mt-3 p-2 border border-0'>
+                                    listOrder.map((order, index) => (
+                                        <div key={order.orderID} className={`row  p-2 pt-3 pb-3 border border-0 rounded-4 ${index % 2 === 0 ? 'bg-light' : ''}`}>
                                             <div className="col-2 text-center" style={{ whiteSpace: 'normal' }}>{order.orderID}</div>
                                             <div className="col-1 text-center">{order.totalAmount.toLocaleString()} đ</div>
                                             <div className="col-1 text-center">{new Date(order.orderDate).toLocaleDateString()}</div>
@@ -155,7 +157,7 @@ const ListOrder = () => {
                                                 </span>
                                             </div>
                                             <div className="col-2 text-center">{order.userID}</div>
-                                            <div className="col d-flex align-items-center"> 
+                                            <div className="col d-flex align-items-center justify-content-center"> 
                                                 <i className="bi bi-eye link-primary link-opacity-75-hover fw-bold" 
                                                     style={{fontSize:'20px', cursor: 'pointer'}}
                                                     onClick={() => navigate(`/admin/orders/${order.orderID}`)}

@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('token'));
     const [cart, setCart] = useState([]);
     const [itemInCart, setItemInCart] = useState(0);
+    const [inforUser, setInforUser] = useState({});
 
     useEffect(() => {
         if (loggedIn) {
@@ -114,8 +115,7 @@ export const AuthProvider = ({ children }) => {
                 theme: "light" 
             });
 
-            await getCart();
-
+            await getCart();            
             // Cập nhật giỏ hàng ngay lập tức trong state
             setCart(prevCart => {
                 const existingItem = prevCart.find(item => item.productID === productID && item.productSizeID === productSizeID);
@@ -129,7 +129,7 @@ export const AuthProvider = ({ children }) => {
                     return [...prevCart, { productID, productSizeID, quantity, cartItemID: response.data.cartItemID }];
                 }
             });
-
+            setItemInCart(prev => prev + quantity);
         } catch(error) {
             console.error('Lỗi khi thêm vào giỏ: ', error)
         }
@@ -257,10 +257,27 @@ export const AuthProvider = ({ children }) => {
                 url: '/api/Auth/GetnInfo'
             });
             if(response.status === 200){
+                setInforUser(response.data);
                 return response.data;
             }
         } catch(error) {
             console.error("Lỗi khi lấy thông tin người dùng:", error);
+        }
+    }
+
+    useEffect(() => {
+        getInforUser();
+    }, [])
+
+    const getInforById = async(userId) => {
+        try {
+            const response = await apiRequest({
+                method: 'get',
+                url: `/api/Auth/GetInforById?id=${userId}`
+            })
+            return response;
+        } catch (error) {
+            console.log("Lỗi khi lấy thông tin khách hàng: ",error)
         }
     }
 
@@ -273,6 +290,18 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.error("Lỗi khi đăng ký: ", error);
+        }
+    }
+
+    const registerAmin = async(data) => {
+        try {
+            const response = await axios.post('/api/Auth/RegisterAdmin', data);
+            if (response.status === 200) {
+                toast.success('Đăng ký thành công');
+                return response;
+            }
+        } catch (error) {
+            console.error("Lỗi khi đăng ký admin: ", error);
         }
     }
 
@@ -293,7 +322,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const data = {
                 email: email,
-                clientUrl: 'http://localhost:5173/account/reset'
+                clientUrl: 'http://localhost:5173/resetpassword'
             }
             const response = axios.post('/api/Auth/forgotpassword', data)
             if(response.status === 200) {
@@ -347,6 +376,28 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const getAllUser = async(querySearch, searchField, page, itemInPage) => {
+        try {
+            let url;
+            if(querySearch == null) { // Kiểm tra cả null và undefined
+                url = `/api/Auth/GetAllUser?searchField=${searchField}&page=${page}&itemInPage=${itemInPage}`;
+            } else {
+                url = `/api/Auth/GetAllUser?querySearch=${querySearch}&searchField=${searchField}&page=${page}&itemInPage=${itemInPage}`;
+            }
+    
+            const response = await apiRequest({
+                method: 'get',
+                url: url
+            });
+            
+            return response;
+        } catch (error) {
+            console.error("Lỗi khi lấy danh sách người dùng: ", error);
+        }
+    };
+    
+    
+
     return (
         <AuthContext.Provider value={{
             loggedIn, 
@@ -362,12 +413,16 @@ export const AuthProvider = ({ children }) => {
             isAdminLogin,
             getInforUser,
             register,
+            registerAmin,
             handleLogin,
             verifyEmail,
             forgotPassword,
             resetPassword,
             confirmEmail,
-            updateUserInfor
+            updateUserInfor,
+            getInforById,
+            getAllUser,
+            inforUser
         }}>
             {children}
         </AuthContext.Provider>
