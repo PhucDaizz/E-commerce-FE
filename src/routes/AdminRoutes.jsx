@@ -16,6 +16,7 @@ import RegisterAdmin from '../Components/RegisterAdmin/RegisterAdmin'
 import ListVoucher from '../Pages/AdminPages/ListVoucher'
 import AddVoucher from '../Pages/AdminPages/AddVoucher'
 import EditVoucher from '../Pages/AdminPages/EditVoucher'
+import Chat from '../Pages/Chat'
 
 const AdminRoutes = () => {
   return (
@@ -54,6 +55,7 @@ const AdminRoutes = () => {
                 <Route path=':voucherId' element={<EditVoucher/>}></Route>
               </Route>
             </Route>
+            <Route path='/chat' element={<Chat/>}   ></Route>
         </Routes>
     </AdminLayout>
   )

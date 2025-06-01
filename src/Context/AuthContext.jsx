@@ -13,6 +13,69 @@ export const AuthProvider = ({ children }) => {
     const [itemInCart, setItemInCart] = useState(0);
     const [inforUser, setInforUser] = useState({});
 
+    const [user, setUser] = useState(null);
+    const [token, setToken] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+     useEffect(() => {
+        checkAuthStatus();
+    }, []);
+
+
+const ClaimTypes = {
+  email: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+  nameidentifier: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
+  role: "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+  // userName: "username" 
+};
+
+const checkAuthStatus = () => {
+//   console.log('[AuthContext] checkAuthStatus: Starting...');
+  try {
+    const storedToken = localStorage.getItem('token');
+    // console.log('[AuthContext] checkAuthStatus: storedToken from localStorage:', storedToken);
+
+    if (storedToken) {
+        // console.log('[AuthContext] checkAuthStatus: Token found. Attempting to decode...');
+        const decodedToken = jwtDecode(storedToken);
+        // console.log('[AuthContext] checkAuthStatus: Token decoded:', decodedToken);
+
+        // Kiểm tra hạn token: decodedToken.exp đã là Unix timestamp (giây)
+        // Date.now() là milliseconds, nên cần nhân decodedToken.exp với 1000
+        if (decodedToken.exp * 1000 > Date.now()) {
+            // console.log('[AuthContext] checkAuthStatus: Token is valid and not expired.');
+            setToken(storedToken);
+
+            const userRoles = decodedToken[ClaimTypes.role];
+            // Đảm bảo roles luôn là một mảng
+            const rolesArray = Array.isArray(userRoles) ? userRoles : (userRoles ? [userRoles] : []);
+
+            setUser({
+                id: decodedToken[ClaimTypes.nameidentifier],
+                email: decodedToken[ClaimTypes.email],
+                userName: decodedToken[ClaimTypes.email], 
+                roles: rolesArray,
+                isAdmin: rolesArray.includes('Admin') 
+            });
+            setIsAuthenticated(true);
+        } else {
+            // console.log('[AuthContext] checkAuthStatus: Token is expired.');
+            // logout();
+        }
+        } else {
+        // console.log('[AuthContext] checkAuthStatus: No token found in localStorage.');
+        }
+    } catch (error) {
+        // console.error('[AuthContext] checkAuthStatus: Error during token processing:', error);
+        logout();
+    } finally {
+        // console.log('[AuthContext] checkAuthStatus: Setting isLoading to false.');
+        setIsLoading(false);
+    }
+    };
+
+
     useEffect(() => {
         if (loggedIn) {
             getCart();
@@ -186,7 +249,21 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem('refreshToken', refreshToken);
                 const decodeToken = jwtDecode(token);
                 const roles = decodeToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
                 if (roles.includes("Admin") || roles.includes("SuperAdmin")) {
+                    localStorage.setItem('token', token);
+                    setToken(token);
+                    setUser({
+                        id: decodeToken.sub || decodeToken.userId,
+                        email: decodeToken.email,
+                        userName: decodeToken.userName || decodeToken.name,
+                        roles: decodeToken.roles || decodeToken.role || [],
+                        isAdmin: true
+                    });
+                    setIsAuthenticated(true);
+                    setIsLoading(false);
+
+
                     return true;
                   } else {
                     return false;
@@ -202,6 +279,24 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('refreshToken', refreshToken);
         setLoggedIn(true);
         getCart();
+
+        try {
+        const decodedToken = jwtDecode(token);
+        localStorage.setItem('token', token);
+        setToken(token);
+        setUser({
+            id: decodedToken.sub || decodedToken.userId,
+            email: decodedToken.email,
+            userName: decodedToken.userName || decodedToken.name,
+            roles: decodedToken.roles || decodedToken.role || [],
+            isAdmin: decodedToken.roles?.includes('Admin') || decodedToken.role?.includes('Admin') || false
+        });
+        setIsAuthenticated(true);
+        setIsLoading(false);
+        } catch (error) {
+        console.error('Error decoding token:', error);
+        throw new Error('Invalid token');
+        }
     }
 
     const logout = () => {
@@ -211,6 +306,12 @@ export const AuthProvider = ({ children }) => {
         
         setCart([]);
         setItemInCart(0);
+
+
+        localStorage.removeItem('token');
+        setToken(null);
+        setUser(null);
+        setIsAuthenticated(false);
     }
 
     const isAdminLogin = () => {
@@ -293,9 +394,15 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const registerAmin = async(data) => {
+    const registerAdmin = async(dataSend) => {
         try {
-            const response = await axios.post('/api/Auth/RegisterAdmin', data);
+            const response = await apiRequest({
+                method: 'post',
+                url: '/api/Auth/RegisterAdmin',
+                data:  dataSend
+            })
+
+            // const response = await axios.post('/api/Auth/RegisterAdmin', dataSend);
             if (response.status === 200) {
                 toast.success('Đăng ký thành công');
                 return response;
@@ -413,7 +520,7 @@ export const AuthProvider = ({ children }) => {
             isAdminLogin,
             getInforUser,
             register,
-            registerAmin,
+            registerAdmin,
             handleLogin,
             verifyEmail,
             forgotPassword,
@@ -422,7 +529,13 @@ export const AuthProvider = ({ children }) => {
             updateUserInfor,
             getInforById,
             getAllUser,
-            inforUser
+            inforUser,
+
+            checkAuthStatus,
+            user,
+            token,
+            isAuthenticated,
+            isLoading,
         }}>
             {children}
         </AuthContext.Provider>

@@ -1,0 +1,581 @@
+/* Apple Style UserChat CSS */
+
+/* Chat Toggle Button */
+.apple-chat-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 60px;
+  height: 60px;
+  background: #000;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 9999;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(20px);
+}
+
+.apple-chat-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16), 0 6px 20px rgba(0, 0, 0, 0.12);
+  background: #1a1a1a;
+}
+
+.apple-chat-toggle:active {
+  transform: translateY(0);
+}
+
+.apple-toggle-icon {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.apple-error-indicator {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  background: #ff453a;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+  border: 2px solid white;
+}
+
+/* Main Chat Container */
+.apple-chat-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 380px;
+  height: 520px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  box-shadow: 0 20px 64px rgba(0, 0, 0, 0.12), 0 8px 32px rgba(0, 0, 0, 0.08);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Header */
+.apple-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px 24px;
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.apple-chat-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.apple-close-btn {
+  width: 32px;
+  height: 32px;
+  background: rgba(0, 0, 0, 0.04);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.apple-close-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  transform: scale(1.05);
+}
+
+.apple-close-icon {
+  width: 16px;
+  height: 16px;
+  color: #666;
+}
+
+/* Status Bars */
+.apple-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  font-size: 13px;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.apple-status-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.apple-status-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.apple-status-connecting {
+  background: rgba(0, 122, 255, 0.04);
+  color: #007aff;
+}
+
+.apple-status-connected {
+  background: rgba(52, 199, 89, 0.04);
+  color: #34c759;
+}
+
+.apple-status-error {
+  background: rgba(255, 69, 58, 0.04);
+  color: #ff453a;
+}
+
+.apple-debug-info {
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.4);
+  margin-left: 8px;
+}
+
+.apple-retry-btn {
+  background: none;
+  border: none;
+  color: #ff453a;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.apple-retry-btn:hover {
+  opacity: 0.7;
+}
+
+/* Chat Status */
+.apple-chat-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  font-size: 13px;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.apple-chat-pending {
+  background: rgba(255, 149, 0, 0.04);
+  color: #ff9500;
+}
+
+.apple-chat-active {
+  background: rgba(52, 199, 89, 0.04);
+  color: #34c759;
+}
+
+.apple-chat-closed {
+  background: rgba(255, 69, 58, 0.04);
+  color: #ff453a;
+}
+
+.apple-admin-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.apple-reset-btn {
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.apple-reset-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Messages Container */
+.apple-messages-container {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.01);
+  scroll-behavior: smooth;
+}
+
+.apple-messages-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.apple-messages-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.apple-messages-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+.apple-messages-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Empty State */
+.apple-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.apple-empty-content {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.apple-empty-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  opacity: 0.3;
+}
+
+.apple-empty-text {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.apple-debug-status {
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.3);
+  margin: 0;
+}
+
+/* Messages */
+.apple-message-wrapper {
+  margin-bottom: 16px;
+  display: flex;
+}
+
+.apple-message-own {
+  justify-content: flex-end;
+}
+
+.apple-message-other {
+  justify-content: flex-start;
+}
+
+.apple-message-bubble {
+  max-width: 75%;
+  padding: 12px 16px;
+  border-radius: 20px;
+  position: relative;
+  word-wrap: break-word;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.apple-bubble-own {
+  background: #000;
+  color: white;
+  border-bottom-right-radius: 8px;
+}
+
+.apple-bubble-other {
+  background: rgba(0, 0, 0, 0.06);
+  color: #000;
+  border-bottom-left-radius: 8px;
+}
+
+.apple-message-content {
+  margin-bottom: 4px;
+}
+
+.apple-message-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.apple-sender-name {
+  font-weight: 600;
+}
+
+.apple-message-time {
+  font-weight: 400;
+}
+
+/* Input Container */
+.apple-input-container {
+  padding: 16px 20px 20px;
+  background: rgba(44, 44, 46, 0.8);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.apple-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 24px;
+  padding: 4px;
+  transition: all 0.2s ease;
+}
+
+.apple-input-wrapper:focus-within {
+  background: rgba(0, 0, 0, 0.06);
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+}
+
+.apple-message-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  font-size: 15px;
+  color: #000;
+  font-family: inherit;
+}
+
+.apple-message-input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.apple-message-input:disabled {
+  opacity: 0.5;
+}
+
+.apple-send-btn {
+  width: 36px;
+  height: 36px;
+  background: #000;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.apple-send-btn:hover:not(:disabled) {
+  background: #1a1a1a;
+  transform: scale(1.05);
+}
+
+.apple-send-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.apple-send-btn:disabled {
+  background: rgba(0, 0, 0, 0.2);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.apple-send-icon {
+  width: 16px;
+  height: 16px;
+  color: white;
+}
+
+/* Error Container */
+.apple-error-container {
+  padding: 16px 20px 20px;
+  background: rgba(255, 69, 58, 0.04);
+  border-top: 1px solid rgba(255, 69, 58, 0.1);
+}
+
+.apple-reconnect-btn {
+  width: 100%;
+  background: #ff453a;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.apple-reconnect-btn:hover:not(:disabled) {
+  background: #ff6961;
+  transform: translateY(-1px);
+}
+
+.apple-reconnect-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.apple-reconnect-btn:disabled {
+  background: rgba(255, 69, 58, 0.5);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.apple-alert-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Animations */
+.apple-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(0, 122, 255, 0.2);
+  border-top: 2px solid #007aff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.apple-spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.apple-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .apple-chat-container {
+    width: calc(100vw - 32px);
+    height: calc(100vh - 120px);
+    bottom: 16px;
+    right: 16px;
+  }
+  
+  .apple-chat-toggle {
+    bottom: 16px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
+  }
+  
+  .apple-toggle-icon {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .apple-chat-container {
+    background: rgba(28, 28, 30, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .apple-chat-title {
+    color: white;
+  }
+  
+  .apple-chat-header {
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+  }
+  
+  .apple-close-btn {
+    background: rgba(255, 255, 255, 0.04);
+  }
+  
+  .apple-close-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  
+  .apple-close-icon {
+    color: #999;
+  }
+  
+  .apple-messages-container {
+    background: rgba(255, 255, 255, 0.01);
+  }
+  
+  .apple-bubble-other {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  
+  .apple-bubble-own {
+    background: #007aff;
+  }
+  
+  .apple-input-wrapper {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  
+  .apple-input-wrapper:focus-within {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  
+  .apple-message-input {
+    color: white;
+  }
+  
+  .apple-message-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .apple-send-btn {
+    background: #007aff;
+  }
+  
+  .apple-send-btn:hover:not(:disabled) {
+    background: #0056cc;
+  }
+  
+  .apple-empty-text {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .apple-debug-status {
+    color: rgba(255, 255, 255, 0.3);
+  }
+}

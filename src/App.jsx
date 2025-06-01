@@ -16,6 +16,7 @@ import ResetPassword from './Components/ResetPassword/ResetPassword'
 import Account from './Pages/Account'
 import UpdateInfor from './Components/UpdateInfor/UpdateInfor'
 import ResultPayment from './Components/ResultPayment/ResultPayment'
+import Chat from './Pages/Chat'
   
 function AppContent() { // Tạo một component mới để sử dụng useLocation()
   const location = useLocation();
@@ -44,7 +45,9 @@ function AppContent() { // Tạo một component mới để sử dụng useLoca
         </Route>
         <Route path='/resetpassword' element={<ResetPassword/>}/>
         <Route path='/admin/*' element={<AdminRoutes />} />
+        <Route path='/chat' element={<Chat/>}></Route>
       </Routes>
+      <Chat/>
       <Footer />
     </>
   );

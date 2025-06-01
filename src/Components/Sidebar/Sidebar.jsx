@@ -127,6 +127,7 @@ const Sidebar = () => {
           <div className="submenu ps-4 d-flex flex-column gap-1">
             <Link to="/profile" className="text-dark text-decoration-none py-1 hover-link">Profile</Link>
             <Link to="/preferences" className="text-dark text-decoration-none py-1 hover-link">Preferences</Link>
+            <Link to="chat"> Chat</Link>
           </div>
         )}
       </div>
