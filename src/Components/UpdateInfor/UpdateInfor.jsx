@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import './UpdateInfor.css';
 import { useAuth } from '../../Context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from '../../api/axios';
+import './UpdateInfor.css'; // Import the CSS file
 
 const UpdateInfor = () => {
     const { getInforUser, updateUserInfor, confirmEmail } = useAuth(); 
@@ -18,6 +18,7 @@ const UpdateInfor = () => {
     const [fullLocation, setFullLocation] = useState('');
     const [detailLocaton, setDetailLocaton] = useState('');
     const [isFillFull, setIsFillFull] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         getProvince();
@@ -49,8 +50,7 @@ const UpdateInfor = () => {
             ...prev,
             address: newDetailLocation
         }));
-    }, [specificAddress, fullLocation]);    
-
+    }, [specificAddress, fullLocation]); 
 
     const getProvince = async() => {
         const response = await axios.get('https://esgoo.net/api-tinhthanh/1/0.htm')
@@ -71,7 +71,6 @@ const UpdateInfor = () => {
         const response = await axios.get(`https://esgoo.net/api-tinhthanh/5/${ward}.htm`);
         setFullLocation(response.data.data.full_name);
     }
-
 
     const handleProvinceChange = (e) => {
         setProvince(e.target.value);
@@ -99,7 +98,6 @@ const UpdateInfor = () => {
             setIsFillFull(false);
         }
     }
-
 
     const [dataUser, setDataUser] = useState({
         userName: '',
@@ -134,8 +132,8 @@ const UpdateInfor = () => {
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
+        setLoading(true);
         try {
             if (!dataUser.phoneNumber || !dataUser.address) {
                 toast.error('Vui lòng điền đầy đủ thông tin bắt buộc');
@@ -151,13 +149,15 @@ const UpdateInfor = () => {
             
             if (response?.status === 200) {
                 toast.success('Cập nhật thông tin thành công');
-                handleGetDataUser(); // Refresh user data
+                handleGetDataUser();
             } else {
                 toast.error('Có lỗi xảy ra, vui lòng thử lại');
             }
         } catch (error) {
             toast.error('Có lỗi xảy ra, vui lòng thử lại sau');
             console.error(error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -165,133 +165,209 @@ const UpdateInfor = () => {
         const response = await confirmEmail();
         if (response.status === 200) {
             toast.success('Vui lòng kiểm tra email của bạn để xác nhận');
-            
         } else {
             toast.error('Có lỗi xảy ra khi xác nhận email, vui lòng thử lại');
         }
-    };  
+    }; 
 
     return (
-        <div className='updateinfor container mt-5 mb-2' style={{minHeight: '75vh'}}>
-            <ToastContainer />
-            <h2 className='mb-4'>Thông tin người dùng</h2>
-            <form onSubmit={handleSubmit}>
-                <div className='row'>
-                    <div className='col-md-6'>
-                        <div className='form-group mb-3'>
-                            <label htmlFor='userName'>Tên người dùng</label>
-                            <input
-                                type='text'
-                                id='userName'
-                                className='form-control'
-                                value={dataUser.userName}
-                                onChange={handleChange}
-                                required
-                                readOnly
-                            />
+        <div className="update-infor-container">
+            <ToastContainer 
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+            
+            <div className="container py-5">
+                <div className="card">
+                    {/* Header */}
+                    <div className="card-header">
+                        <h1 className="header-title">THÔNG TIN CÁ NHÂN</h1>
+                        <p className="header-subtitle">Cập nhật thông tin tài khoản của bạn</p>
+                        <div className="header-text-overlay">
+                            USER PROFILE
                         </div>
-                        <div className='form-group mb-3 row'>
-                            <label htmlFor='email'>Email</label>
-                            <div className='d-flex'>
-                                <input
-                                    type='email'
-                                    id='email'
-                                    className='form-control w-75'
-                                    value={dataUser.email}
-                                    onChange={handleChange}
-                                    required
-                                    readOnly
-                                />
-                                <button type='button' className='btn btn-outline-dark col ms-2'
-                                    onClick={handleConfirmEmail}
-                                    disabled={dataUser.emailConfirmed}
+                    </div>
+
+                    {/* Form Content */}
+                    <div className="form-content">
+                        <form onSubmit={(e) => e.preventDefault()}> {/* Prevent default form submission */}
+                            <div className="row">
+                                {/* Personal Information Column */}
+                                <div className="col-lg-6">
+                                    <h3 className="section-title">Thông tin cơ bản</h3>
+                                    
+                                    <div className="input-group">
+                                        <label className="label">Tên người dùng</label>
+                                        <input
+                                            type="text"
+                                            id="userName"
+                                            className="input input-readonly"
+                                            value={dataUser.userName}
+                                            onChange={handleChange}
+                                            required
+                                            readOnly
+                                        />
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label className="label">Email</label>
+                                        <div className="email-container">
+                                            <div className="email-input-wrapper">
+                                                <input
+                                                    type="email"
+                                                    id="email"
+                                                    className="input input-readonly"
+                                                    value={dataUser.email}
+                                                    onChange={handleChange}
+                                                    required
+                                                    readOnly
+                                                />
+                                                <div className="status-badge-wrapper">
+                                                    <span className={`status-badge ${dataUser.emailConfirmed ? 'status-confirmed' : 'status-pending'}`}>
+                                                        {dataUser.emailConfirmed ? 'Đã xác nhận' : 'Chưa xác nhận'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <button 
+                                                type="button" 
+                                                className={`button-secondary ${dataUser.emailConfirmed ? 'button-disabled' : ''}`}
+                                                onClick={handleConfirmEmail}
+                                                disabled={dataUser.emailConfirmed}
+                                            >
+                                                {dataUser.emailConfirmed ? 'Đã xác nhận' : 'Xác nhận'}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label className="label">Số điện thoại *</label>
+                                        <input
+                                            type="tel"
+                                            id="phoneNumber"
+                                            className="input"
+                                            value={dataUser.phoneNumber}
+                                            onChange={handleChange}
+                                            placeholder="Nhập số điện thoại"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label className="label">Giới tính</label>
+                                        <select
+                                            id="gender"
+                                            className="select"
+                                            value={dataUser.gender}
+                                            onChange={handleChange}
+                                            required
+                                        >
+                                            <option value="">Chọn giới tính</option>
+                                            <option value="true">Nam</option>
+                                            <option value="false">Nữ</option>
+                                            <option value="">Khác</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* Address Information Column */}
+                                <div className="col-lg-6">
+                                    <h3 className="section-title">Thông tin địa chỉ</h3>
+                                    
+                                    <div className="input-group">
+                                        <label className="label">Tỉnh thành</label>
+                                        <select 
+                                            className="select"
+                                            onChange={handleProvinceChange}
+                                            value={province}
+                                        >
+                                            <option value="">Chọn tỉnh thành</option>
+                                            {listProvince.map((item) => (
+                                                <option key={item.id} value={item.id}>{item.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label className="label">Quận huyện</label>
+                                        <select 
+                                            className="select"
+                                            disabled={!province} 
+                                            onChange={handleDistrictChange}
+                                            value={district}
+                                        >
+                                            <option value="">Chọn quận huyện</option>
+                                            {listDistrict.map((item) => (
+                                                <option key={item.id} value={item.id}>{item.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label className="label">Phường xã</label>
+                                        <select 
+                                            className="select"
+                                            disabled={!district} 
+                                            onChange={handleWardChange}
+                                            value={ward}
+                                        >
+                                            <option value="">Chọn phường xã</option>
+                                            {listWard.map((item) => (
+                                                <option key={item.id} value={item.id}>{item.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label className="label">Địa chỉ cụ thể</label>
+                                        <input 
+                                            type="text" 
+                                            className="input"
+                                            onChange={handleSpecificAddressChange}
+                                            value={specificAddress}
+                                            placeholder="Số nhà, tên đường..."
+                                        />
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label className="label">Địa chỉ đầy đủ</label>
+                                        <textarea 
+                                            id="address"
+                                            className="textarea"
+                                            value={detailLocaton} 
+                                            onChange={handleChange}
+                                            placeholder="Địa chỉ chi tiết sẽ hiển thị tại đây"
+                                            disabled
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr className="divider" />
+
+                            {/* Submit Button */}
+                            <div className="text-center">
+                                <button 
+                                    type="button"
+                                    onClick={handleSubmit} 
+                                    className={`button-primary ${loading ? 'loading' : ''}`}
+                                    disabled={loading}
                                 >
-                                    {dataUser.emailConfirmed ? 'Đã xác nhận' : 'Xác nhận'}
+                                    {loading && <span className="loading-spinner"></span>}
+                                    {loading ? 'ĐANG LÀM...' : 'CẬP NHẬT THÔNG TIN'}
                                 </button>
                             </div>
-                        </div>
-                        <div className='form-group mb-3'>
-                            <label htmlFor='phoneNumber'>Số điện thoại</label>
-                            <input
-                                type='tel'
-                                id='phoneNumber'
-                                className='form-control'
-                                value={dataUser.phoneNumber}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        
-                        <div className='form-group mb-3'>
-                            <label htmlFor='gender'>Giới tính</label>
-                            <select
-                                id='gender'
-                                className='form-control'
-                                value={dataUser.gender}
-                                onChange={handleChange}
-                                required
-                            >
-                                <option value=''>Chọn giới tính</option>
-                                <option value='true'>Nam</option>
-                                <option value='false'>Nữ</option>
-                                <option value=''>Khác</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div className='col'>
-                        <div className="mb-3">
-                            <label className="form-label">Tỉnh thành</label>
-                            <select className="form-select" onChange={handleProvinceChange}>
-                                <option value=''>---</option>
-                                {
-                                    listProvince.map((item) => (
-                                        <option key={item.id} value={item.id}>{item.name}</option>
-                                    ))
-                                }
-                                
-                            </select>
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Quận huyện</label>
-                            <select className="form-select" disabled={!province} onChange={handleDistrictChange}>
-                                <option value=''>---</option>
-                                {
-                                    listDistrict.map((item) => (
-                                        <option key={item.id} value={item.id}>{item.name}</option>
-                                    ))
-                                }
-                            </select>
-                        </div>
-
-                        <div className="mb-3">
-                            <label className="form-label">Phường xã</label>
-                            <select className="form-select" disabled={!district} onChange={handleWardChange}>
-                                <option value=''>---</option>
-                                {
-                                    listWard.map((item) => (
-                                        <option key={item.id} value={item.id}>{item.name}</option>
-                                    ))
-                                }
-                            </select>
-                        </div>
-                        
-                        <div className="mb-3">
-                            <label className="form-label">Địa chỉ</label>
-                            <input type="text" className="form-control"  
-                                onChange={handleSpecificAddressChange}
-                                placeholder="Nhập địa chỉ cụ thể (số nhà, tên đường,..)" />
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Địa chỉ của bạn là:</label>
-                            <textarea id='address' type="text" className="form-control" value={detailLocaton} onChange={handleChange} placeholder="Địa chỉ chi tiết" disabled/>
-                        </div>
-                    
-
-                
-                        <button type='submit' className='btn btn-outline-dark'>Lưu thông tin</button>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     );
 };

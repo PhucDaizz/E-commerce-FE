@@ -20,3 +20,51 @@
 .review-body {
     margin-left: 20px;
 }
+
+@media (max-width: 768px) {
+  .mobile-review {
+    padding: 15px 0;
+  }
+  
+  .mobile-review .container {
+    padding: 0 15px;
+  }
+  
+  .mobile-review-title {
+    font-size: 18px !important;
+    margin-bottom: 15px;
+  }
+  
+  .mobile-review-btn {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 12px;
+    font-size: 16px;
+  }
+  
+  .mobile-review-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: #fafafa;
+  }
+  
+  .mobile-info-review {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .mobile-review-comment {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+  
+  .mobile-review .review-body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}

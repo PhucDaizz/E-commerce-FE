@@ -9,6 +9,7 @@ import ProductDetailModal from '../ProductDetailModal/ProductDetailModal';
 import { toast, ToastContainer } from 'react-toastify';
 
 const ListProduct = () => {
+    const apiUrl = import.meta.env.VITE_BASE_API_URL;
     const { getCategory, categories } = useCategory();
     const { getAllProductAdmin, listProduct, formatCurrency, getDetailProduct, changeStatusProduct, setListProduct, pauseSaleProduct } = useProduct();
 
@@ -231,7 +232,7 @@ const ListProduct = () => {
                                             <div className="product-image">
                                                 <img 
                                                     src={product.images?.[0]?.imageURL 
-                                                            ? `https://localhost:7295/Resources/${product.images[0].imageURL}` 
+                                                            ? `${apiUrl}/Resources/${product.images[0].imageURL}` 
                                                             : 'https://via.placeholder.com/80x80?text=No+Image'}  
                                                     alt={product.productName}
                                                     className='product-img'

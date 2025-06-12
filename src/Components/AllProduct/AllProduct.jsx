@@ -3,11 +3,13 @@ import React, { useEffect, useState } from 'react'
 import Item from '../Item/Item';
 import Pagination from '../Pagination/Pagination';
 import axios from '../../api/axios';
+import './AllProduct.css'
 
 export const AllProduct = () => {
     const [data, setData] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const apiUrl = import.meta.env.VITE_BASE_API_URL;
 
     const handlePageChange = (newPage) => {
         setPage(newPage);
@@ -46,7 +48,7 @@ export const AllProduct = () => {
                 {
                     data.map((item) => {
                         const primaryImage = item.images.find(image => image.isPrimary); 
-                        const imageLink = primaryImage ? `https://localhost:7295/Resources/${primaryImage.imageURL}` : ''; 
+                        const imageLink = primaryImage ? `${apiUrl}/Resources/${primaryImage.imageURL}` : ''; 
                         return <Item key={item.productID} id={item.productID} name={item.productName} price={item.price} image={imageLink} ></Item>
                     })
                 }

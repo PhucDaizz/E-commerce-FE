@@ -1,4 +1,9 @@
+/* Base styles for the login form container */
 .login-form-container {
+  /* Added to ensure it acts as a flex container for its direct children, especially the row */
+  display: flex;
+  flex-direction: column;
+  min-height: 100%; /* Ensure it takes at least the height of its parent */
 }
 
 .login-form h2 {
@@ -49,4 +54,87 @@
 
 .icon-link-hv:hover i {
   transform: translateX(-5px); /* Di chuyển biểu tượng sang trái 5px khi hover */
+}
+
+/* --- Responsive Adjustments for Login Component --- */
+
+/* Adjustments for when Login is displayed as a sliding panel within Register */
+.login-content .row {
+  flex-direction: row; /* Default row direction */
+  min-height: 700px; /* Keep consistent height for desktop */
+}
+
+/* Media queries for smaller screens when Login is part of the sliding form (onPage is true) */
+@media (max-width: 768px) {
+  .login-form-container .row {
+    flex-direction: column-reverse; /* Stack columns, put title section at bottom */
+    min-height: auto !important; /* Allow height to adjust */
+    flex-grow: 1; /* Allow to take available space */
+  }
+
+  .login-form-container .col.border-end {
+    border-right: none !important; /* Remove right border */
+    border-bottom: 1px solid #dee2e6 !important; /* Add bottom border */
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+
+  .login-form-container .col.border-end form {
+    width: 90% !important; /* Make form wider on smaller screens */
+    margin: 0 auto; /* Center the form */
+    padding: 0; /* Remove extra padding */
+  }
+
+  /* Specific adjustment for buttons inside the d-flex container in onPage mode */
+  .login-form-container .col.border-end form .d-flex {
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center items */
+  }
+
+  .login-form-container .col.border-end form .d-flex .text-primary {
+    margin-bottom: 15px; /* Add space below "Quên mật khẩu?" */
+    margin-right: 0 !important; /* Remove any inline right margin */
+  }
+
+  .login-form-container .col.border-end form .d-flex button {
+    width: 100% !important; /* Make buttons full width */
+    margin-top: 10px; /* Add space between stacked buttons */
+  }
+
+  /* Adjustments for the title section when Login is visible */
+  .login-form-container .col.d-flex.flex-column.align-items-center.justify-content-center {
+    padding-top: 20px; /* Add padding to prevent title from sticking to top */
+    padding-bottom: 20px;
+  }
+}
+
+/* Further adjustments for very small screens (mobile portrait) */
+@media (max-width: 480px) {
+  .login-form-container {
+    min-height: 100vh; /* Take full viewport height on small phones */
+  }
+
+  .login-form-container .row {
+    min-height: 100vh !important; /* Ensure the row also stretches */
+  }
+
+  .login-form-container .col.border-end form {
+    width: 95% !important; /* Slightly wider form for smaller screens */
+  }
+
+  /* Adjustments for the standard login form (when onPage is false) */
+  .login-form {
+    padding: 20px; /* Add some padding around the form */
+    margin-top: 50px; /* Add top margin if needed */
+  }
+
+  .login-button {
+    width: 100% !important; /* Ensure login button is full width */
+  }
+
+  .login-form .d-flex.flex-column .text-primary {
+    text-align: center; /* Center "Quên mật khẩu?" text */
+    width: 100%; /* Ensure it takes full width for centering */
+    margin-bottom: 10px; /* Add space below it */
+  }
 }

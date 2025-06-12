@@ -11,15 +11,31 @@ import { useAuth } from '../../Context/AuthContext';
 import { toast, ToastContainer } from 'react-toastify';
 
 const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating = 0 }) => {
+  const apiUrl = import.meta.env.VITE_BASE_API_URL;
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [modalSwiper, setModalSwiper] = useState(null);
   const {addToCart} = useAuth();
 
   const predefinedOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
   // Hàm sắp xếp size
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
+
   const sortSizes = (sizes) => {
     return sizes.sort((a, b) => {
       const indexA = predefinedOrder.indexOf(a.size.toUpperCase());
@@ -27,7 +43,6 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
       return indexA - indexB;
     });
   };
-
 
   const handleColorClick = (color) => {
     setSelectedColor(color);
@@ -47,9 +62,38 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
     }); 
   };
 
+  const handleImageClick = (index) => {
+    setCurrentImageIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // Đóng modal khi nhấn ESC
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener('keydown', handleEscKey);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isModalOpen]);
+
   useEffect(() => {
     if (colors.length > 0) { 
-      setSelectedColor(colors[0]); }
+      setSelectedColor(colors[0]); 
+    }
   }, [colors])
 
   function formatCurrency(amount) {
@@ -66,13 +110,12 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
     }
   }
 
-
   return (
     <div className="productDisplay">
       <div className="container">
-        <div className="row">
+        <div className={`row ${isMobile ? 'mobile-layout' : ''}`}>
           {/* Hình ảnh chính */}
-          <div className="col-7 product-imagee">
+          <div className={`${isMobile ? 'col-12' : 'col-7'} product-imagee`}>
             {images.length > 0 ? (
               <>
                 {/* Swiper cho hình ảnh lớn */}
@@ -87,14 +130,17 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
                   thumbs={{ swiper: thumbsSwiper }}
                   modules={[FreeMode, Navigation, Thumbs]}
                   className="mySwiper2"
+                  onSlideChange={(swiper) => setCurrentImageIndex(swiper.realIndex)}
                 >
                   {images.map((item, i) => {
                     return (
                       <SwiperSlide key={i}>
                         <img
-                          src={`https://localhost:7295/Resources/${item.imageURL}`}
+                          src={`${apiUrl}/Resources/${item.imageURL}`}
                           alt={`Product ${i}`}
-                          className="img-fluid"
+                          className="img-fluid clickable-image"
+                          onClick={() => handleImageClick(i)}
+                          style={{ cursor: 'pointer' }}
                         />
                       </SwiperSlide>
                     );
@@ -113,13 +159,15 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
                   className="mySwiper"
                 >
                   {images.map((item, i) => {
-                    const imageLink = `https://localhost:7295/Resources/${item.imageURL}`;
+                    const imageLink = `${apiUrl}/Resources/${item.imageURL}`;
                     return (
                       <SwiperSlide key={i}>
                         <img
                           src={imageLink}
                           alt={`Thumbnail ${i}`}
-                          className="img-thumbnail"
+                          className="img-thumbnail clickable-thumbnail"
+                          onClick={() => handleImageClick(i)}
+                          style={{ cursor: 'pointer' }}
                         />
                       </SwiperSlide>
                     );
@@ -132,7 +180,7 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
           </div>
 
           {/* Mô tả sản phẩm */}
-          <div className="col-5 product-description p-4">
+          <div className={`${isMobile ? 'col-12' : 'col-5'} product-description ${isMobile ? 'mobile-description' : 'p-4'}`}>
             <p className='product-name'>{product.productName}</p>
             
             <Rating rating = {averageRating === 0 ? 5 : Math.round(averageRating)} />
@@ -177,6 +225,50 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
           </div>
         </div>
       </div>
+
+      {/* Modal Full Screen */}
+      {isModalOpen && (
+        <div className="image-modal-overlay" onClick={closeModal}>
+          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn" onClick={closeModal}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            
+            <Swiper
+              onSwiper={setModalSwiper}
+              initialSlide={currentImageIndex}
+              loop={images.length > 1}
+              spaceBetween={10}
+              navigation={images.length > 1}
+              modules={[Navigation]}
+              className="modal-swiper"
+              style={{
+                '--swiper-navigation-color': '#fff',
+                '--swiper-navigation-size': '30px',
+              }}
+            >
+              {images.map((item, i) => (
+                <SwiperSlide key={i}>
+                  <div className="modal-image-container">
+                    <img
+                      src={`${apiUrl}/Resources/${item.imageURL}`}
+                      alt={`Product ${i}`}
+                      className="modal-image"
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            
+            <div className="modal-image-counter">
+              {currentImageIndex + 1} / {images.length}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

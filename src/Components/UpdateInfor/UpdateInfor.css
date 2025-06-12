@@ -1,0 +1,255 @@
+/* UpdateInfor.css */
+
+.update-infor-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: none;
+    overflow: hidden;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #000000 0%, #333333 100%);
+    color: #ffffff;
+    padding: 2rem;
+    position: relative;
+}
+
+.header-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.header-subtitle {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin: 0.5rem 0 0 0;
+    font-weight: 300;
+}
+
+.header-text-overlay {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+.form-content {
+    padding: 2.5rem;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #000000;
+    display: inline-block;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 0.5rem;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input,
+.select,
+.textarea {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #ffffff;
+    font-family: inherit;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+    border-color: #000000 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.input-readonly {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+.select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.textarea {
+    min-height: 80px;
+    resize: vertical;
+    background-color: #f8f9fa;
+}
+
+.button-primary {
+    background: linear-gradient(135deg, #000000 0%, #333333 100%);
+    color: #ffffff;
+    border: none;
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.button-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+.button-primary.loading {
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+.button-secondary {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button-secondary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.button-disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+    border-color: #6c757d; /* Adjust border color for disabled state */
+    color: #ffffff; /* Make text white for disabled secondary button */
+}
+
+.email-container {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end; /* Align items to the end of the cross axis */
+}
+
+.email-input-wrapper {
+    flex: 1;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.5rem; /* Add some space above the badge */
+}
+
+.status-confirmed {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e9ecef, transparent);
+    margin: 2rem 0;
+    border: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+}
+
+/* Bootstrap container and row/col classes are assumed to be available globally or imported */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.py-5 {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.col-lg-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+@media (max-width: 991.98px) {
+    .col-lg-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}

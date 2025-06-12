@@ -3,6 +3,7 @@ import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import axios from '../../api/axios';
 
 const ResultPayment = () => {
+    const apiUrl = import.meta.env.VITE_BASE_API_URL;
     const [searchParams] = useSearchParams();
     const navigate = useNavigate(); // Hook để điều hướng trang
 
@@ -16,7 +17,7 @@ const ResultPayment = () => {
             try {
                 const params = Object.fromEntries(searchParams.entries());
 
-                const response = await axios.get("https://localhost:7295/api/Payment/IpnAction", {
+                const response = await axios.get(`${apiUrl}/api/Payment/IpnAction`, {
                     params: params
                 });
 

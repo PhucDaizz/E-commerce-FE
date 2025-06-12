@@ -19,10 +19,7 @@ console.log('Auth State in ChatExample:', { isLoading, isAuthenticated, user, to
   if (!isAuthenticated) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Vui lòng đăng nhập</h2>
-          <p className="text-gray-600">Bạn cần đăng nhập để sử dụng chat</p>
-        </div>
+        
       </div>
     );
   }

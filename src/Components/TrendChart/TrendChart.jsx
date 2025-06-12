@@ -5,6 +5,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import './TrendChart.css';
 
 const TrendChart = () => {
+    const apiUrl = import.meta.env.VITE_BASE_API_URL;
     const { getReportTopSelling } = useDashboard();
     const [itemTopSelling, setItemTopSelling] = useState(5);
     const [dataTopSelling, setDataTopSelling] = useState([]);
@@ -31,7 +32,7 @@ const TrendChart = () => {
     // Hàm lấy URL ảnh chính từ mảng images
     const getPrimaryImageUrl = (images) => {
         const primaryImage = images?.find(img => img.isPrimary);
-        return primaryImage ? `https://localhost:7295/Resources/${primaryImage.imageURL}` : 'placeholder-image.jpg'; // Ảnh mặc định nếu không có
+        return primaryImage ? `${apiUrl}/Resources/${primaryImage.imageURL}` : 'placeholder-image.jpg'; // Ảnh mặc định nếu không có
     };
 
     return (

@@ -6,6 +6,7 @@ import { useProduct } from '../../Context/ProductContext';
 import { toast, ToastContainer } from 'react-toastify';
 
 const CartCheckout = ({dataCoupon, setDataCoupon, selectedMethod, note}) => {
+    const apiUrl = import.meta.env.VITE_BASE_API_URL
     const { getCart, cart, getInforUser, handleRemoveItem, handleUpdateItemCart } = useAuth();
     const { formatCurrency, applyCoupon, createURLPayment, processPaymentCOD } = useProduct();
     const [coupon, setCoupon] = useState('');
@@ -164,7 +165,7 @@ const CartCheckout = ({dataCoupon, setDataCoupon, selectedMethod, note}) => {
                                         <div className="col-3 position-relative">
                                             <img
                                                 className="img-fluid rounded-1 border"
-                                                src={`https://localhost:7295/Resources/${item.productDTO.images[0].imageURL}`}
+                                                src={`${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`}
                                                 alt={item.productDTO.productName} 
                                                 style={{ maxHeight: '80px' }}
                                             />
@@ -204,7 +205,7 @@ const CartCheckout = ({dataCoupon, setDataCoupon, selectedMethod, note}) => {
                             <div className="col-3 position-relative">
                                 <img
                                     className="img-fluid rounded-1 border"
-                                    src={`https://localhost:7295/Resources/${item.productDTO.images[0].imageURL}`}
+                                    src={`${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`}
                                     alt={item.productDTO.productName} 
                                     style={{ maxHeight: '50px' }}
                                 />

@@ -10,6 +10,8 @@ import Login from '../../Pages/Login'
 const Navbar = () => {
   const [menu, setMenu] = useState("");
   const [isLoginHovered, setIsLoginHovered] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const { loggedIn, logout, itemInCart, inforUser } = useAuth();
   const { handleCategoryChange, categories } = useCategory();
   const { searchQuery, setSearchQuery } = useSearch();
@@ -25,6 +27,21 @@ const Navbar = () => {
     }
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const toggleCategoryDropdown = () => {
+    setIsCategoryDropdownOpen(!isCategoryDropdownOpen);
+  };
+
+  const handleCategoryClick = (categoryName, categoryID) => {
+    setMenu(categoryName);
+    handleCategoryChange(categoryID);
+    setIsMobileMenuOpen(false);
+    setIsCategoryDropdownOpen(false);
+  };
+
   useEffect(() => {
     console.log(inforUser);
   }, [inforUser])
@@ -32,8 +49,15 @@ const Navbar = () => {
   return (
     <nav className='navbar'>
       <div className="navbar-container container">
+        {/* Logo và Menu Toggle */}
         <div className="navbar-logo">
-          <i className='bi bi-list'></i>
+          <button 
+            className="mobile-menu-toggle"
+            onClick={toggleMobileMenu}
+            aria-label="Toggle menu"
+          >
+            <i className={`bi ${isMobileMenuOpen ? 'bi-x' : 'bi-list'}`}></i>
+          </button>
           <Link to={'/'} onClick={() => setMenu('')}>
             <img
               src="https://rubicmarketing.com/wp-content/uploads/2023/04/y-nghia-logo-adidas.jpg"
@@ -42,19 +66,17 @@ const Navbar = () => {
             />
           </Link>
         </div>
-        
-        <div className="navbar-categories">
+
+        {/* Desktop Categories */}
+        <div className="navbar-categories desktop-categories">
           <p onClick={() => {setMenu("shop"); handleCategoryChange(null);}} className='category-item'>
             <Link style={{textDecoration: 'none'}} to={'/shop'}>
               <strong>Shop</strong> {menu === "shop" && <hr/>}
             </Link>
           </p>
-          {categories.map((d) => (
+          {categories.slice(0, 4).map((d) => (
             <p 
-              onClick={() => {
-                setMenu(d.categoryName); 
-                handleCategoryChange(d.categoryID);
-              }}
+              onClick={() => handleCategoryClick(d.categoryName, d.categoryID)}
               key={d.categoryID}
               className='category-item'
             >
@@ -64,9 +86,33 @@ const Navbar = () => {
               {menu === d.categoryName && <hr/>}
             </p>
           ))}
+          {categories.length > 4 && (
+            <div className="category-dropdown">
+              <p className='category-item dropdown-toggle' onClick={toggleCategoryDropdown}>
+                <strong>Xem thêm</strong>
+                <i className={`bi bi-chevron-${isCategoryDropdownOpen ? 'up' : 'down'} ms-1`}></i>
+              </p>
+              {isCategoryDropdownOpen && (
+                <div className="dropdown-menu">
+                  {categories.slice(4).map((d) => (
+                    <p 
+                      onClick={() => handleCategoryClick(d.categoryName, d.categoryID)}
+                      key={d.categoryID}
+                      className='dropdown-item'
+                    >
+                      <Link style={{textDecoration: 'none'}} to={'/shop'}>
+                        <strong>{d.categoryName}</strong>
+                      </Link>
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        <div className="navbar-actions">
+        {/* Desktop Actions */}
+        <div className="navbar-actions desktop-actions">
           <div className="search-container">
             <i className="bi bi-search" onClick={handleSearch}></i>
             <input
@@ -89,7 +135,11 @@ const Navbar = () => {
                 onMouseEnter={() => setIsLoginHovered(true)}
                 onMouseLeave={() => setIsLoginHovered(false)}
               >
-                <button className="auth-button"><Link to={'/login'} className='auth-link' style={{textDecoration: 'none' }}>Đăng nhập</Link></button>
+                <button className="auth-button">
+                  <Link to={'/login'} className='auth-link' style={{textDecoration: 'none'}}>
+                    Đăng nhập
+                  </Link>
+                </button>
                 {isLoginHovered && (
                   <div className="login-form-popup">
                     <div className='haha'></div>
@@ -99,10 +149,14 @@ const Navbar = () => {
               </div>
             </div>
           ) : (
-            <div className="user-info ms-3">
-              <span><Link to='/account' className=' text-black' style={{textDecoration: 'none', fontSize: '14px'}}>Xin chào, {inforUser.userName}!</Link></span>
+            <div className="user-info">
+              <span>
+                <Link to='/account' className='text-black' style={{textDecoration: 'none', fontSize: '14px'}}>
+                  Xin chào, {inforUser.userName}!
+                </Link>
+              </span>
               <Link to={'/cart'}>
-                <i className="bi bi-bag ms-2"></i>
+                <i className="bi bi-bag"></i>
                 <div className='cart-container'>
                   <span className='cart-count'>{itemInCart}</span>
                 </div>
@@ -114,6 +168,80 @@ const Navbar = () => {
           )}
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      <div className={`mobile-menu ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}>
+        {/* Mobile Search */}
+        <div className="mobile-search-container">
+          <div className="search-container">
+            <i className="bi bi-search" onClick={handleSearch}></i>
+            <input
+              type="search"
+              placeholder='Tìm kiếm sản phẩm'
+              className='search-input'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+        </div>
+
+        {/* Mobile Categories */}
+        <div className="mobile-categories">
+          <p onClick={() => handleCategoryClick("shop", null)} className='mobile-category-item'>
+            <Link style={{textDecoration: 'none'}} to={'/shop'}>
+              <strong>Shop</strong>
+            </Link>
+          </p>
+          {categories.map((d) => (
+            <p 
+              onClick={() => handleCategoryClick(d.categoryName, d.categoryID)}
+              key={d.categoryID}
+              className='mobile-category-item'
+            >
+              <Link style={{textDecoration: 'none'}} to={'/shop'}>
+                <strong>{d.categoryName}</strong>
+              </Link>
+            </p>
+          ))}
+        </div>
+
+        {/* Mobile Auth */}
+        <div className="mobile-auth">
+          {!loggedIn ? (
+            <div className="mobile-auth-buttons">
+              <Link to={'/register'} onClick={() => setIsMobileMenuOpen(false)}>
+                <button className="auth-button">Đăng ký</button>
+              </Link>
+              <Link to={'/login'} onClick={() => setIsMobileMenuOpen(false)}>
+                <button className="auth-button">Đăng nhập</button>
+              </Link>
+            </div>
+          ) : (
+            <div className="mobile-user-info">
+              <Link 
+                to='/account' 
+                className='user-link' 
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Xin chào, {inforUser.userName}!
+              </Link>
+              <Link to={'/cart'} onClick={() => setIsMobileMenuOpen(false)}>
+                <div className="cart-link">
+                  <i className="bi bi-bag"></i>
+                  <span>Giỏ hàng ({itemInCart})</span>
+                </div>
+              </Link>
+              <button className="auth-button logout" onClick={() => {logout(); setIsMobileMenuOpen(false);}}>
+                Đăng xuất
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Overlay */}
+      {isMobileMenuOpen && <div className="mobile-menu-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>}
     </nav>
   );
 };

@@ -7,6 +7,7 @@ import { useSearch } from '../../Context/SearchContext'
 import axios from '../../api/axios'
 
 const Collections = () => {
+    const apiUrl = import.meta.env.VITE_BASE_API_URL;
     const [data, setData] = useState([])
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1);
@@ -42,7 +43,7 @@ const Collections = () => {
 
     return (
     <div>
-        <div className="collections">
+        <div className="collections all-product">
             <h3 className='d-flex justify-content-center'>
                 {selectedCategory ? `Sản phẩm theo danh mục` : 'Tất cả sản phẩm'}
             </h3>
@@ -51,7 +52,7 @@ const Collections = () => {
                 { data && data.length > 0 ? 
                     ( data.map((item) => { 
                         const primaryImage = item.images.find(image => image.isPrimary); 
-                        const imageLink = primaryImage ? `https://localhost:7295/Resources/${primaryImage.imageURL}` : ''; 
+                        const imageLink = primaryImage ? `${apiUrl}/Resources/${primaryImage.imageURL}` : ''; 
                         return <Item key={item.productID} id={item.productID} name={item.productName} price={item.price} image={imageLink} />; 
                     }) ) 
                     : ( <div className='noresult' style={{ gridColumn: '1 / -1' }}>

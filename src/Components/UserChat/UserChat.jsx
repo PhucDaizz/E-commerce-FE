@@ -3,8 +3,9 @@ import { chatService } from '../../Services/ChatService';
 import { Send, MessageCircle, X, User, Clock, AlertCircle, Wifi, WifiOff } from 'lucide-react';
 import './UserChat.css'
 import { toast } from 'react-toastify';
-
+import { useChat } from '../../Context/ChatContext';
 const UserChat = ({ user, token }) => {
+    const {markReadMessage} = useChat();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([]);
     const [messageInput, setMessageInput] = useState('');
@@ -35,6 +36,28 @@ const UserChat = ({ user, token }) => {
     useEffect(() => {
         scrollToBottom();
     }, [messages, scrollToBottom]);
+
+    useEffect(() => {
+    if (conversationId && user?.id && chatStatus === 'active') {
+        const markMessagesAsRead = async () => {
+            try {
+                await markReadMessage(conversationId, user.id);
+                setMessages(prevMessages =>
+                    prevMessages.map(message =>
+                        message.conversationId === conversationId &&
+                        message.senderUserId !== user.id // Tin nhắn từ admin
+                            ? { ...message, isReadByClient: true }
+                            : message
+                    )
+                );
+            } catch (error) {
+                console.error('Error marking messages as read:', error);
+                toast.error('Không thể đánh dấu tin nhắn là đã đọc');
+            }
+        };
+        markMessagesAsRead();
+    }
+    }, [conversationId, user?.id, chatStatus, markReadMessage]);
 
     // Initialize chat connection when opening
     useEffect(() => {
@@ -191,6 +214,18 @@ const UserChat = ({ user, token }) => {
             }
         });
 
+        chatService.on('ReceiveReadReceipt', (conversationId, readerUserId, dateTime) => {
+            console.log('Received read receipt:', conversationId, readerUserId, dateTime);
+            setMessages(prevMessages =>
+                prevMessages.map(message =>
+                    message.conversationId === conversationId &&
+                    message.senderUserId === user?.id // Tin nhắn từ user
+                        ? { ...message, isReadByAdmin: true }
+                        : message
+                )
+            );
+        });
+
         chatService.on('ChatClosed', (convId, reason) => {
             console.log('=== ChatClosed Event ===');
             console.log('Server convId:', convId);
@@ -261,6 +296,52 @@ const UserChat = ({ user, token }) => {
         
         eventListenersRegistered.current = false;
     };
+
+    const markMessagesAsRead = async(conversationId) => {
+        const userMessagesInConversation = messages.filter(
+            msg => msg.conversationId === conversationId
+        );
+        const lastUserMessage = userMessagesInConversation[userMessagesInConversation.length - 1];
+
+        if (lastUserMessage?.isReadByClient) {
+            console.log(`Last user message in conversation ${conversationId} already read, skipping SignalR invoke`);
+            return; 
+        }
+
+        try {
+            await chatService.invoke('MarkMessagesAsRead', conversationId);
+            console.log(`Successfully invoked MarkMessagesAsRead for conversation: ${conversationId}`);
+
+            setMessages(prevMessages =>
+            prevMessages.map(message =>
+                message.id === lastUserMessage?.id
+                ? { ...message, isReadByClient: true }
+                : message
+            )
+            );
+        } catch (error) {
+            console.error('Error marking messages as read:', error);
+            toast.error('Không thể đánh dấu tin nhắn là đã đọc');
+        }
+
+        // await chatService.invoke('MarkMessagesAsRead', currentConversationId.current)
+        // setMessages(prevMessages => {
+        //     // Lọc ra các tin nhắn của user trong đoạn chat hiện tại
+        //     const userMessagesInConversation = prevMessages.filter(
+        //     msg => msg.conversationId === currentConversationId.current &&
+        //             msg.senderUserId === user?.id
+        //     );
+
+        //     // Lấy tin nhắn cuối cùng của user (theo thời gian)
+        //     const lastUserMessage = userMessagesInConversation[userMessagesInConversation.length - 1];
+
+        //     return prevMessages.map(message =>
+        //     message.id === lastUserMessage?.id
+        //         ? { ...message, isReadByAdmin: true }
+        //         : message
+        //     );
+        // });
+    }
 
     const cleanupChatState = useCallback(() => {
         console.log('Manual cleanup of chat state');
@@ -341,6 +422,15 @@ const UserChat = ({ user, token }) => {
             minute: '2-digit' 
         });
     };
+    
+    const markMessage = async(currentConversationId) => {
+        if(currentConversationId == null){
+            return;
+        }
+        const response = await markReadMessage(currentConversationId.current)
+        return response;
+    }
+
 
     const renderConnectionStatus = () => {
         if (chatStatus === 'connecting' || isConnecting) {
@@ -445,11 +535,15 @@ const UserChat = ({ user, token }) => {
         }
 
         return messages.map((message, index) => {
-            console.log('Rendering message:', message, 'User ID:', user?.id);
-            
-            // Kiểm tra xem tin nhắn có phải của user hiện tại không
-            const isOwnMessage = message.senderUserId === user?.id;
-            
+    console.log('Rendering message:', message, 'User ID:', user?.id);
+
+    const isOwnMessage = message.senderUserId === user?.id;
+
+    const isLastInSequence =
+        isOwnMessage && // Tin nhắn từ user
+        (index === messages.length - 1 || // Là tin nhắn cuối cùng trong danh sách
+         messages[index + 1]?.senderUserId !== user?.id); // Tin nhắn tiếp theo không phải từ user
+
             return (
                 <div
                     key={`${message.conversationId || 'no-conv'}-${message.id || index}-${index}`}
@@ -466,6 +560,13 @@ const UserChat = ({ user, token }) => {
                             <span className="apple-message-time">
                                 {formatTime(message.sentTimeUtc)}
                             </span>
+                            {isLastInSequence && (
+                                <span className={`apple-message-status ${
+                                    message.isReadByAdmin ? 'read' : 'unread'
+                                }`}>
+                                    {message.isReadByAdmin ? '✓✓' : '✓'}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -481,7 +582,10 @@ const UserChat = ({ user, token }) => {
     if (!isOpen) {
         return (
             <button
-                onClick={() => setIsOpen(true)}
+                onClick={() => {
+                    setIsOpen(true);
+                    markMessage(currentConversationId);
+                }}
                 className="apple-chat-toggle"
             >
                 <MessageCircle className="apple-toggle-icon" />
@@ -525,6 +629,7 @@ const UserChat = ({ user, token }) => {
                             type="text"
                             value={messageInput}
                             onChange={(e) => setMessageInput(e.target.value)}
+                            onClick={() => markMessagesAsRead(currentConversationId.current)}
                             onKeyPress={handleKeyPress}
                             placeholder={
                                 chatStatus === 'no_conversation' || chatStatus === 'connected'

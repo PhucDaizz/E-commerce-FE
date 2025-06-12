@@ -474,6 +474,24 @@
   animation: pulse 2s infinite;
 }
 
+.apple-message-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.apple-message-status {
+    font-size: 12px;
+}
+
+.apple-message-status.read {
+    color: #012547; 
+}
+
+.apple-message-status.unread {
+    color: #d9d9d9; 
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

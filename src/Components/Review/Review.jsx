@@ -5,9 +5,19 @@ import WriteReview from '../WriteReview/WriteReview';
 
 const Review = ({ reviews = [] }) => {
   const [hideReview, setHideReview] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   
-  useEffect(() => {
+   useEffect(() => {
     setHideReview(true);
+    
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => window.removeEventListener('resize', checkIsMobile);
   }, []);
 
   const handleHide = (hideReview) => {
@@ -32,10 +42,10 @@ const Review = ({ reviews = [] }) => {
   }
 
   return (
-    <div className='review'>
+    <div className={`review ${isMobile ? 'mobile-review' : ''}`}>
       <div className="container">
-        <h4 className='d-flex justify-content-center opacity-75'>Bài đánh giá của khách hàng</h4> 
-        <button onClick={() => handleHide(hideReview)} className='btn btn-primary opacity-75'>Viết đánh giá</button>
+        <h4 className={`d-flex justify-content-center opacity-75 ${isMobile ? 'mobile-review-title' : ''}`}>Bài đánh giá của khách hàng</h4> 
+        <button onClick={() => handleHide(hideReview)} className={`btn btn-primary opacity-75 ${isMobile ? 'mobile-review-btn' : ''}`}>Viết đánh giá</button>
         <hr></hr>
         <div> 
           {
@@ -47,11 +57,11 @@ const Review = ({ reviews = [] }) => {
         </div>
         {
           reviews.map((item, i) => (
-            <div key={i} className='review-item'>
-              <p className='infor-review'>{maskEmail(item.username)} - {convertToYMD(item.createdAt)}</p> 
+            <div key={i} className={`review-item ${isMobile ? 'mobile-review-item' : ''}`}>
+              <p className={`infor-review ${isMobile ? 'mobile-info-review' : ''}`}>{maskEmail(item.username)} - {convertToYMD(item.createdAt)}</p> 
               <div className='review-body'>
                 <Rating rating={item.rating}/>
-                <i className='opacity-75'><p>{item.comment}</p></i>
+                <i className='opacity-75'><p className={isMobile ? 'mobile-review-comment' : ''}>{item.comment}</p></i>
               </div>
             </div>
           ))

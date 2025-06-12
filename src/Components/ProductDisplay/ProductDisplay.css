@@ -1,3 +1,4 @@
+/* Base styles - ưu tiên cao nhất */
 .productDisplay .img-fluid {
     max-width: 100%;
     height: auto;
@@ -8,32 +9,38 @@
     justify-content: center;
 }
 
+.productDisplay .size-button.selected {
+    background: #333;
+    color: white;
+    border-color: #333;
+}
 
-  
 .productDisplay .swiper-slide {
     background-size: cover;
     background-position: center;
-    background-color: rgba(0, 0, 0, 0);
+    background-color: transparent;
 }
 
+/* Main swiper - ảnh chính */
 .productDisplay .mySwiper2 {
     height: 70%;
     width: 100%;
 }
 
 .mySwiper2 img {
-    width: 100%; 
-    height: 100%; 
-    object-fit: contain; 
+    width: 100% !important; 
+    height: 100% !important; 
+    object-fit: contain !important; /* Đảm bảo ảnh hiển thị đầy đủ không bị cắt */
 }
 
 .mySwiper2 .swiper-slide {
-    display: flex; /* Căn giữa nội dung */
-    justify-content: center;
-    align-items: center;
-    height: 900px; /* Chiều cao cố định */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: transparent !important;
 }
 
+/* Thumbnail swiper */
 .productDisplay .mySwiper {
     height: 20%;
     box-sizing: border-box;
@@ -57,6 +64,7 @@
     object-fit: cover;
 }
 
+/* Color and size selection styles */
 .color-circle { 
     width: 30px; 
     height: 30px; 
@@ -64,7 +72,7 @@
     margin: 0 10px; 
     cursor: pointer; 
     border: 2px solid transparent; 
-    transition: transform 0.3s, border-color 0.3s
+    transition: transform 0.3s, border-color 0.3s;
 } 
 
 .color-circle.selected {
@@ -79,7 +87,7 @@
 
 .size-button { 
     margin: 5px; 
-    padding: 10px; 
+    padding: 4px; 
     border: 1px solid rgba(0, 0, 0, 0.148); 
     background-color: white; 
     cursor: pointer; 
@@ -98,6 +106,7 @@
     opacity: 0.5; 
 }
 
+/* Product info styles */
 .product-name {
     font-size: 30px;
     font-weight: 500;
@@ -108,11 +117,11 @@
     font-weight: 400;
 }
 
+/* Quantity selector */
 .quantity-selector { 
     display: flex; 
     align-items: center; 
     margin: 20px;
-    
 } 
 
 .quantity-selector button { 
@@ -133,18 +142,20 @@
     height: 30px; 
     text-align: center; 
     border: 1px solid #ced4da; 
-    margin: 0 10px; border-radius: 5px; 
+    margin: 0 10px; 
+    border-radius: 5px; 
 }
 
+/* Add to cart button */
 .add-to-cart {
     background-color: white;
     border: 1px #fa2626 solid;
     width: 100%;
     height: 40px;
     font-weight: 400;
-    position: relative; /* Để sử dụng cho pseudo-element */
-    overflow: hidden; /* Ẩn phần thừa ra ngoài */
-    transition: color 0.3s; /* Hiệu ứng chuyển đổi cho màu chữ */
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s;
     z-index: 1;
     border-radius: 6px;
     margin-bottom: 30px;
@@ -176,4 +187,438 @@
     z-index: 2; 
 }
 
-  
+/* Clickable images */
+.clickable-image {
+    transition: transform 0.2s ease;
+}
+
+.clickable-image:hover {
+    transform: scale(1.02);
+}
+
+.clickable-thumbnail:hover {
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+/* Modal styles - FIX PHÓNG TO ẢNH */
+.image-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(10px); /* làm mờ nền phía sau */
+  background-color: rgba(0, 0, 0, 0.3); /* đen mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease;
+    padding: 0;
+    margin: 0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.image-modal-content {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+    z-index: 10001;
+    transition: background-color 0.2s ease;
+    backdrop-filter: blur(10px);
+}
+
+.modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.modal-swiper {
+    width: 100% !important;
+    height: 100% !important;
+    position: relative;
+}
+
+.modal-swiper .swiper-slide {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden;
+}
+
+.modal-image-container {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 80px 80px 120px 80px; /* Top, Right, Bottom, Left - để chừa chỗ cho close button và counter */
+    box-sizing: border-box;
+}
+
+.modal-image {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important; /* Hiển thị full ảnh không bị cắt */
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    display: block;
+}
+
+.modal-swiper .swiper-button-next,
+.modal-swiper .swiper-button-prev {
+    background: rgba(255, 255, 255, 0.2);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    backdrop-filter: blur(10px);
+    transition: background-color 0.2s ease;
+}
+
+.modal-swiper .swiper-button-next:hover,
+.modal-swiper .swiper-button-prev:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.modal-swiper .swiper-button-next::after,
+.modal-swiper .swiper-button-prev::after {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.modal-image-counter {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    z-index: 10001;
+}
+
+.modal-swiper .swiper-slide-active .modal-image {
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* MOBILE RESPONSIVE - ưu tiên cao nhất */
+@media (max-width: 768px) {
+    .productDisplay .mobile-layout {
+        flex-direction: column;
+    }
+    
+    .productDisplay .product-imagee {
+        margin-bottom: 20px;
+    }
+    
+    .productDisplay .mobile-description {
+        padding: 15px !important;
+    }
+    
+    /* Mobile image styles - FIX CHÍNH */
+    .productDisplay .mySwiper2 {
+        height: 350px !important; /* Tăng chiều cao cho mobile */
+        margin-bottom: 15px !important;
+    }
+
+    .productDisplay .mySwiper2 img,
+    .mySwiper2 img {
+        width: 100% !important; 
+        height: 100% !important; 
+        object-fit: contain !important; /* Hiển thị full ảnh không bị cắt */
+        max-width: 100% !important;
+        max-height: 100% !important;
+    }
+
+    .productDisplay .mySwiper2 .swiper-slide,
+    .mySwiper2 .swiper-slide {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        height: 350px !important; /* Đảm bảo chiều cao cố định */
+    }
+    
+    .productDisplay .mySwiper {
+        height: 80px !important;
+        margin-top: 10px;
+    }
+    
+    .productDisplay .mySwiper .swiper-slide img {
+        height: 70px !important;
+        object-fit: cover !important;
+        width: auto !important;
+    }
+    
+    /* Product info mobile */
+    .productDisplay .product-name {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    .productDisplay .product-price {
+        font-size: 20px;
+        color: #000000;
+        font-weight: 400;
+        margin-bottom: 15px;
+    }
+    
+    .productDisplay .product-color {
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .productDisplay .color-circle {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .productDisplay .color-circle.selected {
+        border-color: #333;
+        transform: scale(1.1);
+    }
+    
+    .productDisplay .product-sizes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .productDisplay .size-button {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        background: white;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 14px;
+        min-width: 45px;
+        transition: all 0.3s ease;
+    }
+    
+    .productDisplay .size-button:hover:not(.out-of-stock) {
+        border-color: #333;
+        background: #f8f9fa;
+    }
+    
+    .productDisplay .size-button.selected {
+        background: #333 !important;
+        color: white !important;
+        border-color: #333 !important;
+    }
+    
+    .productDisplay .size-button.out-of-stock {
+        background: #f5f5f5;
+        color: #999;
+        cursor: not-allowed;
+        text-decoration: line-through;
+    }
+    
+    .productDisplay .quantity-selector {
+        align-items: center;
+        margin-bottom: 20px;
+        justify-content: flex-start;
+        gap: 0;
+    }
+    
+    .productDisplay .quantity-selector button {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #ddd;
+        background: white;
+        cursor: pointer;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .productDisplay .quantity-selector button:first-child {
+        border-radius: 4px 0 0 4px;
+    }
+    
+    .productDisplay .quantity-selector button:last-child {
+        border-radius: 0 4px 4px 0;
+    }
+    
+    .productDisplay .quantity-selector input {
+        width: 60px;
+        height: 40px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-left: none;
+        border-right: none;
+        outline: none;
+        font-size: 16px;
+    }
+    
+    .productDisplay .add-to-cart {
+        width: 100%;
+        padding: 15px;
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-bottom: 20px;
+        transition: background 0.3s ease;
+    }
+    
+    .productDisplay .add-to-cart:hover {
+        background: #555;
+    }
+    
+    .productDisplay .mobile-description-text {
+        font-size: 14px;
+        line-height: 1.6;
+        color: #666;
+    }
+
+    /* Modal responsive - FIX MOBILE MODAL */
+    .image-modal-content {
+        width: 100vw !important;
+        height: 100vh !important;
+    }
+
+    .modal-close-btn {
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .modal-image-container {
+        padding: 60px 20px 100px 20px !important; /* Giảm padding cho mobile */
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .modal-image {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        width: auto !important;
+        height: auto !important;
+        object-fit: contain !important;
+    }
+
+    .modal-swiper .swiper-button-next,
+    .modal-swiper .swiper-button-prev {
+        width: 40px;
+        height: 40px;
+    }
+
+    .modal-swiper .swiper-button-next::after,
+    .modal-swiper .swiper-button-prev::after {
+        font-size: 16px;
+    }
+
+    .modal-image-counter {
+        bottom: 20px;
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+/* Extra small mobile */
+@media (max-width: 480px) {
+    .productDisplay .mySwiper2 {
+        height: 320px !important; /* Điều chỉnh cho màn hình nhỏ hơn */
+    }
+
+    .productDisplay .mySwiper2 .swiper-slide {
+        height: 320px !important;
+    }
+    
+    .productDisplay .product-name {
+        font-size: 16px;
+    }
+    
+    .productDisplay .product-price {
+        font-size: 18px;
+    }
+    
+    .productDisplay .color-circle {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .productDisplay .size-button {
+        padding: 6px 10px;
+        font-size: 13px;
+        min-width: 40px;
+    }
+
+    /* Modal cho mobile nhỏ */
+    .modal-image-container {
+        padding: 50px 15px 80px 15px !important; /* Giảm padding hơn nữa */
+    }
+    
+    .modal-close-btn {
+        top: 10px;
+        right: 10px;
+        width: 35px;
+        height: 35px;
+    }
+    
+    .modal-swiper .swiper-button-next,
+    .modal-swiper .swiper-button-prev {
+        width: 35px;
+        height: 35px;
+    }
+
+    .modal-image-counter {
+        bottom: 15px;
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+}

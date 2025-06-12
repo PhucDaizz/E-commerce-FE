@@ -50,12 +50,16 @@ const Login = ({ onPage, setHideRegister, setIsSliding}) => {
       <ToastContainer/>
       { onPage ? (
           <div className='row' style={{ minHeight: '700px' }}>
-            <div className="col border-end d-flex flex-column align-items-center justify-content-center">
-              
+            {/* Cột tiêu đề được đặt lên trước */}
+            <div className="col d-flex flex-column align-items-center justify-content-center order-md-2 order-1"> {/* order-md-2: normal order on desktop, order-1: first on mobile */}
+                <h1>{forgetPass ? 'Đặt lại mật mã' : 'Đăng nhập tài khoản'}</h1>
+                <div className='border border-0 w-25 bg-black' style={{ height: '2px' }}></div>
+            </div>
+            {/* Cột form được đặt sau */}
+            <div className="col border-end d-flex flex-column align-items-center justify-content-center order-md-1 order-2"> {/* order-md-1: normal order on desktop, order-2: second on mobile */}
               {
                 forgetPass ? (
                   <div className='w-75'>
-                    {/* <h3 className='mb-3'>Đặt lại mật mã</h3> */}
                     <form onSubmit={handleResetPassword}>
                       <div className="form-group">
                         <label htmlFor="email">Email:</label>
@@ -119,12 +123,7 @@ const Login = ({ onPage, setHideRegister, setIsSliding}) => {
                   </form>
                 )
               }
-              
             </div>
-              <div className="col d-flex flex-column align-items-center justify-content-center">
-                <h1>{forgetPass ? 'Đặt lại mật mã' : 'Đăng nhập tài khoản'}</h1>
-                <div className='border border-0 w-25 bg-black' style={{ height: '2px' }}></div>
-              </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="login-form"> 

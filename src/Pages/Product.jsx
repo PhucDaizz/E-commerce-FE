@@ -38,7 +38,7 @@ const Product = () => {
   },[productId])
 
   return (
-    <div>
+    <div className='mobile-product-container'>
       <Breadcrum categoryname={category} productName={product.productName}/>
       <ProductDisplay images={images} product={product} colors={color} rating={averageRating}/>
       <Review reviews={reviews}/>

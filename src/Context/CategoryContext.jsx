@@ -8,6 +8,7 @@ const CategoryContext = createContext();
 
 // Tạo Provider để bọc các thành phần con
 export const CategoryProvider = ({ children }) => {
+  const apiUrl = import.meta.env.VITE_BASE_API_URL;
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categories, setCategories] = useState([]);
 
@@ -17,7 +18,7 @@ export const CategoryProvider = ({ children }) => {
 
   const getCategory = async () => {
     try {
-      const res = await axios.get('https://localhost:7295/api/Category');
+      const res = await axios.get(`${apiUrl}/api/Category`);
       setCategories(res.data);
     } catch (error) {
       console.error(error);
@@ -67,7 +68,7 @@ export const CategoryProvider = ({ children }) => {
 
   const getDetailCategory = async(categoryID) => {
     try {
-      const response = await axios.get(`https://localhost:7295/api/Category/${categoryID}`)
+      const response = await axios.get(`${apiUrl}/api/Category/${categoryID}`)
       return response.data
     } catch(error) {
       console.error("Lỗi khi lấy thông tin muc sp: ",error)

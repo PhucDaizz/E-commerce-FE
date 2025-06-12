@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 
 const CartItem = () => {
+    const apiUrl = import.meta.env.VITE_BASE_API_URL;
     const [totalCost, setTotalCost] = useState(0);
     const { cart, getCart, handleUpdateItemCart, handleRemoveItem } = useAuth();
     const navigate = useNavigate();
@@ -64,7 +65,7 @@ const CartItem = () => {
                                         {/* Ảnh sản phẩm */}
                                         <td>
                                             <img 
-                                                src={`https://localhost:7295/Resources/${item.productDTO.images[0].imageURL}`} 
+                                                src={`${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`} 
                                                 alt="Product" 
                                                 className="img-fluid rounded"
                                                 style={{ width: '60px', height: '60px', objectFit: 'cover' }}

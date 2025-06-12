@@ -16,8 +16,10 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import './AdminChatComponent.css';
+import { useChat } from '../../Context/ChatContext';
 
 const AdminChatComponent = ({ admin, token }) => {
+  const {markReadMessage} = useChat();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [activeTab, setActiveTab] = useState('pending'); // 'pending' or 'active'
@@ -104,6 +106,7 @@ const AdminChatComponent = ({ admin, token }) => {
     chatService.off('ChatClosed');
     chatService.off('ChatError');
     chatService.off('ChatInfo');
+    chatService.off('ReceiveReadReceipt');
 
     // Receive pending conversations when admin connects
     chatService.on('ReceivePendingConversations', (conversations) => {
@@ -261,7 +264,74 @@ const AdminChatComponent = ({ admin, token }) => {
       console.log('Chat info:', info);
       toast.info(info);
     });
+
+    chatService.on('ReceiveReadReceipt', (conversationId, readerUserId, DateTime) => {
+      if (readerUserId !== admin.id) {
+        setMessages(prevMessages =>
+          prevMessages.map(message =>
+            message.conversationId === conversationId &&
+            message.senderUserId === admin.id 
+              ? { ...message, isReadByClient: true }
+              : message
+          )
+        );
+      }
+
+      if (readerUserId === admin.id) {
+        setActiveConversations(prev =>
+          prev.map(conv =>
+            conv.conversationId === conversationId
+              ? { ...conv, isReadByAdmin: true }
+              : conv
+          )
+        );
+      }
+      
+      
+      // setMessages(prevMessages =>
+      //   prevMessages.map(message =>
+      //     message.conversationId === conversationId &&
+      //     message.senderUserId !== admin.id // Tin nhắn từ client
+      //       ? { ...message, isReadByClient: true }
+      //       : message
+      //   )
+      // );
+      // // Cập nhật activeConversations để phản ánh trạng thái đọc
+      // setActiveConversations(prev =>
+      //   prev.map(conv =>
+      //     conv.conversationId === conversationId
+      //       ? { ...conv, isReadByAdmin: true }
+      //       : conv
+      //   )
+      // );
+    });
   };
+
+  const markMessagesAsRead = async (conversationId) => {
+    const isAlreadyRead = activeConversations.find(
+      conv => conv.conversationId === conversationId
+    )?.isReadByAdmin;
+
+    if (isAlreadyRead) {
+      console.log(`Conversation ${conversationId} already marked as read, skipping SignalR invoke`);
+      return; 
+    }
+    try {
+      await chatService.invoke('MarkMessagesAsRead', conversationId);
+      console.log(`Successfully invoked MarkMessagesAsRead for conversation: ${conversationId}`);
+      
+      setActiveConversations(prev =>
+        prev.map(conv =>
+          conv.conversationId === conversationId
+            ? { ...conv, isReadByAdmin: true }
+            : conv
+        )
+      );
+    } catch (error) {
+      console.error('Error marking messages as read:', error);
+      toast.error('Không thể đánh dấu tin nhắn là đã đọc');
+    }
+  }
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -300,6 +370,19 @@ const AdminChatComponent = ({ admin, token }) => {
       
       // Request chat history
       await chatService.adminRequestChatHistory(conversation.conversationId);
+      // If admin is not read
+      if (!conversation.isReadByAdmin) {
+        await chatService.adminRequestChatHistory(conversation.conversationId);
+        await markReadMessage(conversation.conversationId);
+
+        setActiveConversations(prev =>
+          prev.map(conv =>
+            conv.conversationId === conversation.conversationId
+              ? { ...conv, isReadByAdmin: true }
+              : conv
+          )
+        );
+      }
     } catch (error) {
       console.error('Error selecting active chat:', error);
       toast.error('Không thể tải lịch sử chat: ' + error.message);
@@ -472,7 +555,12 @@ const AdminChatComponent = ({ admin, token }) => {
                     </div>
                   ) : (
                     activeConversations.map((conversation) => {
-                      const isUnread = !conversation.isReadByAdmin;
+                      
+                      const isUnread =  conversation.lastMessageUserId !== admin.id && !conversation.isReadByAdmin ;
+                      console.log('lastMessageAdmin: ', conversation.lastMessageUserId === admin.id);
+                      console.log('isAdminRead:' , conversation.isReadByAdmin);
+                      console.log('isUnread:' , conversation.lastMessageUserId !== admin.id || !conversation.isReadByAdmin);
+
                       return (
                         <div
                           key={conversation.conversationId}
@@ -530,21 +618,39 @@ const AdminChatComponent = ({ admin, token }) => {
 
               {/* Messages */}
               <div className="apple-chat-messages">
-                {messages.map((message, index) => (
-                  <div
-                    key={index}
-                    className={`apple-chat-message ${
-                      message.senderUserId === admin.id ? 'sent' : 'received'
-                    }`}
-                  >
-                    <div className="apple-chat-message-bubble">
-                      <p className="apple-chat-message-text">{message.messageContent}</p>
-                      <span className="apple-chat-message-time">
-                        {formatTime(message.sentTimeUtc)}
-                      </span>
+                {messages.map((message, index) => {
+                  // Kiểm tra xem đây có phải là tin nhắn cuối cùng trong chuỗi từ admin
+                  const isLastInSequence =
+                    message.senderUserId === admin.id && // Tin nhắn từ admin
+                    (index === messages.length - 1 || // Là tin nhắn cuối cùng trong danh sách
+                    messages[index + 1]?.senderUserId !== admin.id || // Tin nhắn tiếp theo không phải từ admin
+                    messages[index + 1]?.senderUserId !== message.senderUserId); // Tin nhắn tiếp theo từ người gửi khác
+
+                  return (
+                    <div
+                      key={index}
+                      className={`apple-chat-message ${
+                        message.senderUserId === admin.id  ? 'sent' : 'received'
+                      }`}
+                    >
+                      <div className="apple-chat-message-bubble">
+                        <p className="apple-chat-message-text">{message.messageContent}</p>
+                        <div className="apple-chat-message-footer">
+                          <span className="apple-chat-message-time">
+                            {formatTime(message.sentTimeUtc)}
+                          </span>
+                          {isLastInSequence && (
+                            <span className={`apple-chat-message-status ${
+                              message.isReadByClient ? 'read' : 'unread'
+                            }`}>
+                              {message.isReadByClient ? '✓✓' : '✓'}
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 <div ref={messagesEndRef} />
               </div>
 
@@ -556,6 +662,7 @@ const AdminChatComponent = ({ admin, token }) => {
                     type="text"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
+                    onClick={() => markMessagesAsRead(currentConversation.conversationId)}
                     placeholder="Type a message..."
                     className="apple-chat-input"
                   />

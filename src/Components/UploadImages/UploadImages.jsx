@@ -6,6 +6,7 @@ import { toast, ToastContainer } from 'react-toastify';
 
 
 const UploadImages = ({productId, photos}) => {
+    const apiUrl = import.meta.env.VITE_BASE_API_URL;
     const [images, setImages] = useState([]);
     const [fileCount, setFileCount] = useState(0);
     const {uploadImages} = useProduct();
@@ -87,7 +88,7 @@ const UploadImages = ({productId, photos}) => {
               photos && photos.length > 0 ? (
                 photos.map((img) => (
                   <div key={img.imageID} className="image-preview">
-                    <img src={`https://localhost:7295/Resources/${img.imageURL}`} alt="preview" />
+                    <img src={`${apiUrl}/Resources/${img.imageURL}`} alt="preview" />
                     <button onClick={() => handleDeleteImage(img.imageID)}>×</button>
                   </div>
                 ))

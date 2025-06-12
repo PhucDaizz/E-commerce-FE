@@ -12,3 +12,27 @@
     text-decoration: none;
     color: #5e5e5e;
 }
+
+@media (max-width: 768px) {
+  .mobile-breadcrum {
+    margin: 0;
+    font-size: 12px;
+    padding: 10px 15px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .mobile-breadcrum a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .mobile-breadcrum .category-name,
+  .mobile-breadcrum .product-name {
+    display: inline-block;
+  }
+  
+  .mobile-breadcrum .product-name {
+    font-weight: 500;
+  }
+}

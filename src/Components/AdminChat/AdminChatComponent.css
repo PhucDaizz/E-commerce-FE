@@ -739,3 +739,22 @@
     background: #e5e5e7;
   }
 }
+
+
+.apple-chat-message-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.apple-chat-message-status {
+  font-size: 12px;
+}
+
+.apple-chat-message-status.read {
+  color: #0084ff; /* Màu xanh giống Messenger khi đã đọc */
+}
+
+.apple-chat-message-status.unread {
+  color: #888; /* Màu xám khi chưa đọc */
+}

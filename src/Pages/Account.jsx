@@ -38,8 +38,8 @@ const Account = () => {
     console.log(dataOrder)
   },[])
 
-  if (error) return <div>Error: {error.message}</div>;
-  if (!inforUser || !dataOrder) return <div>Loading...</div>;
+  if (error) return <div className="error-container">Error: {error.message}</div>;
+  if (!inforUser || !dataOrder) return <div className="loading-container">Loading...</div>;
 
   function formatDateTime(dateString) {
     const date = new Date(dateString);
@@ -78,70 +78,109 @@ const Account = () => {
   return (
     <div className='account'>
       {!isHidden && (
-        <div className='container' style={{ minHeight: '80vh' }}>
-          <div className="row">
-            <div className="col-10">
-              <h3 className='mt-5'>Thông tin tài khoản</h3>
-              <p>Xin chào, {inforUser.userName}</p>
-              <div className='d-flex flex-column' style={{ fontSize: '14px' }}>
-                <p className='mt-3 fw-bold'>Đơn hàng gần nhất của bạn</p>
-                <div className='row title bg-light p-3 w-100 justify-content-center align-items-center'>
-                  <div className="col-3 fw-bold">Mã đơn hàng</div>
-                  <div className="col fw-bold">Ngày</div>
-                  <div className="col fw-bold">Chuyển đến</div>
-                  <div className="col fw-bold">Giá trị đơn hàng</div>
-                  <div className="col fw-bold">Phương thức TT</div>
-                  <div className="col fw-bold">Tình trạng TT</div>
-                </div>
+        <div className='account-container'>
+          <div className="account-content">
+            <div className="account-main">
+              <div className="account-header">
+                <div className="header-line"></div>
+                <h1 className="account-title">MY ACCOUNT</h1>
+                <p className="welcome-text">Welcome back, <span className="username">{inforUser.userName}</span></p>
+              </div>
 
-                <div className="row w-100 justify-content-center align-items-center border border-top-0 pt-2 pb-2">
-                  {dataOrder.length > 0 ? (
-                    dataOrder.map(order => (
-                      <div key={order.orderID} className='row pt-2'>
-                        <div className="col-3 text-primary" 
-                          style={{cursor: 'pointer'}}
-                          onClick={() => getOrdDetail(order.orderID)}
-                        >
-                          {order.orderID}
+              <div className="orders-section">
+                <h2 className="section-title">RECENT ORDERS</h2>
+                
+                <div className="orders-table">
+                  <div className="table-header">
+                    <div className="header-cell order-id">ORDER ID</div>
+                    <div className="header-cell date">DATE</div>
+                    <div className="header-cell address">SHIPPING TO</div>
+                    <div className="header-cell amount">TOTAL</div>
+                    <div className="header-cell payment">PAYMENT</div>
+                    <div className="header-cell status">STATUS</div>
+                  </div>
+
+                  <div className="table-body">
+                    {dataOrder.length > 0 ? (
+                      dataOrder.map(order => (
+                        <div key={order.orderID} className="table-row">
+                          <div className="cell order-id-cell" 
+                            onClick={() => getOrdDetail(order.orderID)}
+                          >
+                            #{order.orderID}
+                          </div>
+                          <div className="cell date-cell">{formatDateTime(order.orderDate)}</div>
+                          <div className="cell address-cell">{order.shipping.shippingAddress}</div>
+                          <div className="cell amount-cell">{order.totalAmount.toLocaleString()} VND</div>
+                          <div className="cell payment-cell">{paymentMethod[order.paymentMethodID]}</div>
+                          <div className="cell status-cell">
+                            <span className={`status-badge status-${order.status}`}>
+                              {statusMapping[order.status]}
+                            </span>
+                          </div>
                         </div>
-                        <div className="col">{formatDateTime(order.orderDate)}</div>
-                        <div className="col">{order.shipping.shippingAddress}</div>
-                        <div className="col">{order.totalAmount}</div>
-                        <div className="col">{paymentMethod[order.paymentMethodID]}</div>
-                        <div className="col">{statusMapping[order.status]}</div>
+                      ))
+                    ) : (
+                      <div className="no-orders">
+                        <div className="no-orders-icon">📦</div>
+                        <p>No recent orders found</p>
                       </div>
-                    ))
-                  ) : (
-                    <p className='mt-2'>Không có đơn hàng nào gần đây.</p>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="col border-start" style={{minHeight: '80vh'}}>
-              <p className='mt-5'>Tài khoản của tôi</p>
-              <button className='btn btn-outline-dark m-auto' onClick={() => navigate('/account/update')}>Cập nhật thông tin</button>
+
+            <div className="account-sidebar">
+              <div className="sidebar-content">
+                <h3 className="sidebar-title">Cài ĐẶT TÀI KHOẢN</h3>
+                <div className="sidebar-divider"></div>
+                <button 
+                  className="update-btn" 
+                  onClick={() => navigate('/account/update')}
+                >
+                  <span className="btn-text">CHỈNH SỬA</span>
+                  <div className="btn-arrow">→</div>
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Tab chi tiết đơn hàng */}
+          {/* Order Detail Modal */}
           {showDetail && (
             <div className="order-detail-modal">
-              <div className="order-detail-content w-50">
-                <h4>Chi tiết đơn hàng</h4>
-                <button className="btn-close" onClick={() => setShowDetail(false)}>✖</button>
-                <div className="row bg-light p-2">
-                  <div className="col fw-bold text-uppercase">Tên sp</div>
-                  <div className="col fw-bold text-uppercase">Số lượng</div>
-                  <div className="col fw-bold text-uppercase">Đơn giá</div>
+              <div className="modal-backdrop" onClick={() => setShowDetail(false)}></div>
+              <div className="order-detail-content">
+                <div className="modal-header">
+                  <h2 className="modal-title">ORDER DETAILS</h2>
+                  <button className="close-btn" onClick={() => setShowDetail(false)}>
+                    <span className="close-icon">✕</span>
+                  </button>
                 </div>
-                <div className="order-detail-items">
-                  {orderDetail.map((item) => (
-                    <div key={item.orderDetailID} className="order-item row">
-                      <p className='col'><Link className='text-black' to={`/product/${item.productDTO.productID}`} style={{textDecoration: 'none'}}><strong>{item.productDTO.productName}</strong></Link></p>
-                      <p className='col'>Số lượng: {item.quantity}</p>
-                      <p className='col'>Đơn giá: {item.unitPrice.toLocaleString()} VND</p>
-                    </div>
-                  ))}
+
+                <div className="order-items">
+                  <div className="items-header">
+                    <div className="item-header product">PRODUCT</div>
+                    <div className="item-header quantity">QTY</div>
+                    <div className="item-header price">PRICE</div>
+                  </div>
+
+                  <div className="items-list">
+                    {orderDetail.map((item) => (
+                      <div key={item.orderDetailID} className="order-item">
+                        <div className="item-product">
+                          <Link 
+                            className="product-link" 
+                            to={`/product/${item.productDTO.productID}`}
+                          >
+                            {item.productDTO.productName}
+                          </Link>
+                        </div>
+                        <div className="item-quantity">{item.quantity}</div>
+                        <div className="item-price">{item.unitPrice.toLocaleString()} VND</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

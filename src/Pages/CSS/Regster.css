@@ -1,28 +1,140 @@
 .Register {
     position: relative;
     overflow: hidden;
-    min-height: 700px;
-  }
-  
-  .register-content {
-    position: absolute;
+    min-height: 700px; 
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-between; 
+}
+
+.register-content {
+    position: absolute; 
     width: 100%;
     transition: transform 0.5s ease-in-out;
     left: 0;
-  }
-  
-  .register-content.slide-out {
+    display: flex;
+    flex-direction: column;
+}
+
+.register-content.slide-out {
     transform: translateX(-100%);
-  }
-  
-  .login-content {
+}
+
+.login-content {
     position: absolute;
     width: 100%;
     height: 100%;
     left: 100%;
     transition: transform 0.5s ease-in-out;
-  }
-  
-  .login-content.slide-in {
+    top: 0; 
+}
+
+.login-content.slide-in {
     transform: translateX(0%);
-  }
+}
+
+/* Tablet styles (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .Register .btn-outline-dark {
+        width: 35% !important;
+    }
+}
+
+/* Mobile landscape (481px - 768px) */
+@media (max-width: 768px) and (min-width: 481px) {
+    .Register .row {
+        flex-direction: column;
+        min-height: auto !important; /* Allow height to adjust based on content */
+    }
+    
+    .Register .border-end {
+        border-end: none !important;
+        border-bottom: 1px solid #dee2e6 !important;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .Register .btn-outline-dark {
+        width: 50% !important;
+    }
+    
+    .Register .text-primary {
+        position: static !important; /* Remove absolute positioning */
+        margin-top: 15px;
+        margin-bottom: 20px; /* Add some space below the button */
+        display: block;
+        text-align: center;
+    }
+
+    .register-content form {
+        margin-bottom: 0 !important; /* Remove bottom margin to prevent extra space */
+        padding-bottom: 0 !important; /* Remove bottom padding if it's pushing elements */
+    }
+}
+
+/* Mobile portrait (320px - 480px) */
+@media (max-width: 480px) {
+    .Register {
+        min-height: 100vh; 
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .Register .container {
+        margin-top: 10px !important;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .Register .row {
+        flex-direction: column;
+        min-height: auto !important;
+        flex-grow: 1; 
+    }
+    
+    .Register .border-end {
+        border-end: none !important;
+        border-bottom: 1px solid #dee2e6 !important;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .Register .btn-outline-dark {
+        width: 100% !important;
+    }
+    
+    .Register .text-primary {
+        position: static !important; 
+        margin-top: 0;
+        margin-bottom: 20px; 
+        display: block;
+        text-align: center;
+    }
+    
+    .register-content form {
+        margin-top: 15px !important;
+        padding: 15px !important; 
+        padding-bottom: 0 !important; 
+        flex-grow: 1; 
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; 
+    }
+
+    .register-content form button[type="submit"] {
+        margin-top: auto; 
+        margin-bottom: 15px; 
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .Register {
+        min-height: 100vh;
+    }
+    
+    .Register .row {
+        min-height: 100vh !important;
+    }
+}

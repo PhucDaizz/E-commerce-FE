@@ -13,6 +13,7 @@ import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
 import './ProductDetailModal.css';
 
 const ProductDetailModal = ({ product, isOpen, toggle, setListProduct }) => {
+    const apiUrl = import.meta.env.VITE_BASE_API_URL;
     const { formatCurrency, deleteProduct } = useProduct();
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -108,7 +109,7 @@ const ProductDetailModal = ({ product, isOpen, toggle, setListProduct }) => {
                                             {product.images.map((image) => (
                                                 <SwiperSlide key={image.imageID}>
                                                     <img
-                                                        src={`https://localhost:7295/Resources/${image.imageURL}`}
+                                                        src={`${apiUrl}/Resources/${image.imageURL}`}
                                                         alt={`Product view ${image.imageID}`}
                                                         style={{ width: '100%', height: 'auto' , position: 'absolute', top: '0px'}}
                                                         
@@ -130,7 +131,7 @@ const ProductDetailModal = ({ product, isOpen, toggle, setListProduct }) => {
                                             {product.images.map((image) => (
                                                 <SwiperSlide key={image.imageID}>
                                                     <img
-                                                        src={`https://localhost:7295/Resources/${image.imageURL}`}
+                                                        src={`${apiUrl}/Resources/${image.imageURL}`}
                                                         alt={`Thumbnail ${image.imageID}`}
                                                         style={{ width: '100%', height: 'auto', cursor: 'pointer' }}
                                                     />
