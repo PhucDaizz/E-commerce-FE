@@ -109,7 +109,14 @@ const ProductDetailModal = ({ product, isOpen, toggle, setListProduct }) => {
                                             {product.images.map((image) => (
                                                 <SwiperSlide key={image.imageID}>
                                                     <img
-                                                        src={`${apiUrl}/Resources/${image.imageURL}`}
+                                                        src={
+                                                            image.imageURL
+                                                            ? image.imageURL.includes("cloudinary.com")
+                                                                ? image.imageURL
+                                                                : `${apiUrl}/Resources/${image.imageURL}`
+                                                            : 'https://via.placeholder.com/80x80?text=No+Image'
+                                                        }
+                                                        
                                                         alt={`Product view ${image.imageID}`}
                                                         style={{ width: '100%', height: 'auto' , position: 'absolute', top: '0px'}}
                                                         
@@ -131,7 +138,13 @@ const ProductDetailModal = ({ product, isOpen, toggle, setListProduct }) => {
                                             {product.images.map((image) => (
                                                 <SwiperSlide key={image.imageID}>
                                                     <img
-                                                        src={`${apiUrl}/Resources/${image.imageURL}`}
+                                                        src={
+                                                            image.imageURL
+                                                            ? image.imageURL.includes("cloudinary.com")
+                                                                ? image.imageURL
+                                                                : `${apiUrl}/Resources/${image.imageURL}`
+                                                            : 'https://via.placeholder.com/80x80?text=No+Image'
+                                                        }
                                                         alt={`Thumbnail ${image.imageID}`}
                                                         style={{ width: '100%', height: 'auto', cursor: 'pointer' }}
                                                     />

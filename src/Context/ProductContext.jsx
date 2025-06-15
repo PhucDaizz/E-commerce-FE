@@ -77,26 +77,27 @@ export const ProductProvider  = ({children}) => {
         }
     }
 
-    const uploadImages = async(productID,images) => {
+    const uploadImages = async (productID, images, onCloud = false) => {
         try {
             const response = await apiRequestIMG({
                 method: 'post',
-                url: `/api/ProductImage/UploadListImage/${productID}`,
+                url: `/api/ProductImage/UploadListImage/${productID}?onCloud=${onCloud}`,
                 data: images,
                 headers: { 'Content-Type': 'multipart/form-data' }
-            })
-            if(response.status === 200) {
+            });
+
+            if (response.status === 200) {
                 toast.success("Thêm hình ảnh thành công");
                 return response;
-            }
-            else {
+            } else {
                 toast.error('Lỗi khi tải ảnh lên');
                 return response;
             }
-        } catch(error) {
+        } catch (error) {
             console.log('Lỗi khi tải ảnh lên: ', error);
         }
-    }
+    };
+
 
     const deleteProduct = async(productId) => {
         try {

@@ -15,6 +15,11 @@ export const AllProduct = () => {
         setPage(newPage);
     };
 
+    const resolveImageUrl = (imageUrl) => {
+        return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/Resources/${imageUrl}`;
+    };
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -48,7 +53,7 @@ export const AllProduct = () => {
                 {
                     data.map((item) => {
                         const primaryImage = item.images.find(image => image.isPrimary); 
-                        const imageLink = primaryImage ? `${apiUrl}/Resources/${primaryImage.imageURL}` : ''; 
+                        const imageLink = primaryImage ? resolveImageUrl(primaryImage.imageURL) : ''; 
                         return <Item key={item.productID} id={item.productID} name={item.productName} price={item.price} image={imageLink} ></Item>
                     })
                 }

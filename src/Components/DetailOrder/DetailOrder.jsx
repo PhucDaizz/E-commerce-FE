@@ -149,7 +149,13 @@ return (
                 <div key={index} className={`d-flex align-items-center p-3 mb-2 rounded ${index % 2 === 0 ? "bg-light" :""}`}>
                   {/* Hình ảnh sản phẩm */}
                   <img
-                    src={`${apiUrl}/Resources/${item.productDTO.images[0].imageURL}` || "https://via.placeholder.com/60"}
+                    src={
+                      item.productDTO.images[0].imageURL
+                      ? item.productDTO.images[0].imageURL.includes("cloudinary.com")
+                          ? item.productDTO.images[0].imageURL
+                          : `${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`
+                      : 'https://via.placeholder.com/60'
+                    }
                     alt={item.productDTO.productName}
                     className="rounded me-3"
                     width="60"

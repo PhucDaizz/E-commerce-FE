@@ -41,6 +41,12 @@ const Collections = () => {
         setPage(newPage);
     };
 
+    const resolveImageUrl = (imageUrl) => {
+        if (!imageUrl) return '';
+        return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/Resources/${imageUrl}`;
+    };
+
+
     return (
     <div>
         <div className="collections all-product">
@@ -52,7 +58,8 @@ const Collections = () => {
                 { data && data.length > 0 ? 
                     ( data.map((item) => { 
                         const primaryImage = item.images.find(image => image.isPrimary); 
-                        const imageLink = primaryImage ? `${apiUrl}/Resources/${primaryImage.imageURL}` : ''; 
+                        const imageLink = resolveImageUrl(primaryImage?.imageURL);
+
                         return <Item key={item.productID} id={item.productID} name={item.productName} price={item.price} image={imageLink} />; 
                     }) ) 
                     : ( <div className='noresult' style={{ gridColumn: '1 / -1' }}>

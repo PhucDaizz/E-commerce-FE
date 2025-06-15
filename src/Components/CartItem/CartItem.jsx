@@ -65,7 +65,13 @@ const CartItem = () => {
                                         {/* Ảnh sản phẩm */}
                                         <td>
                                             <img 
-                                                src={`${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`} 
+                                                src={
+                                                    item.productDTO.images[0].imageURL
+                                                    ? item.productDTO.images[0].imageURL.includes("cloudinary.com")
+                                                        ? item.productDTO.images[0].imageURL
+                                                        : `${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`
+                                                    : 'https://via.placeholder.com/80x80?text=No+Image'
+                                                }
                                                 alt="Product" 
                                                 className="img-fluid rounded"
                                                 style={{ width: '60px', height: '60px', objectFit: 'cover' }}

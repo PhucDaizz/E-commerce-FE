@@ -29,10 +29,16 @@ const TrendChart = () => {
         setItemTopSelling(Number(e.target.value));
     };
 
+
+    const resolveImageUrl = (imageUrl) => {
+        return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/Resources/${imageUrl}`;
+    };
+
+
     // Hàm lấy URL ảnh chính từ mảng images
     const getPrimaryImageUrl = (images) => {
         const primaryImage = images?.find(img => img.isPrimary);
-        return primaryImage ? `${apiUrl}/Resources/${primaryImage.imageURL}` : 'placeholder-image.jpg'; // Ảnh mặc định nếu không có
+        return primaryImage ? resolveImageUrl(primaryImage.imageURL) : 'placeholder-image.jpg'; // Ảnh mặc định nếu không có
     };
 
     return (

@@ -136,7 +136,14 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
                     return (
                       <SwiperSlide key={i}>
                         <img
-                          src={`${apiUrl}/Resources/${item.imageURL}`}
+                          src={
+                            item.imageURL
+                            ? item.imageURL.includes("cloudinary.com")
+                                ? item.imageURL
+                                : `${apiUrl}/Resources/${item.imageURL}`
+                            : 'https://via.placeholder.com/60'
+                          }
+                          
                           alt={`Product ${i}`}
                           className="img-fluid clickable-image"
                           onClick={() => handleImageClick(i)}
@@ -159,7 +166,11 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
                   className="mySwiper"
                 >
                   {images.map((item, i) => {
-                    const imageLink = `${apiUrl}/Resources/${item.imageURL}`;
+                    const imageLink = item.imageURL
+                        ? item.imageURL.includes("cloudinary.com")
+                            ? item.imageURL
+                            : `${apiUrl}/Resources/${item.imageURL}`
+                        : 'https://via.placeholder.com/80x80?text=No+Image'
                     return (
                       <SwiperSlide key={i}>
                         <img
@@ -254,7 +265,13 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
                 <SwiperSlide key={i}>
                   <div className="modal-image-container">
                     <img
-                      src={`${apiUrl}/Resources/${item.imageURL}`}
+                      src={
+                          item.imageURL
+                          ? item.imageURL.includes("cloudinary.com")
+                              ? item.imageURL
+                              : `${apiUrl}/Resources/${item.imageURL}`
+                          : 'https://via.placeholder.com/80x80?text=No+Image'
+                      }
                       alt={`Product ${i}`}
                       className="modal-image"
                     />

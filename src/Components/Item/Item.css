@@ -14,7 +14,7 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Tăng độ bóng khi hover */
 }
 
-.item-image {
+.item .item-image {
     height: 300px;
     width: 100%;
     object-fit: cover; /* Đảm bảo hình ảnh được cắt đúng tỷ lệ */
@@ -24,7 +24,7 @@
     margin: 6px 0;
 }
 
-.item-name {
+.item .item-name {
     display: flex;
     justify-content: center; /* Căn giữa tên sản phẩm */
     gap: 20px;
@@ -32,7 +32,7 @@
     color: #333; /* Màu chữ tối hơn */
 }
 
-.item-price {
+.item .item-price {
     display: flex;
     justify-content: center; /* Căn giữa giá sản phẩm */
     color: #000000; /* Màu chữ cho giá sản phẩm */

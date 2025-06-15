@@ -165,7 +165,13 @@ const CartCheckout = ({dataCoupon, setDataCoupon, selectedMethod, note}) => {
                                         <div className="col-3 position-relative">
                                             <img
                                                 className="img-fluid rounded-1 border"
-                                                src={`${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`}
+                                                src={
+                                                    item.productDTO.images[0].imageURL
+                                                    ? item.productDTO.images[0].imageURL.includes("cloudinary.com")
+                                                        ? item.productDTO.images[0].imageURL
+                                                        : `${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`
+                                                    : 'https://via.placeholder.com/80x80?text=No+Image'
+                                                }
                                                 alt={item.productDTO.productName} 
                                                 style={{ maxHeight: '80px' }}
                                             />
@@ -205,7 +211,14 @@ const CartCheckout = ({dataCoupon, setDataCoupon, selectedMethod, note}) => {
                             <div className="col-3 position-relative">
                                 <img
                                     className="img-fluid rounded-1 border"
-                                    src={`${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`}
+                                    src={
+                                        item.productDTO.images[0].imageURL
+                                        ? item.productDTO.images[0].imageURL.includes("cloudinary.com")
+                                            ? item.productDTO.images[0].imageURL
+                                            : `${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`
+                                        : 'https://via.placeholder.com/80x80?text=No+Image'
+                                    }
+                                    
                                     alt={item.productDTO.productName} 
                                     style={{ maxHeight: '50px' }}
                                 />

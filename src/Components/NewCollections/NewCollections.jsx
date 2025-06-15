@@ -18,6 +18,12 @@ const NewCollections = () => {
         .catch(err => console.log(err))
     }, [])
 
+    const resolveImageUrl = (imageUrl) => {
+        if (!imageUrl) return '';
+        return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/Resources/${imageUrl}`;
+    };
+
+
     return (
         <div className='newcollection'>
             <div className="title-newcollection d-flex">
@@ -60,7 +66,7 @@ const NewCollections = () => {
                     {
                         data.map((item,i) => {
                             const primaryImage = item.images.find(image => image.isPrimary);
-                            const imageLink = primaryImage ? `${apiUrl}/Resources/${primaryImage.imageURL}` : '';
+                            const imageLink = primaryImage ? resolveImageUrl(primaryImage.imageURL) : '';
                             return (
                                 <SwiperSlide key={i}>
                                     <Item id={item.productID} name={item.productName} price={item.price} image={imageLink}/>
