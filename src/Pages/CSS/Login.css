@@ -138,3 +138,20 @@
     margin-bottom: 10px; /* Add space below it */
   }
 }
+
+.google-login-button {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: white;
+  color: #444;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.google-login-button:hover {
+  background-color: #f5f5f5;
+}

@@ -5,17 +5,26 @@ import { useCategory } from '../../Context/CategoryContext';
 import { useSearch } from '../../Context/SearchContext';
 import axios from '../../api/axios';
 import './Navbar.css';
-import Login from '../../Pages/Login'
+import Login from '../../Pages/Login';
 
 const Navbar = () => {
   const [menu, setMenu] = useState("");
   const [isLoginHovered, setIsLoginHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { loggedIn, logout, itemInCart, inforUser } = useAuth();
   const { handleCategoryChange, categories } = useCategory();
   const { searchQuery, setSearchQuery } = useSearch();
   const navigate = useNavigate();
+
+  // Detect screen size
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleSearch = () => {
     navigate('/shop');
@@ -42,9 +51,21 @@ const Navbar = () => {
     setIsCategoryDropdownOpen(false);
   };
 
+  // Optimized API call for categories
   useEffect(() => {
-    console.log(inforUser);
-  }, [inforUser])
+    const fetchCategories = async () => {
+      try {
+        if (categories.length === 0) {
+          const response = await axios.get('/categories');
+          handleCategoryChange(null, response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <nav className='navbar'>
@@ -67,106 +88,122 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Desktop Categories */}
-        <div className="navbar-categories desktop-categories">
-          <p onClick={() => {setMenu("shop"); handleCategoryChange(null);}} className='category-item'>
-            <Link style={{textDecoration: 'none'}} to={'/shop'}>
-              <strong>Shop</strong> {menu === "shop" && <hr/>}
-            </Link>
-          </p>
-          {categories.slice(0, 4).map((d) => (
-            <p 
-              onClick={() => handleCategoryClick(d.categoryName, d.categoryID)}
-              key={d.categoryID}
-              className='category-item'
-            >
+        {/* Desktop Categories - CHỈ HIỆN TRÊN DESKTOP */}
+        {!isMobile && (
+          <div className="navbar-categories desktop-categories">
+            <p onClick={() => {setMenu("shop"); handleCategoryChange(null);}} className='category-item'>
               <Link style={{textDecoration: 'none'}} to={'/shop'}>
-                <strong>{d.categoryName}</strong>
+                <strong>Shop</strong> {menu === "shop" && <hr/>}
               </Link>
-              {menu === d.categoryName && <hr/>}
             </p>
-          ))}
-          {categories.length > 4 && (
-            <div className="category-dropdown">
-              <p className='category-item dropdown-toggle' onClick={toggleCategoryDropdown}>
-                <strong>Xem thêm</strong>
-                <i className={`bi bi-chevron-${isCategoryDropdownOpen ? 'up' : 'down'} ms-1`}></i>
-              </p>
-              {isCategoryDropdownOpen && (
-                <div className="dropdown-menu">
-                  {categories.slice(4).map((d) => (
-                    <p 
-                      onClick={() => handleCategoryClick(d.categoryName, d.categoryID)}
-                      key={d.categoryID}
-                      className='dropdown-item'
-                    >
-                      <Link style={{textDecoration: 'none'}} to={'/shop'}>
-                        <strong>{d.categoryName}</strong>
-                      </Link>
-                    </p>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Desktop Actions */}
-        <div className="navbar-actions desktop-actions">
-          <div className="search-container">
-            <i className="bi bi-search" onClick={handleSearch}></i>
-            <input
-              type="search"
-              placeholder='Tìm kiếm sản phẩm'
-              className='search-input'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-          </div>
-
-          {!loggedIn ? (
-            <div className="auth-buttons">
-              <Link to={'/register'}>
-                <button className="auth-button">Đăng ký</button>
-              </Link>
-              <div 
-                className="login-container"
-                onMouseEnter={() => setIsLoginHovered(true)}
-                onMouseLeave={() => setIsLoginHovered(false)}
+            {categories.slice(0, 4).map((d) => (
+              <p 
+                onClick={() => handleCategoryClick(d.categoryName, d.categoryID)}
+                key={d.categoryID}
+                className='category-item'
               >
-                <button className="auth-button">
-                  <Link to={'/login'} className='auth-link' style={{textDecoration: 'none'}}>
-                    Đăng nhập
-                  </Link>
-                </button>
-                {isLoginHovered && (
-                  <div className="login-form-popup">
-                    <div className='haha'></div>
-                    <Login onPage={false}/>
+                <Link style={{textDecoration: 'none'}} to={'/shop'}>
+                  <strong>{d.categoryName}</strong>
+                </Link>
+                {menu === d.categoryName && <hr/>}
+              </p>
+            ))}
+            {categories.length > 4 && (
+              <div className="category-dropdown">
+                <p className='category-item dropdown-toggle' onClick={toggleCategoryDropdown}>
+                  <strong>Xem thêm</strong>
+                  <i className={`bi bi-chevron-${isCategoryDropdownOpen ? 'up' : 'down'} ms-1`}></i>
+                </p>
+                {isCategoryDropdownOpen && (
+                  <div className="dropdown-menu">
+                    {categories.slice(4).map((d) => (
+                      <p 
+                        onClick={() => handleCategoryClick(d.categoryName, d.categoryID)}
+                        key={d.categoryID}
+                        className='dropdown-item'
+                      >
+                        <Link style={{textDecoration: 'none'}} to={'/shop'}>
+                          <strong>{d.categoryName}</strong>
+                        </Link>
+                      </p>
+                    ))}
                   </div>
                 )}
               </div>
+            )}
+          </div>
+        )}
+
+        {/* Desktop Actions - CHỈ HIỆN TRÊN DESKTOP */}
+        {!isMobile && (
+          <div className="navbar-actions desktop-actions">
+            <div className="search-container">
+              <i className="bi bi-search" onClick={handleSearch}></i>
+              <input
+                type="search"
+                placeholder='Tìm kiếm sản phẩm'
+                className='search-input'
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
             </div>
-          ) : (
-            <div className="user-info">
-              <span>
-                <Link to='/account' className='text-black' style={{textDecoration: 'none', fontSize: '14px'}}>
-                  Xin chào, {inforUser.userName}!
+
+            {!loggedIn ? (
+              <div className="auth-buttons">
+                <Link to={'/register'}>
+                  <button className="auth-button">Đăng ký</button>
                 </Link>
-              </span>
-              <Link to={'/cart'}>
-                <i className="bi bi-bag"></i>
-                <div className='cart-container'>
-                  <span className='cart-count'>{itemInCart}</span>
+                <div 
+                  className="login-container"
+                  onMouseEnter={() => setIsLoginHovered(true)}
+                  onMouseLeave={() => setIsLoginHovered(false)}
+                >
+                  <button className="auth-button">
+                    <Link to={'/login'} className='auth-link' style={{textDecoration: 'none'}}>
+                      Đăng nhập
+                    </Link>
+                  </button>
+                  {isLoginHovered && (
+                    <div className="login-form-popup">
+                      <div className='haha'></div>
+                      <Login onPage={false}/>
+                    </div>
+                  )}
                 </div>
-              </Link>
-              <button className="auth-button logout" onClick={logout}>
-                Đăng xuất
-              </button>
-            </div>
-          )}
-        </div>
+              </div>
+            ) : (
+              <div className="user-info">
+                <span>
+                  <Link to='/account' className='text-black' style={{textDecoration: 'none', fontSize: '14px'}}>
+                    Xin chào, {inforUser.userName}!
+                  </Link>
+                </span>
+                <Link to={'/cart'}>
+                  <i className="bi bi-bag"></i>
+                  <div className='cart-container'>
+                    <span className='cart-count'>{itemInCart}</span>
+                  </div>
+                </Link>
+                <button className="auth-button logout" onClick={logout}>
+                  Đăng xuất
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Cart icon for mobile - CHỈ HIỆN TRÊN MOBILE */}
+        {isMobile && loggedIn && (
+          <div className="mobile-cart-icon">
+            <Link to={'/cart'}>
+              <i className="bi bi-bag"></i>
+              <div className='cart-container'>
+                <span className='cart-count'>{itemInCart}</span>
+              </div>
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Mobile Menu */}

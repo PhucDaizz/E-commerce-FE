@@ -111,6 +111,21 @@ const Login = ({ onPage, setHideRegister, setIsSliding}) => {
                       <p className='mt-1 text-primary' style={{cursor: 'pointer'}} onClick={() => setForgetPass(true)}>Quên mật khẩu?</p>
                       <button type="submit" className="btn btn-outline-dark rounded-0 w-25">Đăng nhập</button> 
                     </div>
+                    <div className='d-flex justify-content-center align-items-center mt-3'>
+                      <button 
+                        className="google-login-button" 
+                        onClick={() => {
+                          window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google-login`; // URL API backend
+                        }}
+                      >
+                        <img 
+                          src="https://developers.google.com/identity/images/g-logo.png" 
+                          alt="Google logo" 
+                          style={{ width: '20px', marginRight: '8px' }} 
+                        />
+                        Đăng nhập với Google
+                      </button>
+                    </div>
                     {
                       location.pathname === '/register' && (
                         <p className='mt-2 icon-link icon-link-hv d-flex align-items-center' 
@@ -126,39 +141,56 @@ const Login = ({ onPage, setHideRegister, setIsSliding}) => {
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="login-form"> 
-            <h2>Đăng nhập tài khoản</h2> 
-            <div className="form-group"> 
-              <label htmlFor="email">Email:</label> 
-              <input 
-                type="email" 
-                id="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                required 
-              /> 
-            </div> 
-            <div className="form-group"> 
-              <label htmlFor="password">Mật khẩu:</label> 
-              <input 
-                type="password" 
-                id="password" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
-                required 
-              /> 
-            </div> 
-            <div className="d-flex flex-column">
-              <div className="">
-                <p className='mt-1 text-primary' 
-                  style={{cursor: 'pointer'}} 
-                  onClick={() => {
-                    navigateToResetPass();
-                  }}>Quên mật khẩu?</p>
-                <button type="submit" className="login-button">Đăng nhập</button> 
+          <div>
+            <form onSubmit={handleSubmit} className="login-form"> 
+              <h2>Đăng nhập tài khoản</h2> 
+              <div className="form-group"> 
+                <label htmlFor="email">Email:</label> 
+                <input 
+                  type="email" 
+                  id="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  required 
+                /> 
+              </div> 
+              <div className="form-group"> 
+                <label htmlFor="password">Mật khẩu:</label> 
+                <input 
+                  type="password" 
+                  id="password" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  required 
+                /> 
+              </div> 
+              <div className="d-flex flex-column">
+                <div className="">
+                  <p className='mt-1 text-primary' 
+                    style={{cursor: 'pointer'}} 
+                    onClick={() => {
+                      navigateToResetPass();
+                    }}>Quên mật khẩu?</p>
+                  <button type="submit" className="login-button">Đăng nhập</button> 
+                </div>
               </div>
+            </form> 
+            <div className='d-flex justify-content-center align-items-center mt-3'>
+              <button 
+                className="google-login-button" 
+                onClick={() => {
+                  window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google-login`; // URL API backend
+                }}
+              >
+                <img 
+                  src="https://developers.google.com/identity/images/g-logo.png" 
+                  alt="Google logo" 
+                  style={{ width: '20px', marginRight: '8px' }} 
+                />
+                Đăng nhập với Google
+              </button>
             </div>
-          </form> 
+          </div>
         )
       }
     </div>

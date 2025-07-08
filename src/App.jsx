@@ -17,6 +17,7 @@ import Account from './Pages/Account'
 import UpdateInfor from './Components/UpdateInfor/UpdateInfor'
 import ResultPayment from './Components/ResultPayment/ResultPayment'
 import Chat from './Pages/Chat'
+import AuthCallback from './Pages/AuthCallback'
   
 function AppContent() { // Tạo một component mới để sử dụng useLocation()
   const location = useLocation();
@@ -26,6 +27,7 @@ function AppContent() { // Tạo một component mới để sử dụng useLoca
     <>
       {isAdminRoute ? <AdminNavbar /> : <Navbar />}
       <Routes>
+        <Route path='/auth/callback' element={<AuthCallback />} />
         <Route path='/' element={<Home />} />
         <Route path='/shop' element={<Shop />} />
         <Route path='/ao' />

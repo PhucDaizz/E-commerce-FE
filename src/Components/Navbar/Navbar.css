@@ -240,6 +240,24 @@
   z-index: 1001;
 }
 
+/* Mobile cart icon */
+.mobile-cart-icon {
+  position: absolute;
+  right: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.navbar .mobile-cart-icon i {
+  font-size: 24px;
+  color: black;
+}
+
+@media (max-width: 480px) {
+  .mobile-cart-icon {
+    right: 50px;
+  }
+}
 /* User Info */
 .navbar .user-info {
   display: flex;

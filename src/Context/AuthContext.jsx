@@ -274,6 +274,32 @@ const checkAuthStatus = () => {
         }
     }
 
+    const handleLoginGG = async(token, refreshToken) => {
+        localStorage.setItem('token', token);
+        localStorage.setItem('refreshToken', refreshToken);
+        const decodeToken = jwtDecode(token);
+        const roles = decodeToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+        if (roles.includes("Admin") || roles.includes("SuperAdmin")) {
+            localStorage.setItem('token', token);
+            setToken(token);
+            setUser(
+            {
+                id: decodeToken.sub || decodeToken.userId,
+                email: decodeToken.email,
+                userName: decodeToken.userName || decodeToken.name,
+                roles: decodeToken.roles || decodeToken.role || [],
+                isAdmin: true
+            });
+            setIsAuthenticated(true);
+            setIsLoading(false);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     const login = (token, refreshToken) => {
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
@@ -294,8 +320,10 @@ const checkAuthStatus = () => {
         setIsAuthenticated(true);
         setIsLoading(false);
         } catch (error) {
-        console.error('Error decoding token:', error);
-        throw new Error('Invalid token');
+            console.error('Error decoding token:', error);
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            throw new Error('Invalid token');
         }
     }
 
@@ -522,6 +550,7 @@ const checkAuthStatus = () => {
             register,
             registerAdmin,
             handleLogin,
+            handleLoginGG,
             verifyEmail,
             forgotPassword,
             resetPassword,
