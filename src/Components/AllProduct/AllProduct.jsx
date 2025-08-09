@@ -16,7 +16,7 @@ export const AllProduct = () => {
     };
 
     const resolveImageUrl = (imageUrl) => {
-        return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/Resources/${imageUrl}`;
+        return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/${imageUrl}`;
     };
 
 

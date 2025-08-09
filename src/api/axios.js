@@ -13,6 +13,10 @@ export const axiosPrivate = axios.create({
     withCredentials: true
 })
 
+export const axiosInstance = axios.create({
+    baseURL: apiUrl
+  // KHÔNG set Content-Type mặc định
+});
 
 export const ghnApi = axios.create({
     baseURL: 'https://dev-online-gateway.ghn.vn',

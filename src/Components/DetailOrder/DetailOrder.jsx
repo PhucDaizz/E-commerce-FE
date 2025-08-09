@@ -153,7 +153,7 @@ return (
                       item.productDTO.images[0].imageURL
                       ? item.productDTO.images[0].imageURL.includes("cloudinary.com")
                           ? item.productDTO.images[0].imageURL
-                          : `${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`
+                          : `${apiUrl}/${item.productDTO.images[0].imageURL}`
                       : 'https://via.placeholder.com/60'
                     }
                     alt={item.productDTO.productName}
@@ -167,6 +167,8 @@ return (
                     <p className="mb-0 text-muted">Sản phẩm</p>
                     <h6 className={`fw-bold name-product`} style={{cursor: 'pointer'}}>
                       {item.productDTO.productName}
+                      <br/>
+                      <span className="text-muted fw-normal">{item.productSizeDTO.size} - {item.productSizeDTO.colorName}</span>
                     </h6>
                   </div>
 

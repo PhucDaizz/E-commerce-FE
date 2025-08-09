@@ -115,6 +115,23 @@ const Sidebar = () => {
           </div>
         )}
 
+
+        {/* Banner */}
+        <div
+          className="menu-item py-2 px-3 d-flex align-items-center gap-2 rounded hover-bg"
+          onClick={() => toggleMenu('banner')}
+        >
+          <i className="bi bi-image"></i>
+          <span>Banner</span>
+        </div>
+        {openMenus.banner && (
+          <div className="submenu ps-4 d-flex flex-column gap-1">
+            <Link to="/admin/banner/list" className="text-dark text-decoration-none py-1 hover-link">DS Banner</Link>
+            <Link to="/admin/banner/add" className="text-dark text-decoration-none py-1 hover-link">Thêm Banner</Link>
+          </div>
+        )}
+          
+
         {/* Settings */}
         <div
           className="menu-item py-2 px-3 d-flex align-items-center gap-2 rounded hover-bg"

@@ -113,7 +113,7 @@ const ProductDetailModal = ({ product, isOpen, toggle, setListProduct }) => {
                                                             image.imageURL
                                                             ? image.imageURL.includes("cloudinary.com")
                                                                 ? image.imageURL
-                                                                : `${apiUrl}/Resources/${image.imageURL}`
+                                                                : `${apiUrl}/${image.imageURL}`
                                                             : 'https://via.placeholder.com/80x80?text=No+Image'
                                                         }
                                                         
@@ -142,7 +142,7 @@ const ProductDetailModal = ({ product, isOpen, toggle, setListProduct }) => {
                                                             image.imageURL
                                                             ? image.imageURL.includes("cloudinary.com")
                                                                 ? image.imageURL
-                                                                : `${apiUrl}/Resources/${image.imageURL}`
+                                                                : `${apiUrl}/${image.imageURL}`
                                                             : 'https://via.placeholder.com/80x80?text=No+Image'
                                                         }
                                                         alt={`Thumbnail ${image.imageID}`}

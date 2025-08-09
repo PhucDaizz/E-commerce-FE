@@ -235,7 +235,7 @@ const ListProduct = () => {
                                                         product.images?.[0]?.imageURL
                                                         ? product.images[0].imageURL.includes("cloudinary.com")
                                                             ? product.images[0].imageURL
-                                                            : `${apiUrl}/Resources/${product.images[0].imageURL}`
+                                                            : `${apiUrl}/${product.images[0].imageURL}`
                                                         : 'https://via.placeholder.com/80x80?text=No+Image'
                                                     }
                                                     alt={product.productName}

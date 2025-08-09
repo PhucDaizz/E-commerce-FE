@@ -69,7 +69,7 @@ const CartItem = () => {
                                                     item.productDTO.images[0].imageURL
                                                     ? item.productDTO.images[0].imageURL.includes("cloudinary.com")
                                                         ? item.productDTO.images[0].imageURL
-                                                        : `${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`
+                                                        : `${apiUrl}/${item.productDTO.images[0].imageURL}`
                                                     : 'https://via.placeholder.com/80x80?text=No+Image'
                                                 }
                                                 alt="Product" 
@@ -81,6 +81,8 @@ const CartItem = () => {
                                         <td className="text-start">
                                             <Link to={`/product/${item.productID}`} className="text-decoration-none text-dark ">
                                                 {item.productDTO.productName}
+                                                <br />
+                                                <span className="text-muted">{item.productSizeDTO.size} - {item.colorName}</span>
                                             </Link>
                                         </td>
                                         {/* Số lượng */}

@@ -20,7 +20,7 @@ const NewCollections = () => {
 
     const resolveImageUrl = (imageUrl) => {
         if (!imageUrl) return '';
-        return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/Resources/${imageUrl}`;
+        return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/${imageUrl}`;
     };
 
 

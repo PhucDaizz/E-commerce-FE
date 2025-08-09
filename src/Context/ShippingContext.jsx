@@ -83,8 +83,13 @@ export const ShippingProvider = ({children}) => {
 
             function transformOrderDetails(orderDetails) {
                 return orderDetails.map(detail => {
+                    const productName = detail.productDTO.productName;
+                    const colorName = detail.productSizeDTO.colorName;
+                    const size = detail.productSizeDTO.size;
+                    const newName = `${productName} - ${colorName} - Size: ${size}`;
+
                     return {
-                        name: detail.productDTO.productName,
+                        name: newName ,
                         code: detail.productDTO.productID.toString(),
                         quantity: detail.quantity,
                         price: detail.unitPrice,

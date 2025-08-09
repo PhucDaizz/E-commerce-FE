@@ -169,8 +169,8 @@ const CartCheckout = ({dataCoupon, setDataCoupon, selectedMethod, note}) => {
                                                     item.productDTO.images[0].imageURL
                                                     ? item.productDTO.images[0].imageURL.includes("cloudinary.com")
                                                         ? item.productDTO.images[0].imageURL
-                                                        : `${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`
-                                                    : 'https://via.placeholder.com/80x80?text=No+Image'
+                                                        : `${item.productDTO.images[0].imageURL}`
+                                                    : 'https://via.${apiUrl}/placeholder.com/80x80?text=No+Image'
                                                 }
                                                 alt={item.productDTO.productName} 
                                                 style={{ maxHeight: '80px' }}
@@ -215,7 +215,7 @@ const CartCheckout = ({dataCoupon, setDataCoupon, selectedMethod, note}) => {
                                         item.productDTO.images[0].imageURL
                                         ? item.productDTO.images[0].imageURL.includes("cloudinary.com")
                                             ? item.productDTO.images[0].imageURL
-                                            : `${apiUrl}/Resources/${item.productDTO.images[0].imageURL}`
+                                            : `${apiUrl}/${item.productDTO.images[0].imageURL}`
                                         : 'https://via.placeholder.com/80x80?text=No+Image'
                                     }
                                     

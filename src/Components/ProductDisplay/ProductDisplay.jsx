@@ -140,7 +140,7 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
                             item.imageURL
                             ? item.imageURL.includes("cloudinary.com")
                                 ? item.imageURL
-                                : `${apiUrl}/Resources/${item.imageURL}`
+                                : `${apiUrl}/${item.imageURL}`
                             : 'https://via.placeholder.com/60'
                           }
                           
@@ -169,7 +169,7 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
                     const imageLink = item.imageURL
                         ? item.imageURL.includes("cloudinary.com")
                             ? item.imageURL
-                            : `${apiUrl}/Resources/${item.imageURL}`
+                            : `${apiUrl}/${item.imageURL}`
                         : 'https://via.placeholder.com/80x80?text=No+Image'
                     return (
                       <SwiperSlide key={i}>
@@ -269,7 +269,7 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
                           item.imageURL
                           ? item.imageURL.includes("cloudinary.com")
                               ? item.imageURL
-                              : `${apiUrl}/Resources/${item.imageURL}`
+                              : `${apiUrl}/${item.imageURL}`
                           : 'https://via.placeholder.com/80x80?text=No+Image'
                       }
                       alt={`Product ${i}`}

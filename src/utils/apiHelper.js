@@ -1,4 +1,4 @@
-import axios from '../api/axios';
+import axios, { axiosInstance } from '../api/axios';
 import { isAxiosError } from 'axios';
 
 export const header = (token) => ({
@@ -70,6 +70,72 @@ export const apiRequest = async (config) => {
         }
     } catch (error) {
         console.error('API Request Error:', error);
+        throw error;
+    }
+};
+
+export const apiMultipartRequest = async (config) => {
+    try {
+        let token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('No token found');
+        }
+
+        // CHỈ gắn Authorization header, KHÔNG gắn Content-Type
+        config.headers = {
+            'Authorization': `Bearer ${token}`,
+            ...config.headers
+        };
+
+        // Đảm bảo xóa Content-Type nếu có (để axios tự động thêm với boundary)
+        if (config.data instanceof FormData) {
+            delete config.headers['Content-Type'];
+            console.log('FormData detected, removed Content-Type header');
+        }
+
+        config.timeout = 30000; // Tăng timeout cho upload file
+
+        console.log('Multipart request config:', {
+            url: config.url,
+            method: config.method,
+            headers: config.headers,
+            hasFormData: config.data instanceof FormData
+        });
+
+        try {
+            return await axiosInstance(config);
+        } catch (error) {
+            if (isAxiosError(error)) {
+                if (!error.response) {
+                    console.error('Network Error');
+                    throw new Error('Network Error');
+                }
+
+                // Token hết hạn
+                if (error.response.status === 401) {
+                    console.log('Token hết hạn, đang làm mới token...');
+                    token = await refreshToken();
+                    if (token) {
+                        // Cập nhật lại header với token mới
+                        config.headers = {
+                            'Authorization': `Bearer ${token}`,
+                            ...config.headers
+                        };
+
+                        // Xóa Content-Type cho FormData lần nữa
+                        if (config.data instanceof FormData) {
+                            delete config.headers['Content-Type'];
+                        }
+
+                        return await axiosInstance(config);
+                    }
+                    throw new Error('Failed to refresh token');
+                }
+            }
+            throw error;
+        }
+    } catch (error) {
+        console.error('API Multipart Request Error:', error);
         throw error;
     }
 };

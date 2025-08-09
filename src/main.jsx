@@ -12,25 +12,28 @@ import { ProductProvider } from './Context/ProductContext.jsx';
 import { ShippingProvider } from './Context/ShippingContext.jsx';
 import { DashboardProvider } from './Context/DashboardContext.jsx';
 import { ChatProvider } from './Context/ChatContext.jsx';
+import { BannerProvider } from './Context/BannerContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
-      <CategoryProvider>
-          <SearchProvider>
-              <AdminProvider>
-                <ProductProvider>
-                  <ShippingProvider>
-                    <DashboardProvider>
-                      <ChatProvider>
-                        <App />
-                      </ChatProvider>
-                    </DashboardProvider>
-                  </ShippingProvider>
-                </ProductProvider>
-              </AdminProvider>
-          </SearchProvider>
-      </CategoryProvider>
+      <BannerProvider>
+        <CategoryProvider>
+            <SearchProvider>
+                <AdminProvider>
+                  <ProductProvider>
+                    <ShippingProvider>
+                      <DashboardProvider>
+                        <ChatProvider>
+                          <App />
+                        </ChatProvider>
+                      </DashboardProvider>
+                    </ShippingProvider>
+                  </ProductProvider>
+                </AdminProvider>
+            </SearchProvider>
+        </CategoryProvider>
+      </BannerProvider>
     </AuthProvider>
   </StrictMode>,
 )

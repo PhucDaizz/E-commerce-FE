@@ -184,7 +184,7 @@ const UploadImagesAdmin = ({productId, photos, onPhotosUpdate}) => {
                         const isCloudinaryImage = img.imageURL && img.imageURL.includes('cloudinary.com');
                         const imageSrc = isCloudinaryImage 
                             ? img.imageURL 
-                            : `${apiUrl}/Resources/${img.imageURL}`;
+                            : `${apiUrl}/${img.imageURL}`;
                         
                         return (
                             <div key={img.imageID} className="image-preview">

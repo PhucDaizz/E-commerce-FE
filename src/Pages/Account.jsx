@@ -174,12 +174,28 @@ const Account = () => {
                             to={`/product/${item.productDTO.productID}`}
                           >
                             {item.productDTO.productName}
+                            <br/>
+                            <span className='fw-normal'>{item.productSizeDTO.colorName} - {item.productSizeDTO.size}</span>
                           </Link>
                         </div>
                         <div className="item-quantity">{item.quantity}</div>
                         <div className="item-price">{item.unitPrice.toLocaleString()} VND</div>
                       </div>
                     ))}
+                  </div>
+                </div>
+                <div className="order-summary">
+                  <div className="summary-item">
+                    <span className="summary-label">Total: </span>
+                    <span className="summary-value">{orderDetail.reduce((total, item) => total + (item.unitPrice * item.quantity), 0).toLocaleString()} VND</span>
+                  </div>
+                  <div className="summary-item">
+                    <span className="summary-label">Shipping: </span>
+                    <span className="summary-value">30.000 VND</span>
+                  </div>
+                  <div className="summary-item">
+                    <span className="summary-label">Grand Total: </span>
+                    <span className="summary-value">{(orderDetail.reduce((total, item) => total + (item.unitPrice * item.quantity), 0) + 30000).toLocaleString()} VND</span>
                   </div>
                 </div>
               </div>

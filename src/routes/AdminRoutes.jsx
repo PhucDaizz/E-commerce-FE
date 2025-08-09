@@ -17,6 +17,7 @@ import ListVoucher from '../Pages/AdminPages/ListVoucher'
 import AddVoucher from '../Pages/AdminPages/AddVoucher'
 import EditVoucher from '../Pages/AdminPages/EditVoucher'
 import Chat from '../Pages/Chat'
+import ListBanner from '../Components/ListBanner/ListBanner'
 
 const AdminRoutes = () => {
   return (
@@ -54,6 +55,13 @@ const AdminRoutes = () => {
               <Route path='edit'>
                 <Route path=':voucherId' element={<EditVoucher/>}></Route>
               </Route>
+            </Route>
+            <Route path='/banner'>
+              <Route path='list' element={<ListBanner/>}></Route>
+              {/* <Route path='add' element={<AddBanner/>}></Route>
+              <Route path='edit'>
+                <Route path=':bannerId' element={<EditBanner/>}></Route>
+              </Route> */}
             </Route>
             <Route path='/chat' element={<Chat/>}   ></Route>
         </Routes>
