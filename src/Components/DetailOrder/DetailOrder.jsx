@@ -6,136 +6,178 @@ import { useAdmin } from '../../Context/AdminContext';
 import { useProduct } from '../../Context/ProductContext';
 import OrderApproval from '../OrderApproval/OrderApproval';
 import { useShipping } from '../../Context/ShippingContext';
+import CancelOrderModal from '../Modals/CancelOrderModal'; 
 
 const DetailOrder = () => {
-const apiUrl = import.meta.env.VITE_BASE_API_URL;
-const { orderId } = useParams();
-const { getDetailOrder } = useAdmin();
-const { formatCurrency, getInforCoupon } = useProduct();
-const { printBillOfLading } = useShipping();
+  const apiUrl = import.meta.env.VITE_BASE_API_URL;
+  const { orderId } = useParams();
+  const { getDetailOrder } = useAdmin(); 
+  const { formatCurrency, getInforCoupon, cancelOrder } = useProduct();
+  const { printBillOfLading } = useShipping();
 
-const [showTab, setShowTab] = useState(false);
-const [dataOrder, setDataOrder] = useState({});
-const [orderDetail, setOrderDetail] = useState([]);
-const [dataCoupon, setDataCoupon] = useState({});
-const [showDropdown, setShowDropdown] = useState(false);
-const [isOrderProcessing, setIsOrderProcessing] = useState(false);
+  const [showTab, setShowTab] = useState(false);
+  const [dataOrder, setDataOrder] = useState({});
+  const [orderDetail, setOrderDetail] = useState([]);
+  const [dataCoupon, setDataCoupon] = useState({});
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [isOrderProcessing, setIsOrderProcessing] = useState(false);
+  // State cho modal hủy đơn hàng
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState(null);
 
-const isApproved = dataOrder?.shippingDTO?.length > 0 && dataOrder.shippingDTO[0]?.shippingServicesID;
+  const isApproved = dataOrder?.shippingDTO?.length > 0 && dataOrder.shippingDTO[0]?.shippingServicesID;
 
-const handleGetDataDetailOrder = async () => {
+  const handleGetDataDetailOrder = async () => {
     const response = await getDetailOrder(orderId);
     if (response.status === 200) {
-        setDataOrder(response.data);
-        setOrderDetail(response.data.getOrderDetailDTO);
-        console.log(response.data);
+      setDataOrder(response.data);
+      setOrderDetail(response.data.getOrderDetailDTO);
+      console.log(response.data);
     }
-};
+  };
 
-const handlegetDataCoupon = async () => {
+  const handleCancelOrder = async () => {
+    setIsCancelling(true);
+    setCancelError(null);
+    
     try {
-        if (!dataOrder.discountID) return null;
-        const response = await getInforCoupon(dataOrder.discountID);
-        return response;
+      const result = await cancelOrder(orderId);
+      if (result) {
+        toast.success("Đơn hàng đã được hủy thành công!");
+        await handleGetDataDetailOrder(); 
+        setShowCancelModal(false);
+      }
     } catch (error) {
-        console.error("Lỗi khi lấy thông tin mã giảm giá:", error);
-        return null;
+      setCancelError(error.message || 'Không thể hủy đơn hàng');
+      toast.error("Có lỗi xảy ra khi hủy đơn hàng!");
+    } finally {
+      setIsCancelling(false);
     }
-};
+  };
 
-const handlePrintBill = async (paperSize) => {
+  const handlegetDataCoupon = async () => {
+    try {
+      if (!dataOrder.discountID) return null;
+      const response = await getInforCoupon(dataOrder.discountID);
+      return response;
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin mã giảm giá:", error);
+      return null;
+    }
+  };
+
+  const handlePrintBill = async (paperSize) => {
     const url = await printBillOfLading(dataOrder.shippingDTO[0].shippingServicesID, paperSize);
     if (url) {
-        window.open(url, '_blank');
+      window.open(url, '_blank');
     }
-};
+  };
 
-const handleToggleDropdown = () => {
+  const handleToggleDropdown = () => {
     setShowDropdown(!showDropdown);
-};
+  };
 
-const subtotal = () => {
+  const subtotal = () => {
     let total = 0;
     orderDetail.forEach(element => {
-        total += (element.unitPrice * element.quantity);
+      total += (element.unitPrice * element.quantity);
     });
     return total;
-};
+  };
 
-const methodPayment = {
+  const methodPayment = {
     '1': 'Chuyển khoản ngân hàng',
     '2': 'COD'
-};
+  };
 
-const handleToggleTab = () => {
+  const handleToggleTab = () => {
     setShowTab(!showTab);
-};
+  };
 
-const handleOrderApproved = async () => {
+  const handleOrderApproved = async () => {
     setIsOrderProcessing(true);
     setShowTab(false);
     toast.success("Đơn hàng đã được duyệt thành công!");
     await handleGetDataDetailOrder(); // Cập nhật dữ liệu ngay lập tức
     setIsOrderProcessing(false);
-};
+  };
 
-useEffect(() => {
+  useEffect(() => {
     handleGetDataDetailOrder();
-}, [orderId]);
+  }, [orderId]);
 
-useEffect(() => {
+  useEffect(() => {
     const fetchCoupon = async () => {
-        if (dataOrder.discountID) {
-            const response = await handlegetDataCoupon();
-            if (response.status === 200) {
-                setDataCoupon(response.data);
-                console.log("Coupon data loaded:", response.data);
-            } else {
-                console.error("Không thể lấy thông tin mã giảm giá");
-            }
+      if (dataOrder.discountID) {
+        const response = await handlegetDataCoupon();
+        if (response.status === 200) {
+          setDataCoupon(response.data);
+          console.log("Coupon data loaded:", response.data);
+        } else {
+          console.error("Không thể lấy thông tin mã giảm giá");
         }
+      }
     };
     fetchCoupon();
-}, [dataOrder.discountID]);
+  }, [dataOrder.discountID]);
 
-return (
-  <div className='detail-order container mb-3'>
+  return (
+    <div className='detail-order container mb-3'>
       <ToastContainer />
       <div className='d-flex justify-content-between w-100'>
         <h4 className='mt-4 mb-3 fw-bold'>Đơn hàng: {orderId}</h4>
         <div className='d-flex'>
           <button
-              className={isApproved || isOrderProcessing ? 'btn btn-secondary m-3' : 'btn btn-outline-primary m-3'}
-              onClick={handleToggleTab}
-              disabled={isApproved || isOrderProcessing}
+            className='btn btn-danger m-3'
+            disabled={dataOrder.status != 0}
+            onClick={() => setShowCancelModal(true)}
           >
-              {showTab ? "Đóng" : "Duyệt đơn"}
+            Huỷ đơn
+          </button>
+          <button
+            className={isApproved || isOrderProcessing || dataOrder.status !== 0 ? 'btn btn-secondary m-3' : 'btn btn-outline-primary m-3'}
+            onClick={handleToggleTab}
+            disabled={isApproved || isOrderProcessing || dataOrder.status !== 0}
+          >
+            {showTab ? "Đóng" : "Duyệt đơn"}
           </button>
           {isApproved && (
-              <div className='dropdown-container'>
-                  <button className='btn btn-success m-3' onClick={handleToggleDropdown}>
-                      In vận đơn <i className="bi bi-chevron-down" style={{ fontSize: '10px' }}></i>
-                  </button>
-                  {showDropdown && (
-                      <div className='print-order'>
-                          <button className='dropdown-item' onClick={() => handlePrintBill('A5')}>A5</button>
-                          <button className='dropdown-item' onClick={() => handlePrintBill('80x80')}>80x80</button>
-                          <button className='dropdown-item' onClick={() => handlePrintBill('52x70')}>52x70</button>
-                      </div>
-                  )}
-              </div>
+            <div className='dropdown-container'>
+              <button className='btn btn-success m-3' onClick={handleToggleDropdown}>
+                In vận đơn <i className="bi bi-chevron-down" style={{ fontSize: '10px' }}></i>
+              </button>
+              {showDropdown && (
+                <div className='print-order'>
+                  <button className='dropdown-item' onClick={() => handlePrintBill('A5')}>A5</button>
+                  <button className='dropdown-item' onClick={() => handlePrintBill('80x80')}>80x80</button>
+                  <button className='dropdown-item' onClick={() => handlePrintBill('52x70')}>52x70</button>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
 
+      {/* Modal hủy đơn hàng */}
+      <CancelOrderModal
+        showCancelModal={showCancelModal}
+        setShowCancelModal={setShowCancelModal}
+        orderDetail={{ orderId: orderId }} // Truyền orderId vào orderDetail
+        isCancelling={isCancelling}
+        cancelError={cancelError}
+        handleCancelOrder={handleCancelOrder}
+      />
+
       {showTab && !isOrderProcessing && (
-          <div className="order-approval-overlay" onClick={handleToggleTab}>
-              <div className="order-approval-tab" onClick={(e) => e.stopPropagation()}>
-                  <OrderApproval dataOrder={dataOrder} orderDetail={orderDetail} onOrderApproved={handleOrderApproved} />
-              </div>
+        <div className="order-approval-overlay" onClick={handleToggleTab}>
+          <div className="order-approval-tab" onClick={(e) => e.stopPropagation()}>
+            <OrderApproval dataOrder={dataOrder} orderDetail={orderDetail} onOrderApproved={handleOrderApproved} />
           </div>
+        </div>
       )}
 
+      
       <div className="row">
         <div className="col">
           {/* Chi tiết sản phẩm */}

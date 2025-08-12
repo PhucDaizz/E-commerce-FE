@@ -846,3 +846,99 @@
     max-height: 95vh;
   }
 }
+
+/* Thêm vào file Account.css */
+.confirmation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100000000000000000000000000000000000;
+}
+
+.confirmation-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  font-family: 'Arial', sans-serif;
+  width: 90%;
+  z-index: 100000000000000000000000000000000001;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.modal-actions .btn {
+  margin: 0 0.5rem; 
+  min-width: 120px;
+  padding: 0.5rem 1rem;
+}
+
+.modal-actions .btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+}
+
+.modal-actions .btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+
+.modal-actions .btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.modal-actions .btn:active {
+  transform: translateY(0);
+}
+
+.order-summary {
+  background-color: #ffffff; /* nền đen thể thao */
+  color: #000000; /* chữ trắng */
+  padding: 20px;
+  border-radius: 10px;
+  font-family: 'Arial Black', 'Segoe UI', sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+.order-summary .summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.order-summary .summary-item:last-child {
+  border-bottom: none;
+}
+
+.order-summary .summary-label {
+  color: #bbb; /* màu xám nhẹ cho label */
+  font-size: 14px;
+}
+
+.order-summary .summary-value {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.order-summary .summary-item:last-child .summary-value {
+  color: #ffcc00; /* màu vàng nổi bật cho tổng cộng */
+}

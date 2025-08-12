@@ -380,11 +380,23 @@ export const ProductProvider  = ({children}) => {
             console.error('Lỗi khi lấy danh sách voucher:', error);
         }
     }
+
+    const cancelOrder = async(orderId) => {
+        try {
+            const response = await apiRequest({
+                method: 'put',
+                url: `/api/Order/CancelOrder/${orderId}`
+            });
+            return response;
+        } catch (error) {
+            console.error('Lỗi khi hủy đơn hàng: ', error); 
+        }
+    }
     
     const formatDateTime = (dateString) => {
         const date = new Date(dateString);
         const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 vì tháng bắt đầu từ 0
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
         const year = date.getFullYear();
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
@@ -421,7 +433,8 @@ export const ProductProvider  = ({children}) => {
             getAllVoucher,
             formatDateTime,
             pauseSaleProduct,
-            deleteProduct
+            deleteProduct,
+            cancelOrder
         }}>
             {children}
         </ProductContext.Provider>
