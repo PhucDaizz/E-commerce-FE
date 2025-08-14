@@ -1,25 +1,303 @@
+/* Collections Container */
+.collections-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
 .collections {
-    min-height: 300px;
+    min-height: 400px;
 }
 
+/* Header Section */
+.collections-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.collections-header h3 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    position: relative;
+}
+
+.collections-header h3:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border-radius: 2px;
+}
+
+/* Filters Section */
+.filters-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 150px;
+    flex: 1;
+}
+
+.filter-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.3rem;
+}
+
+.filter-select {
+    padding: 0.7rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    background: white;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.filter-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Price Range Inputs */
+.price-range-group {
+    min-width: 220px;
+}
+
+.price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.price-input {
+    flex: 1;
+    padding: 0.7rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    background: white;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.price-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.price-separator {
+    font-weight: 600;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* Toggle Switch */
+.sort-direction-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-switch {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    gap: 0.7rem;
+}
+
+.toggle-switch input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    background-color: #ccc;
+    border-radius: 13px;
+    transition: 0.3s ease;
+}
+
+.toggle-slider:before {
+    content: "";
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    top: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: #007bff;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
+
+.toggle-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+    min-width: 70px;
+}
+
+/* Products Grid */
 .shop-product {
-    margin: 20px 170px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    row-gap: 20px;
+    gap: 1.5rem;
+    margin: 2rem 0;
 }
 
+/* Responsive Grid */
+/* Extra Large screens */
+@media (min-width: 1400px) {
+    .shop-product {
+        grid-template-columns: repeat(5, 1fr);
+        margin: 2rem 0;
+    }
+}
+
+/* Large screens */
+@media (min-width: 1200px) and (max-width: 1399px) {
+    .shop-product {
+        grid-template-columns: repeat(4, 1fr);
+        margin: 2rem 0;
+    }
+}
+
+/* Medium screens */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .shop-product {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Small screens */
+@media (min-width: 576px) and (max-width: 767px) {
+    .shop-product {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 575px) {
+    .shop-product {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+/* No Results Section */
 .noresult {
-    display: flex; /* Sử dụng Flexbox để căn giữa */
-    justify-content: center; /* Căn giữa theo chiều ngang */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    height: 200px; /* Đảm bảo chiều cao đủ để căn giữa */
-    text-align: center; /* Căn giữa văn bản */
-    width: 100%; /* Đảm bảo chiều rộng đầy đủ */
-    font-size: 18px; /* Kích thước chữ */
-    color: #555; /* Màu chữ */
-    background-color: #f9f9f9; /* Màu nền nhẹ để làm nổi bật thông báo */
-    border: 1px solid #ccc; /* Đường viền nhẹ */
-    border-radius: 5px; /* Bo góc nhẹ */
-    margin: 20px 0; /* Khoảng cách trên và dưới */
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 16px;
+    margin: 2rem 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.no-result-content {
+    text-align: center;
+    padding: 2rem;
+}
+
+.no-result-icon {
+    font-size: 4rem;
+    color: #007bff;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+}
+
+.no-result-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.no-result-subtext {
+    font-size: 1rem;
+    color: #666;
+    margin: 0;
+}
+
+/* Responsive Filters */
+@media (max-width: 768px) {
+    .filters-section {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .filter-group {
+        min-width: 100%;
+    }
+    
+    .price-range-group {
+        min-width: 100%;
+    }
+    
+    .collections-header h3 {
+        font-size: 1.5rem;
+    }
+    
+    .collections-container {
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .price-inputs {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    
+    .price-separator {
+        text-align: center;
+    }
+    
+    .toggle-switch {
+        justify-content: center;
+    }
+    
+    .filters-section {
+        padding: 0.75rem;
+    }
 }

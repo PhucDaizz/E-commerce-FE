@@ -8,6 +8,7 @@ import { useCategory } from '../../Context/CategoryContext';
 import AddColors from '../../Components/AddColors/AddColors';
 import Confirmation from '../../Components/Confirmation/Confirmation';
 import UploadImagesAdmin from '../../Components/UploadImagesAdmin/UploadImagesAdmin';
+import ProductTagSelector from '../../Components/ProductTagSelector/ProductTagSelector';
 
 const EditProducts = () => {
     const { productID } = useParams();
@@ -281,8 +282,8 @@ const EditProducts = () => {
                     {/* Product Information Card */}
                     <div className="product-info-card">
                         <div className="card-header">
-                            <h3 className="card-title">
-                                <i className="fas fa-info-circle me-2"></i>
+                            <h3 className="card-title text-white">
+                                <i className="bi bi-info-circle me-2"></i>
                                 Thông tin sản phẩm
                             </h3>
                         </div>
@@ -388,8 +389,8 @@ const EditProducts = () => {
                         {/* Sizes */}
                         <div className="sizes-card">
                             <div className="card-header">
-                                <h3 className="card-title">
-                                    <i className="fas fa-ruler me-2"></i>
+                                <h3 className="card-title text-white">
+                                    <i className="fa-solid fa-ruler"></i>
                                     Kích thước sản phẩm
                                 </h3>
                             </div>
@@ -479,7 +480,7 @@ const EditProducts = () => {
                         </div>
                     </div>
                 </div>
-
+                <ProductTagSelector productId={productID} isEditMode={true} />
                 {/* Upload Images Section */}
                 <div className="upload-section">
                     <UploadImagesAdmin productId={productID} photos={data.images}/>

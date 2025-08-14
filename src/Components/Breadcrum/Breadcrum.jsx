@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const Breadcrum = (props) => {
 
     return (
-        <div className='breadcrum container mobile-breadcrum'>
+        <div className='breadcrum container mobile-breadcrum pt-2'>
             <Link to='/'>TRANG CHỦ</Link> / <span className="category-name">{props.categoryname}</span> / <span className="product-name">{props.productName}</span>
         </div>
     )

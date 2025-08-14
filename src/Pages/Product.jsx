@@ -1,3 +1,4 @@
+// Product.js
 import React, { useEffect, useState } from 'react'
 import Breadcrum from '../Components/Breadcrum/Breadcrum'
 import axios from '../api/axios'
@@ -9,7 +10,7 @@ const Product = () => {
   const {productId} = useParams();
   const [category, setCategory] = useState('');
   const [product, setProduct] = useState({});
-  const [images,  setImages] = useState([]);
+  const [images, setImages] = useState([]);
   const [color, setColor] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
@@ -24,7 +25,10 @@ const Product = () => {
     })
     .catch(err => console.log(err))
     
-    // call api review 
+    fetchReviews();
+  },[productId])
+
+  const fetchReviews = () => {
     axios.get(`/api/ProductReview/${productId}`)
     .then(rv => {
       if (rv.data.length > 0) { 
@@ -35,13 +39,31 @@ const Product = () => {
       }
     })
     .catch(err => console.log(err))
-  },[productId])
+  }
+
+  const handleNewReview = (newReview) => {
+    const updatedReviews = [newReview, ...reviews];
+    setReviews(updatedReviews);
+    
+    const totalRating = updatedReviews.reduce((acc, curr) => acc + curr.rating, 0);
+    const avgRating = totalRating / updatedReviews.length;
+    setAverageRating(avgRating);
+  }
 
   return (
-    <div className='mobile-product-container'>
+    <div className='mobile-product-container mt-5'>
       <Breadcrum categoryname={category} productName={product.productName}/>
-      <ProductDisplay images={images} product={product} colors={color} rating={averageRating}/>
-      <Review reviews={reviews}/>
+      <ProductDisplay 
+        images={images} 
+        product={product} 
+        colors={color} 
+        rating={averageRating}
+      />
+      <Review 
+        reviews={reviews} 
+        productId={productId}
+        onNewReview={handleNewReview}
+      />
     </div>
   )
 }

@@ -392,6 +392,23 @@ export const ProductProvider  = ({children}) => {
             console.error('Lỗi khi hủy đơn hàng: ', error); 
         }
     }
+
+    const postReview = async (productId, review, rating) => {
+        try {
+            const response = await apiRequest({
+                method: 'post',
+                url: `/api/ProductReview`,
+                data: {
+                    productID: productId,
+                    rating: rating,
+                    comment: review
+                }
+            });
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    };
     
     const formatDateTime = (dateString) => {
         const date = new Date(dateString);
@@ -434,7 +451,8 @@ export const ProductProvider  = ({children}) => {
             formatDateTime,
             pauseSaleProduct,
             deleteProduct,
-            cancelOrder
+            cancelOrder,
+            postReview
         }}>
             {children}
         </ProductContext.Provider>

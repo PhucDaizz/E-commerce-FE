@@ -13,6 +13,7 @@ import { ShippingProvider } from './Context/ShippingContext.jsx';
 import { DashboardProvider } from './Context/DashboardContext.jsx';
 import { ChatProvider } from './Context/ChatContext.jsx';
 import { BannerProvider } from './Context/BannerContext.jsx';
+import { TagProvider } from './Context/TagContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -20,6 +21,7 @@ createRoot(document.getElementById('root')).render(
       <BannerProvider>
         <CategoryProvider>
             <SearchProvider>
+              <TagProvider>
                 <AdminProvider>
                   <ProductProvider>
                     <ShippingProvider>
@@ -31,6 +33,7 @@ createRoot(document.getElementById('root')).render(
                     </ShippingProvider>
                   </ProductProvider>
                 </AdminProvider>
+              </TagProvider>
             </SearchProvider>
         </CategoryProvider>
       </BannerProvider>

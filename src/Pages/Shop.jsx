@@ -7,7 +7,7 @@ const Shop = () => {
   return (
     
     <div className='shop'>
-        <div className='breadcum-category'>
+        <div className='breadcum-category pt-4'>
             <Breadcrum categoryname='DANH MỤC' ></Breadcrum>
         </div>
         <Collections/>

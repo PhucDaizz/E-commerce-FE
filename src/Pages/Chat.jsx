@@ -7,7 +7,7 @@ import UserChat from '../Components/UserChat/UserChat';
 
 const Chat = () => {
   const { user, token, isAuthenticated, isLoading } = useAuth();
-console.log('Auth State in ChatExample:', { isLoading, isAuthenticated, user, token });
+// console.log('Auth State in ChatExample:', { isLoading, isAuthenticated, user, token });
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">

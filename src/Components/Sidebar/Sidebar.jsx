@@ -130,6 +130,21 @@ const Sidebar = () => {
             <Link to="/admin/banner/add" className="text-dark text-decoration-none py-1 hover-link">Thêm Banner</Link>
           </div>
         )}
+
+        {/* Tag */}
+        <div
+          className="menu-item py-2 px-3 d-flex align-items-center gap-2 rounded hover-bg"
+          onClick={() => toggleMenu('tag')}
+        >
+          <i className="bi bi-tags"></i>
+          <span>Tag</span>
+        </div>
+        {openMenus.tag && (
+          <div className="submenu ps-4 d-flex flex-column gap-1">
+            <Link to="/admin/tag/list" className="text-dark text-decoration-none py-1 hover-link">DS Tag</Link>
+            <Link to="/admin/tag/add" className="text-dark text-decoration-none py-1 hover-link">Thêm Tag</Link>
+          </div>
+        )}
           
 
         {/* Settings */}

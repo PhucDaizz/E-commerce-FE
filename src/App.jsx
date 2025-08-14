@@ -30,8 +30,6 @@ function AppContent() { // Tạo một component mới để sử dụng useLoca
         <Route path='/auth/callback' element={<AuthCallback />} />
         <Route path='/' element={<Home />} />
         <Route path='/shop' element={<Shop />} />
-        <Route path='/ao' />
-        <Route path='/quan' />
         <Route path='/product' element={<Product />}>
           <Route path=':productId' element={<Product />} />
         </Route>

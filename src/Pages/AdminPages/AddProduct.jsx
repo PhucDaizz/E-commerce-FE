@@ -6,6 +6,7 @@ import { useCategory } from '../../Context/CategoryContext';
 import AddColors from '../../Components/AddColors/AddColors';
 import UploadImages from '../../Components/UploadImages/UploadImages';
 import Confirmation from '../../Components/Confirmation/Confirmation';
+import ProductTagSelector from '../../Components/ProductTagSelector/ProductTagSelector';
 
 const AddProducts = () => {
     const {handleAddProduct, handleAddProductColor, getAllColor, addRangeColors} = useProduct();
@@ -218,7 +219,7 @@ const AddProducts = () => {
                     {/* Product Information Card */}
                     <div className="product-info-card">
                         <div className="card-header">
-                            <h3 className="card-title">
+                            <h3 className="card-title text-white">
                                 <i className="fas fa-info-circle me-2"></i>
                                 Thông tin sản phẩm
                             </h3>
@@ -328,7 +329,7 @@ const AddProducts = () => {
                         {/* Sizes */}
                         <div className="sizes-card">
                             <div className="card-header">
-                                <h3 className="card-title">
+                                <h3 className="card-title text-white">
                                     <i className="fas fa-ruler me-2"></i>
                                     Kích thước sản phẩm
                                 </h3>
@@ -419,7 +420,7 @@ const AddProducts = () => {
                         </div>
                     </div>
                 </div>
-
+                <ProductTagSelector productId={productID} isEditMode={false} />
                 {/* Upload Images Section */}
                 <div className="upload-section">
                     <UploadImages productId={productID}/>
