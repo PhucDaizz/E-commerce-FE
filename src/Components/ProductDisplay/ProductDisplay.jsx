@@ -106,6 +106,7 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
       addToCart(product.productID, quantity, selectedSize.productSizeID);
     }
     else{
+      addToCart(product.productID, selectedSize.stock, selectedSize.productSizeID);
       toast.error("Xin lỗi bạn số lượng trong kho không đủ 😓")
     }
   }

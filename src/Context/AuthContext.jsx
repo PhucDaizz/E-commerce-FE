@@ -3,7 +3,6 @@ import axios from '../api/axios';
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { isAxiosError } from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { data, useNavigate } from 'react-router-dom';
 
 const AuthContext =  createContext();
 
@@ -194,6 +193,7 @@ const checkAuthStatus = () => {
             });
             setItemInCart(prev => prev + quantity);
         } catch(error) {
+            toast.error('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
             console.error('Lỗi khi thêm vào giỏ: ', error)
         }
     };
@@ -530,6 +530,9 @@ const checkAuthStatus = () => {
             console.error("Lỗi khi lấy danh sách người dùng: ", error);
         }
     };
+
+    
+
     
     
 
@@ -559,7 +562,6 @@ const checkAuthStatus = () => {
             getInforById,
             getAllUser,
             inforUser,
-
             checkAuthStatus,
             user,
             token,

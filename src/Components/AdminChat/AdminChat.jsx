@@ -525,7 +525,7 @@ const AdminChatComponent = ({ admin, token }) => {
                               <User size={16} />
                             </div>
                             <span className="apple-chat-username">
-                              {conversation.clientUserName || 'Customer'}
+                              {conversation.userName || 'Customer'}
                             </span>
                           </div>
                           <span className="apple-chat-time">

@@ -20,7 +20,7 @@ const Sidebar = () => {
         <div className="col-9">
           <img
             className="img-fluid fit-img"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS99TXM-MEQUoSk7E7kmf2OB9HNW6bplfFOiQ&s"
+            src="https://yeuchaybo.com/wp-content/uploads/2014/09/adidas-logo.jpg"
             alt="Logo"
           />
         </div>
@@ -127,7 +127,6 @@ const Sidebar = () => {
         {openMenus.banner && (
           <div className="submenu ps-4 d-flex flex-column gap-1">
             <Link to="/admin/banner/list" className="text-dark text-decoration-none py-1 hover-link">DS Banner</Link>
-            <Link to="/admin/banner/add" className="text-dark text-decoration-none py-1 hover-link">Thêm Banner</Link>
           </div>
         )}
 
@@ -142,24 +141,22 @@ const Sidebar = () => {
         {openMenus.tag && (
           <div className="submenu ps-4 d-flex flex-column gap-1">
             <Link to="/admin/tag/list" className="text-dark text-decoration-none py-1 hover-link">DS Tag</Link>
-            <Link to="/admin/tag/add" className="text-dark text-decoration-none py-1 hover-link">Thêm Tag</Link>
           </div>
         )}
           
 
         {/* Settings */}
-        <div
+        
+        {/* <div
           className="menu-item py-2 px-3 d-flex align-items-center gap-2 rounded hover-bg"
           onClick={() => toggleMenu('settings')}
         >
           <i className="bi bi-gear"></i>
           <span>Settings</span>
-        </div>
+        </div> */}
         {openMenus.settings && (
           <div className="submenu ps-4 d-flex flex-column gap-1">
-            <Link to="/profile" className="text-dark text-decoration-none py-1 hover-link">Profile</Link>
-            <Link to="/preferences" className="text-dark text-decoration-none py-1 hover-link">Preferences</Link>
-            <Link to="chat"> Chat</Link>
+            {/* <Link to="chat"> Chat</Link> */}
           </div>
         )}
       </div>

@@ -5,6 +5,7 @@ import axios from '../api/axios'
 import { useParams } from 'react-router-dom'
 import ProductDisplay from '../Components/ProductDisplay/ProductDisplay'
 import Review from '../Components/Review/Review'
+import ProductRecommendations from '../Components/ProductRecommendations/ProductRecommendations'
 
 const Product = () => {
   const {productId} = useParams();
@@ -64,6 +65,7 @@ const Product = () => {
         productId={productId}
         onNewReview={handleNewReview}
       />
+      <ProductRecommendations productId={productId} />
     </div>
   )
 }

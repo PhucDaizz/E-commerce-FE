@@ -1,0 +1,20 @@
+.tag-admin .action-cell {
+    text-align: center;
+}
+
+.tag-admin .action-btn {
+    width: 80px; /* Đảm bảo cả hai nút có độ dài bằng nhau */
+    padding: 0.25rem 0.5rem;
+}
+
+.tag-admin .d-flex.gap-2 {
+    gap: 0.5rem;
+}
+
+.tag-admin .table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.tag-admin .alert {
+    margin-bottom: 0;
+}

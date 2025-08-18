@@ -421,7 +421,63 @@ export const ProductProvider  = ({children}) => {
     
         return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
     };    
-    
+
+    const getRecomendedProduct = async (productID, pageIndex, pageSize) => {
+        try {
+            const response = await axios.get(`/api/Product/${productID}/recommend?pageIndex=${pageIndex}&pageSize=${pageSize}`);
+            return response.data;
+        } catch (error) {
+            console.error('Lỗi khi lấy sản phẩm gợi ý:', error);
+        }
+    }
+
+               
+    const validateCart = async () => {
+        try {
+            const response = await apiRequest({
+                method: 'post',
+                url: '/api/InventoryReservation/validate-cart'
+            });
+            return response.data; 
+        } catch (error) {
+            console.error("Error validating cart:", error);
+            toast.error("Không thể kiểm tra tồn kho. Vui lòng thử lại.");
+            return null; 
+        }
+    };
+
+    const reserveInventory = async () => {
+        try {
+            const response = await apiRequest({
+                method: 'post',
+                url: 'api/InventoryReservation/ReserveInventory'
+            })
+            console.log("Inventory reserved successfully:", response);
+            return response;
+
+        } catch (error) {
+            console.error("Error reserving inventory:", error);
+            toast.error("Không thể đặt hàng. Vui lòng thử lại.");
+            return null;
+        }
+    } 
+
+    const releaseReservation = async () => {
+        try {
+            const response = await apiRequest({
+                method: 'post',
+                url: 'api/InventoryReservation/ReleaseReservation'
+            })
+            console.log("Inventory reservation released successfully:", response);
+            return response;
+
+        } catch (error) {
+            console.error("Error releasing inventory reservation:", error);
+            toast.error("Không thể hủy đặt hàng. Vui lòng thử lại.");
+            return null;
+        }
+    }
+
     return (
         <ProductContext.Provider value={{
             handleAddProduct,
@@ -452,7 +508,11 @@ export const ProductProvider  = ({children}) => {
             pauseSaleProduct,
             deleteProduct,
             cancelOrder,
-            postReview
+            postReview,
+            getRecomendedProduct,
+            validateCart,
+            reserveInventory,
+            releaseReservation
         }}>
             {children}
         </ProductContext.Provider>

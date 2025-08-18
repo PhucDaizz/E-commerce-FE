@@ -59,7 +59,7 @@ const Admin = () => {
     }, [dataReportUser]);
 
     return (
-        <div className="admin-dashboard container-fluid py-4">
+        <div className="admin-dashboard container-fluid py-4 cont">
             <div className="row g-4">
                 {/* Báo cáo doanh thu */}
                 <h2 className=' fw-bold'>Thống kế bán hàng </h2>

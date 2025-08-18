@@ -118,27 +118,30 @@ const TagList = () => {
                                 <td>{tag.tagName}</td>
                                 <td>{tag.slug}</td>
                                 <td style={{ verticalAlign: 'middle' }}>
-                                <div style={{ 
-                                    display: 'flex', 
-                                    flexDirection: 'column', 
-                                    alignItems: 'center',
-                                    gap: '0.5rem'
-                                }}>
-                                    <button 
-                                        style={{ width: '120px' }} 
-                                        className="btn btn-sm btn-outline-primary"
-                                        onClick={() => handleEditClick(tag)} 
-                                    >
-                                    Edit
-                                    </button>
-                                    <button 
-                                        className="btn btn-sm btn-outline-danger w-75"
-                                        onClick={() => handleDeleteClick(tag)}
-                                        disabled={loading}
-                                    >
-                                    Delete
-                                    </button>
-                                </div>
+                                    <div style={{ 
+                                        display: 'flex', 
+                                        flexDirection: 'column', 
+                                        alignItems: 'center',
+                                        justifyContent: 'center', 
+                                        gap: '0.5rem',
+                                        height: '100%', 
+                                    }}>
+                                        <button 
+                                            style={{ width: '120px' }} 
+                                            className="btn btn-sm btn-outline-primary"
+                                            onClick={() => handleEditClick(tag)} 
+                                        >
+                                            Edit
+                                        </button>
+                                        <button 
+                                            style={{ width: '120px' }} 
+                                            className="btn btn-sm btn-outline-danger"
+                                            onClick={() => handleDeleteClick(tag)}
+                                            disabled={loading}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                             ))

@@ -4,6 +4,7 @@ import { useAuth } from '../Context/AuthContext';
 import { useProduct } from '../Context/ProductContext';
 import CancelOrderModal from '../Components/Modals/CancelOrderModal';
 import './CSS/Account.css';
+import { toast, ToastContainer } from 'react-toastify';
 
 const Account = () => {
   const location = useLocation();
@@ -68,13 +69,14 @@ const Account = () => {
     3: 'PayPal',
   };
 
-  const getOrdDetail = async (orderID, status) => {
+  const getOrdDetail = async (orderID, status, paymentMethodID) => {
     try {
       const response = await getOrderDetail(orderID);
       setOrderDetail({
         items: response.data,
         status: status,
-        orderId: orderID
+        orderId: orderID,
+        paymentMethodID: paymentMethodID
       });
       setShowDetail(true);
     } catch (error) {
@@ -106,6 +108,18 @@ const Account = () => {
 
   return (
     <div className='account'>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        style={{ zIndex: 999999 }} 
+      />
       {!isHidden && (
         <div className='account-container'>
           <div className="account-content">
@@ -135,7 +149,7 @@ const Account = () => {
                         <div key={order.orderID} className="table-row">
                           <div 
                             className="cell order-id-cell" 
-                            onClick={() => getOrdDetail(order.orderID, order.status)}
+                            onClick={() => getOrdDetail(order.orderID, order.status, order.paymentMethodID)}
                           >
                             #{order.orderID}
                           </div>
@@ -223,12 +237,23 @@ const Account = () => {
                   </div>
                 </div>
                 
-                {orderDetail.status === 0 && (
+                {orderDetail.status === 0 && orderDetail.paymentMethodID !== 1 && (
                   <div className='container cancel-button-container d-flex align-items-center justify-content-center mt-4'>
                     <button 
                       className='cancel-order-btn bg-danger button-primary'
                       onClick={() => setShowCancelModal(true)}
                       disabled={isCancelling}
+                    >
+                      Huỷ đơn hàng
+                    </button>
+                  </div>
+                )}
+
+                {orderDetail.status === 0 && orderDetail.paymentMethodID === 1 && (
+                  <div className='container cancel-button-container d-flex align-items-center justify-content-center mt-4'>
+                    <button 
+                      className='cancel-order-btn bg-danger button-primary'
+                      onClick={() => toast.error('Xin lỗi, đơn hàng của bạn không thể hủy vì đã thanh toán rồi')}
                     >
                       Huỷ đơn hàng
                     </button>

@@ -52,7 +52,7 @@ const UserChat = ({ user, token }) => {
                 );
             } catch (error) {
                 console.error('Error marking messages as read:', error);
-                toast.error('Không thể đánh dấu tin nhắn là đã đọc');
+                
             }
         };
         markMessagesAsRead();
@@ -321,7 +321,6 @@ const UserChat = ({ user, token }) => {
             );
         } catch (error) {
             console.error('Error marking messages as read:', error);
-            toast.error('Không thể đánh dấu tin nhắn là đã đọc');
         }
 
         // await chatService.invoke('MarkMessagesAsRead', currentConversationId.current)
@@ -378,7 +377,6 @@ const UserChat = ({ user, token }) => {
             setMessageInput('');
         } catch (error) {
             console.error('Failed to start chat:', error);
-            toast.error('Không thể bắt đầu chat: ' + error.message);
         }
     };
 
