@@ -26,7 +26,6 @@ const ClaimTypes = {
   email: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
   nameidentifier: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
   role: "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-  // userName: "username" 
 };
 
 const checkAuthStatus = () => {
@@ -178,20 +177,7 @@ const checkAuthStatus = () => {
             });
 
             await getCart();            
-            // Cập nhật giỏ hàng ngay lập tức trong state
-            setCart(prevCart => {
-                const existingItem = prevCart.find(item => item.productID === productID && item.productSizeID === productSizeID);
-                if (existingItem) {
-                    return prevCart.map(item =>
-                        item.productID === productID && item.productSizeID === productSizeID
-                            ? { ...item, quantity: item.quantity + quantity }
-                            : item
-                    );
-                } else {
-                    return [...prevCart, { productID, productSizeID, quantity, cartItemID: response.data.cartItemID }];
-                }
-            });
-            setItemInCart(prev => prev + quantity);
+            
         } catch(error) {
             toast.error('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
             console.error('Lỗi khi thêm vào giỏ: ', error)

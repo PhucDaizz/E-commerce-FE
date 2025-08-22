@@ -78,7 +78,7 @@ const ListOrder = () => {
 
     return (
         <div className='list-order container'>
-            <div className='mt-3'>
+            <div className='card card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3'>
                 <h4>Danh sách hoá đơn</h4>
             </div>
 

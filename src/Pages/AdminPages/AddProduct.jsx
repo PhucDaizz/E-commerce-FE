@@ -25,6 +25,7 @@ const AddProducts = () => {
     const [selectedColorForSize, setSelectedColorForSize] = useState(null);
     const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
     const [selectedSizes, setSelectedSizes] = useState({});
+    const [isAddSizes, setIsAddSizes] = useState(false);
 
     useEffect(() => {
         getCategory();
@@ -139,6 +140,7 @@ const AddProducts = () => {
     
     useEffect(() => {
         const fetchColors = async () => {
+        if (!productID) return; 
         const result = await getAllColor(productID);
         if (result) {
             setColors(result);
@@ -153,13 +155,28 @@ const AddProducts = () => {
             Object.entries(selectedSizes).map(([key, value]) => [parseInt(key), value])
         );
         try {
-        console.log(formattedSizes);
-        await addRangeColors(formattedSizes);
-        toast.done('Thêm số lượng cho sản phẩm thành công.');
+            console.log(formattedSizes);
+            const response = await addRangeColors(formattedSizes);
+            if (response && response.status === 200) {
+                setIsAddSizes(true);
+            } else {
+                setIsAddSizes(false);
+                toast.error('Thêm kích thước thất bại');
+            }
+            console.log(productID , colors.length > 0 , isAddSizes)
         } catch(error) {
-        console.error('Lỗi khi thêm sản phẩm: ', error);
+            setIsAddSizes(false);
+            console.error('Lỗi khi thêm sản phẩm: ', error);
+            toast.error('Có lỗi xảy ra khi thêm kích thước');
         }
     };
+
+    useEffect(() => {
+    console.log('isAddSizes changed:', isAddSizes);
+    console.log('Step 3 condition:', productID && colors.length > 0 && isAddSizes);
+    console.log('productID:', productID);
+    console.log('colors.length:', colors.length);
+}, [isAddSizes, productID, colors.length]);
 
     return (
         <div className="add-product-container">
@@ -200,7 +217,7 @@ const AddProducts = () => {
                         <span>Màu sắc</span>
                     </div>
                     <div className="step-line"></div>
-                    <div className={`step ${productID && colors.length > 0 && Object.keys(selectedSizes).length > 0 ? 'active' : 'pending'}`}>
+                    <div className={`step ${productID && colors.length > 0 && isAddSizes ? 'completed' : (productID && colors.length > 0) ? 'active' : 'pending'}`}>
                         <div className="step-number">3</div>
                         <span>Kích thước</span>
                     </div>

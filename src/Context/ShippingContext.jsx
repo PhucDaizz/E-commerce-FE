@@ -16,16 +16,58 @@ export const ShippingProvider = ({children}) => {
 
     const getProvince = async() => {
         try {
-            console.log(GHN_TOKEN)
-            const response = await ghnApi.get('/master-data/province', {
+            const response = await ghnApi.get('/shiip/public-api/master-data/province', {
                 headers: ghnHeaders(GHN_TOKEN)
             });
-            console.log(response);
+            return response.data.data;
         } catch (error) {
             console.error('Lỗi lấy danh sách tỉnh:', error);
             throw error;
         }
     }
+
+    const splitAndReverseAddress = (address) => {
+        const parts = address.split(',').map(part => part.trim());
+        const reversedParts = parts.reverse();
+
+        const level4 = reversedParts[0];
+        const level3 = reversedParts[1];
+        const level2 = reversedParts[2];
+        const level1 = reversedParts.slice(3).reverse().join(', ');
+
+        return [level1, level2, level3, level4];
+    };
+
+    const getProvinceFromAddress = (address) => {
+        const [, , , level4] = splitAndReverseAddress(address);
+        return level4.trim();
+    };
+
+    const findProvince = (provinceName, provinces) => {
+    if (!provinceName || !provinces) return null;
+
+        return provinces.find(p =>
+            p.ProvinceName?.toLowerCase().includes(provinceName.toLowerCase()) ||
+            (Array.isArray(p.NameExtension) && 
+            p.NameExtension.some(ext => ext.toLowerCase().includes(provinceName.toLowerCase())))
+        ) || null;
+    };
+
+    const getTypeService = async(provinceAdminClient) => {
+        const response = await ghnApi.post('/shiip/public-api/v2/shipping-order/available-services',
+            {
+                shop_id: parseInt(SHOP_ID),
+                from_district: provinceAdminClient.admin.ProvinceID,
+                to_district: provinceAdminClient.client.ProvinceID
+            },
+            {
+                headers: ghnHeaders(GHN_TOKEN)
+            }
+        );
+        return response.data;
+
+    }
+
 
     const get_pick_shift = async() => {
         const response = await ghnApi.get('/shiip/public-api/v2/shift/date', {
@@ -65,7 +107,7 @@ export const ShippingProvider = ({children}) => {
 
 
 
-    const createShippingOrder = async(data, inforUserRecive, detailFromAddress, requiredNote, dimensions, pick_shift, couponShip) => {
+    const createShippingOrder = async(data, inforUserRecive, detailFromAddress, requiredNote, dimensions, pick_shift, couponShip, isWeightCargo, itemDimensions) => {
         try {
 
             function splitAndReverseAddress(address) {
@@ -81,22 +123,27 @@ export const ShippingProvider = ({children}) => {
                 return [level1, level2, level3, level4];
             }
 
-            function transformOrderDetails(orderDetails) {
+            function transformOrderDetails(orderDetails, itemDimensions) {
                 return orderDetails.map(detail => {
                     const productName = detail.productDTO.productName;
                     const colorName = detail.productSizeDTO.colorName;
                     const size = detail.productSizeDTO.size;
                     const newName = `${productName} - ${colorName} - Size: ${size}`;
 
+                    // Lấy kích thước từ itemDimensions nếu có (cho hàng nặng)
+                    const dimensionData = itemDimensions?.find(item => 
+                        item.productID === detail.productDTO.productID
+                    );
+
                     return {
                         name: newName ,
                         code: detail.productDTO.productID.toString(),
                         quantity: detail.quantity,
                         price: detail.unitPrice,
-                        length: 12,  // Giá trị ví dụ, bạn có thể điều chỉnh hoặc tính toán lại giá trị thực tế
-                        width: 12,   // Giá trị ví dụ, bạn có thể điều chỉnh hoặc tính toán lại giá trị thực tế
-                        height: 7,  // Giá trị ví dụ, bạn có thể điều chỉnh hoặc tính toán lại giá trị thực tế
-                        weight: 1000, // Giá trị ví dụ, bạn có thể điều chỉnh hoặc tính toán lại giá trị thực tế
+                        length: dimensionData?.length || 20,
+                        width: dimensionData?.width || 18,
+                        height: dimensionData?.height || 7,
+                        weight: dimensionData?.weight || 600,
                         category: {
                             level1: "Trang phục"  // Giá trị ví dụ, bạn có thể điều chỉnh hoặc lấy từ dữ liệu thực tế
                         }
@@ -106,7 +153,7 @@ export const ShippingProvider = ({children}) => {
 
             const addressUserFourLevel = splitAndReverseAddress(data.shippingDTO[0].shippingAddress)
             const addressAdminFourLevel = splitAndReverseAddress(detailFromAddress)
-            const items = transformOrderDetails(data.getOrderDetailDTO)
+            const items = transformOrderDetails(data.getOrderDetailDTO, itemDimensions)
 
 
             const dataSend = {
@@ -137,7 +184,7 @@ export const ShippingProvider = ({children}) => {
                 cod_failed_amount: 20000,
                 deliver_station_id: null,
                 insurance_value: data.totalAmount,
-                service_type_id: 2,
+                service_type_id: isWeightCargo ? 5 : 2,
                 coupon: couponShip,
                 pick_shift: [pick_shift],
                 items: items
@@ -203,7 +250,10 @@ export const ShippingProvider = ({children}) => {
             get_pick_shift,
             createShippingOrder,
             updateShipping,
-            printBillOfLading
+            printBillOfLading,
+            getProvinceFromAddress,
+            findProvince,
+            getTypeService
         }}>
             {children}
         </ShippingContext.Provider>

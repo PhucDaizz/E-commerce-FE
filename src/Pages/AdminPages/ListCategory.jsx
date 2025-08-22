@@ -41,9 +41,18 @@ const ListCategory = () => {
     );
 
     return (
-        <div className="list-category container">
+        <div className="list-category container card pb-5">
             <ToastContainer />
-            <h4 className="mt-3">Danh sách mục sản phẩm</h4>
+            <div className='card mt-4 product-header card-header'>
+                <h4 className="mt-3">Danh sách mục sản phẩm</h4>
+                <div className="col text-end btn-add add-product-btn">
+                        <Link to={'/admin/categories/add'} className="btn-link">
+                            <button className="btn-primary btn-modern">
+                                <i className="bi bi-plus"></i> Thêm mới
+                            </button>
+                        </Link>
+                    </div>
+            </div>
             <div className="border shadow-sm mt-3 p-3 bg-white">
                 <div className="row container mt-2 align-items-center">
                     <div className="col-7 d-flex align-items-center">
@@ -58,13 +67,7 @@ const ListCategory = () => {
                             onChange={(e) => setSearchCategory(e.target.value)}
                         />
                     </div>
-                    <div className="col text-end btn-add">
-                        <Link to={'/admin/categories/add'} className="btn-link">
-                            <button className="btn btn-outline-primary">
-                                <i className="bi bi-plus"></i> Thêm mới
-                            </button>
-                        </Link>
-                    </div>
+                    
                 </div>
 
                 <div className="product-list mt-3 bg-light">

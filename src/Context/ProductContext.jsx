@@ -71,9 +71,11 @@ export const ProductProvider  = ({children}) => {
             } else {
                 toast.error("Thêm thất bại")
             }
-            
+            return response;
         } catch(error) {
             console.log("Lỗi khi thêm số lượng sản phẩm: ", error);
+            toast.error("Có lỗi xảy ra khi thêm kích thước");
+            throw error;
         }
     }
 

@@ -82,9 +82,11 @@ const AddVoucher = () => {
     };
 
     return (
-        <div className='add-voucher container'>
+        <div className='add-voucher container card mt-4 mb-5'>
             <ToastContainer/>
-            <h4 className="mb-0 mt-3">Thêm Voucher Mới</h4>
+            <div className='card product-header pb=5 mt-3 bg-black'>
+                <h4 className="mb-0 mt-3">Thêm Voucher Mới</h4>
+            </div>
             <div className="card shadow-sm border-0 mt-3">
                 <div className=" d-flex justify-content-between align-items-center">
                     <button type="button" className="btn-close btn-close-white" aria-label="Close"></button>

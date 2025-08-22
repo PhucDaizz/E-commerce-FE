@@ -14,7 +14,7 @@ const Navbar = () => {
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { loggedIn, logout, itemInCart, inforUser } = useAuth();
-  const { handleCategoryChange, categories } = useCategory();
+  const { handleCategoryChange, categories, getCategory } = useCategory();
   const { searchQuery, setSearchQuery } = useSearch();
   const navigate = useNavigate();
 
@@ -53,18 +53,19 @@ const Navbar = () => {
 
   // Optimized API call for categories
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        if (categories.length === 0) {
-          const response = await axios.get('/categories');
-          handleCategoryChange(null, response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
+    // const fetchCategories = async () => {
+    //   try {
+    //     if (categories.length === 0) {
+    //       const response = await axios.get('/categories');
+    //       handleCategoryChange(null, response.data);
+    //     }
+    //   } catch (error) {
+    //     console.error('Error fetching categories:', error);
+    //   }
+    // };
 
-    fetchCategories();
+    // fetchCategories();
+    getCategory()
   }, []);
 
   return (

@@ -26,7 +26,6 @@ const ListProducts = () => {
 
     return (
         <div className='list-products container'>
-        <h4 className='mt-3'>Danh sách sản phẩm</h4>
         <ListProduct/>
         </div>
     )

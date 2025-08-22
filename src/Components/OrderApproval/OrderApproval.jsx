@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useShipping } from '../../Context/ShippingContext';
 import { useAuth } from '../../Context/AuthContext';
 import { toast, ToastContainer } from 'react-toastify';
+import WeightCargoForm from '../WeightCargoForm/WeightCargoForm';
 
 const OrderApproval = ({ dataOrder, orderDetail, onOrderApproved }) => {
-    const { get_pick_shift, createShippingOrder, updateShipping } = useShipping();
+    const {getProvince, get_pick_shift, createShippingOrder, updateShipping, getProvinceFromAddress, findProvince, getTypeService } = useShipping();
     const { getInforById, getInforUser } = useAuth();
 
     const [dataPickShift, setDataPickShift] = useState([]);
@@ -15,8 +16,14 @@ const OrderApproval = ({ dataOrder, orderDetail, onOrderApproved }) => {
     const [dataUser, setDataUser] = useState({});
     const [dataUserSend, setDataUserSend] = useState({});
     const [dimensions, setDimensions] = useState({ length: 0, width: 0, height: 0, weight: 0 });
+    const [isWeightCargo, setIsWeightCargo] = useState(false);
+    const [itemDimensions, setItemDimensions] = useState([]);
+
+    // const [provinceAdminClient, setProvinceAdminClient] = useState({});
+    // const [typeOfServices, setTypeOfServices] = useState({});
 
     useEffect(() => {
+        console.log(dataOrder)
         const fetchData = async () => {
             try {
                 const response = await get_pick_shift();
@@ -46,6 +53,39 @@ const OrderApproval = ({ dataOrder, orderDetail, onOrderApproved }) => {
         if (dataOrder?.userID) fetchUserInfo(dataOrder.userID);
     }, [dataOrder?.userID]);
 
+    // Lấy loại dịch vụ vận chuyển => Đã bị chuyển sang cố định không cần call api
+    // useEffect(() => {
+    //     console.log(dataUserSend)
+    //     if(dataUserSend?.address && 
+    //         dataOrder?.shippingDTO?.length > 0 && 
+    //         dataOrder.shippingDTO[0]?.shippingAddress)
+    //     {
+    //         getService(dataUserSend.address, dataOrder.shippingDTO[0].shippingAddress);
+    //     }
+    // }, [dataUserSend])
+
+
+    // const getService = async (adminAddress, clientAddress) => {
+    //     const adminProvinceName = getProvinceFromAddress(adminAddress);
+    //     const clientProvinceName = getProvinceFromAddress(clientAddress);
+
+    //     const provinces = await getProvince();
+
+    //     const matchedProvinceAdmin = findProvince(adminProvinceName, provinces);
+    //     const matchedProvinceClient = findProvince(clientProvinceName, provinces);
+    //     const provinceObj = { admin: matchedProvinceAdmin, client: matchedProvinceClient };
+    //     setProvinceAdminClient(provinceObj);
+
+    //     if (provinceObj.admin && provinceObj.client) {
+    //         const typeServices = await getTypeService(provinceObj);
+    //         setTypeOfServices(typeServices);
+    //     }
+        
+    // };
+    const handleClick = () => {
+        setIsWeightCargo(prevState => !prevState);
+    };
+
     const handleChangePickShift = (event) => {
         const shiftId = Number(event.target.value);
         setIndexShift(shiftId);
@@ -60,6 +100,15 @@ const OrderApproval = ({ dataOrder, orderDetail, onOrderApproved }) => {
         setDimensions({ ...dimensions, [e.target.name]: e.target.value });
     };
 
+    const handleDimensionsChange = (dimensions) => {
+        setItemDimensions(dimensions);
+        console.log('Updated item dimensions:', dimensions);
+    };
+
+    const handleCargoTypeChange = () => {
+        setIsWeightCargo(!isWeightCargo);
+    };
+
     const sendToGHN = async () => {
         try {
             if (dataOrder.shippingDTO?.length > 0 && dataOrder.shippingDTO[0]?.shippingServicesID) {
@@ -69,6 +118,11 @@ const OrderApproval = ({ dataOrder, orderDetail, onOrderApproved }) => {
             if (!dataOrder || !dataUser || !dataUserSend?.address || !requiredNote) {
                 toast.error("Lỗi: Thiếu dữ liệu cần thiết để tạo đơn hàng. Vui lòng cập nhập thông tin của bạn (nhấn vào userName kế nút đăng xuất)");
                 return { success: false, message: "Thiếu dữ liệu cần thiết để tạo đơn hàng" };
+            }
+
+            if (isWeightCargo && (!itemDimensions || itemDimensions.length === 0)) {
+                toast.error("Vui lòng nhập đầy đủ kích thước cho tất cả sản phẩm khi chọn hàng nặng!");
+                return { success: false, message: "Thiếu thông tin kích thước sản phẩm" };
             }
 
             const convertedDimensions = {
@@ -85,7 +139,9 @@ const OrderApproval = ({ dataOrder, orderDetail, onOrderApproved }) => {
                 requiredNote,
                 convertedDimensions,
                 indexShift,
-                couponShip
+                couponShip,
+                isWeightCargo,
+                itemDimensions 
             );
 
             if (response && response.status === 200) {
@@ -112,7 +168,7 @@ const OrderApproval = ({ dataOrder, orderDetail, onOrderApproved }) => {
     };
 
     return (
-        <div className='order-approval p-4 border rounded bg-light shadow-sm'>
+        <div className='order-approval p-4 border rounded bg-light shadow-sm overflow-auto' style={{ maxHeight: '900px', overflowY: 'auto' }}>
             <ToastContainer />
             <h5 className='fw-bold mb-3 text-primary'>Duyệt đơn hàng</h5>
 
@@ -171,6 +227,23 @@ const OrderApproval = ({ dataOrder, orderDetail, onOrderApproved }) => {
                     </div>
                 </div>
             </div>
+
+            {/* Loại hàng */}
+            <div>
+                <label className='fw-bold'>Loại hàng:</label>
+                <button 
+                    className={`m-auto btn ${isWeightCargo ? 'btn-danger' : ' btn-info '}`}
+                    onClick={handleClick}
+                >
+                    {isWeightCargo ? 'Hàng nặng' : 'Hàng nhẹ'}
+                </button>
+            </div>
+             
+            <WeightCargoForm 
+                orderDetail={dataOrder}
+                onDimensionsChange={handleDimensionsChange}
+                isWeightCargo={isWeightCargo}
+            />
 
             {/* Mã giảm giá bên ship */}
             <div className='mb-3'>

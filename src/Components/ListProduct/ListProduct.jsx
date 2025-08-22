@@ -124,7 +124,7 @@ const ListProduct = () => {
             <ToastContainer/>
             
             {/* Header Section */}
-            <div className="product-header">
+            <div className="product-header card-header">
                 <div className="header-title">
                     <h2 className="page-title">
                         <i className="bi bi-box-seam me-2"></i>
@@ -133,7 +133,7 @@ const ListProduct = () => {
                     <p className="page-subtitle">Danh sách và quản lý tất cả sản phẩm</p>
                 </div>
                 <Link to={'/admin/products/add'} className='add-product-btn'>
-                    <button className='btn btn-primary btn-modern'>
+                    <button className='btn-primary btn-modern'>
                         <i className="bi bi-plus-circle me-2"></i>
                         Thêm sản phẩm mới
                     </button>
@@ -192,7 +192,7 @@ const ListProduct = () => {
                                 onKeyDown={handleKeyDown}
                             />
                             <button 
-                                className="btn search-btn" 
+                                className="btn search-btn " 
                                 onClick={() => setClickSearch(!clickSearch)}
                             >
                                 <i className="bi bi-search"></i>
@@ -204,9 +204,9 @@ const ListProduct = () => {
 
             {/* Products Table */}
             <div className="products-table-container">
-                <div className="table-header">
+                <div className="table-header" style={{display: 'flex'}}>
                     <div className="table-stats">
-                        <span className="total-items">
+                        <span className="total-items text-white fw-bold">
                             <i className="bi bi-archive me-1"></i>
                             Tổng cộng:  <strong className='ps-1 pe-1'>{listProduct.totalCount || 0}</strong> sản phẩm
                         </span>
@@ -243,7 +243,8 @@ const ListProduct = () => {
                                                 />
                                             </div>
                                             <div className="product-details">
-                                                <h6 className="product-name">{product.productName}</h6>
+                                                <h6 className="product-name" 
+                                                >{product.productName}</h6>
                                                 <span className="product-category">
                                                     {categories.find(cat => cat.categoryID === product.categoryID)?.categoryName || 'N/A'}
                                                 </span>

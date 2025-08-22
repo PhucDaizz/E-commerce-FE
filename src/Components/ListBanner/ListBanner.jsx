@@ -177,13 +177,15 @@ const ListBanner = () => {
             <div className="card shadow-sm">
                 <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h1 className="h4 mb-0">Danh sách Banner</h1>
-                    <button 
-                        className="btn btn-success"
-                        onClick={handleCreateClick}
-                        disabled={isLoading}
-                    >
-                        + Thêm Banner
-                    </button>
+                    <div className='btn-add add-product-btn'>
+                        <button 
+                            className="btn-primary btn-modern"
+                            onClick={handleCreateClick}
+                            disabled={isLoading}
+                        >
+                            + Thêm Banner
+                        </button>
+                    </div>
                 </div>
                 
                 <div className="card-body">

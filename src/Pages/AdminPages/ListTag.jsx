@@ -75,13 +75,15 @@ const TagList = () => {
             <div className="card shadow-sm">
                 <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <h1 className="h4 mb-0">Danh sách Tag</h1>
-                <button 
-                    className="btn btn-success"
-                    onClick={() => setShowCreateModal(true)} // Add your create tag function here
-                    disabled={loading}
-                >
-                    + Add New Tag
-                </button>
+                <div className='btn-add add-product-btn'>
+                    <button 
+                        className="btn-primary btn-modern"
+                        onClick={() => setShowCreateModal(true)} // Add your create tag function here
+                        disabled={loading}
+                    >
+                        + Add New Tag
+                    </button>
+                </div>
                 </div>
                 
                 <div className="card-body">

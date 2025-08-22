@@ -92,9 +92,16 @@ const ListVoucher = () => {
     }
 
     return (
-        <div className='list-voucher container'>
+        <div className='list-voucher container card mt-4'>
             <ToastContainer/>
-            <h4 className="mt-3">Danh sách voucher</h4>
+           <div className='card shadow-sm mt-4 card-header d-flex justify-content-between align-items-center'>
+                <h4 className="h4 mb-0">Danh sách voucher</h4>
+                <div className="btn-add mt-2 btn-add add-product-btn">
+                    <button className="btn-primary btn-modern" onClick={() => navigate('/admin/voucher/add')}>
+                        <i className="bi bi-plus"></i> Thêm mới
+                    </button>
+                </div>
+            </div>
             <div className="border shadow-sm mt-3 p-3 bg-white">
                 <div className="row container mt-2 align-items-center">
                     <div className="col d-flex align-items-center flex-wrap gap-3">
@@ -152,11 +159,7 @@ const ListVoucher = () => {
                             />
                         </div>
                     </div>
-                    <div className="col text-end btn-add">
-                        <button className="btn btn-outline-primary" onClick={() => navigate('/admin/voucher/add')}>
-                            <i className="bi bi-plus"></i> Thêm mới
-                        </button>
-                    </div>
+                    
                 </div>
 
                 <div className="voucher-header mt-3 bg-light p-2 mb-2 fw-bold" style={{ fontSize: '14px' }}>
