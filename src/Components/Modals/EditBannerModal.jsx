@@ -41,13 +41,18 @@ const EditBannerModal = ({
         endDate: data.endDate?.split('T')[0] || ''
       });
       if (data.imageUrl) {
-        setImagePreview(`${import.meta.env.VITE_BASE_API_URL}${data.imageUrl}`);
+        setImagePreview(resolveImageUrl(data.imageUrl));
       }
     } catch (error) {
       console.error('Error loading banner:', error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const resolveImageUrl = (imageUrl) => {
+      if (!imageUrl) return '';
+      return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/${imageUrl}`;
   };
 
   const handleInputChange = (e) => {

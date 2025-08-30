@@ -35,6 +35,11 @@ const Hero = () => {
     );
   };
 
+  const resolveImageUrl = (imageUrl) => {
+      if (!imageUrl) return '';
+      return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/${imageUrl}`;
+  };
+
   const activeBanners = getActiveBanners();
 
   const nextSlide = () => {
@@ -172,7 +177,7 @@ const Hero = () => {
                     <div 
                       className="banner-background"
                       style={{
-                        backgroundImage: `url(${apiUrl}${banner.imageUrl})`,
+                        backgroundImage: `url(${resolveImageUrl(banner.imageUrl)})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat'

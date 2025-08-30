@@ -6,7 +6,6 @@ import CreateBannerModal from '../Modals/CreateBannerModal';
 import DeleteConfirmationModal from '../Modals/DeleteConfirmationModal';
 import EditBannerModal from '../Modals/EditBannerModal';
 
-
 const ListBanner = () => {
     const { bannersAdmin = [], getAllBannersAdmin, deleteBanner, createBanner, changeStatusBanner, isLoading, error } = useBannerContext();
     const apiUrl = import.meta.env.VITE_BASE_API_URL;
@@ -46,6 +45,12 @@ const ListBanner = () => {
         fetchBanners();
     }, []);
 
+    // Hàm xử lý URL ảnh
+    const resolveImageUrl = (imageUrl) => {
+        if (!imageUrl) return '';
+        return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/${imageUrl}`;
+    };
+
     const handleEditClick = (bannerId) => {
         setEditingBannerId(bannerId);
         setShowEditModal(true);
@@ -55,8 +60,6 @@ const ListBanner = () => {
     const handleUpdateSuccess = () => {
         
     };
-
-
 
     // Delete functions
     const handleDeleteClick = (banner) => {
@@ -117,7 +120,7 @@ const ListBanner = () => {
             resetForm();
         } catch (error) {
             console.error('Error creating banner:', error);
-            alert('Lỗi: ' + error.message); // Hiển thị lỗi cho user
+            alert('Lỗi: ' + error.message);
         }
     };
 
@@ -205,7 +208,6 @@ const ListBanner = () => {
                             <table className="table table-hover">
                                 <thead className="table-light">
                                     <tr>
-                                        {/* <th>ID</th> */}
                                         <th>Tiêu đề</th>
                                         <th>Hình ảnh</th>
                                         <th>Trạng thái</th>
@@ -219,15 +221,18 @@ const ListBanner = () => {
                                     {bannersAdmin.length > 0 ? (
                                         bannersAdmin.map(banner => (
                                             <tr key={banner.id}>
-                                                {/* <td>{banner.id}</td> */}
                                                 <td>{banner.title}</td>
                                                 <td>
                                                     {banner.imageUrl && (
                                                         <img 
-                                                            src={`${apiUrl}${banner.imageUrl}`} 
+                                                            src={resolveImageUrl(banner.imageUrl)}
                                                             alt={banner.title} 
                                                             style={{ width: '100px', height: 'auto' }}
                                                             className="img-thumbnail"
+                                                            onError={(e) => {
+                                                                // Fallback nếu ảnh không tải được
+                                                                e.target.src = 'https://via.placeholder.com/100x50?text=Image+Error';
+                                                            }}
                                                         />
                                                     )}
                                                 </td>
@@ -280,7 +285,7 @@ const ListBanner = () => {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="8" className="text-center py-4">
+                                            <td colSpan="7" className="text-center py-4">
                                                 Không có banner nào được tìm thấy
                                             </td>
                                         </tr>

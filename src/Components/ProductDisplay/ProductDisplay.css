@@ -65,7 +65,7 @@
 }
 
 /* Color and size selection styles */
-.color-circle { 
+.productDisplay .color-circle { 
     width: 30px; 
     height: 30px; 
     border-radius: 50%; 
@@ -75,17 +75,17 @@
     transition: transform 0.3s, border-color 0.3s;
 } 
 
-.color-circle.selected {
+.productDisplay .color-circle.selected {
     transform: scale(0.8); 
     border-color: black; 
 } 
 
-.product-sizes { 
+.productDisplay .product-sizes { 
     margin-top: 20px; 
     margin-bottom: 20px;
 } 
 
-.size-button { 
+.productDisplay .size-button { 
     margin: 5px; 
     padding: 4px; 
     border: 1px solid rgba(0, 0, 0, 0.148); 
@@ -96,35 +96,38 @@
     height: 40px;
 } 
 
-.size-button.selected { 
+.productDisplay .size-button.selected { 
     border-color: black; 
 }
 
-.size-button.out-of-stock { 
+.productDisplay .size-button.out-of-stock { 
     background-color: lightgray; 
     cursor: not-allowed; 
     opacity: 0.5; 
 }
 
 /* Product info styles */
-.product-name {
+.productDisplay .product-name {
     font-size: 30px;
     font-weight: 500;
+    overflow: initial ;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
-.product-price {
+.productDisplay .product-price {
     font-size: 24px;
     font-weight: 400;
 }
 
 /* Quantity selector */
-.quantity-selector { 
+.productDisplay .quantity-selector { 
     display: flex; 
     align-items: center; 
     margin: 20px;
 } 
 
-.quantity-selector button { 
+.productDisplay .quantity-selector button { 
     width: 30px; 
     height: 30px; 
     border: 1px solid black; 
@@ -147,7 +150,7 @@
 }
 
 /* Add to cart button */
-.add-to-cart {
+.productDisplay .add-to-cart {
     background-color: white;
     border: 1px #fa2626 solid;
     width: 100%;
@@ -161,7 +164,7 @@
     margin-bottom: 30px;
 }
 
-.add-to-cart::before {
+.productDisplay .add-to-cart::before {
     content: '';
     position: absolute;
     top: 0;
@@ -173,36 +176,36 @@
     z-index: 0; 
 }
 
-.add-to-cart:hover::before {
+.productDisplay .add-to-cart:hover::before {
     left: 0; 
 }
 
-.add-to-cart:hover {
+.productDisplay .add-to-cart:hover {
     color: white; 
     z-index: 1; 
 }
 
-.add-to-cart span { 
+.productDisplay .add-to-cart span { 
     position: relative; 
     z-index: 2; 
 }
 
 /* Clickable images */
-.clickable-image {
+.productDisplay .clickable-image {
     transition: transform 0.2s ease;
 }
 
-.clickable-image:hover {
+.productDisplay .clickable-image:hover {
     transform: scale(1.02);
 }
 
-.clickable-thumbnail:hover {
+.productDisplay .clickable-thumbnail:hover {
     opacity: 0.8;
     transition: opacity 0.2s ease;
 }
 
 /* Modal styles - FIX PHÓNG TO ẢNH */
-.image-modal-overlay {
+.productDisplay .image-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -224,7 +227,7 @@
     to { opacity: 1; }
 }
 
-.image-modal-content {
+.productDisplay .image-modal-content {
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -234,7 +237,7 @@
     overflow: hidden;
 }
 
-.modal-close-btn {
+.productDisplay .modal-close-btn {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -253,17 +256,17 @@
     backdrop-filter: blur(10px);
 }
 
-.modal-close-btn:hover {
+.productDisplay .modal-close-btn:hover {
     background: rgba(255, 255, 255, 0.3);
 }
 
-.modal-swiper {
+.productDisplay .modal-swiper {
     width: 100% !important;
     height: 100% !important;
     position: relative;
 }
 
-.modal-swiper .swiper-slide {
+.productDisplay .modal-swiper .swiper-slide {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
@@ -272,7 +275,7 @@
     overflow: hidden;
 }
 
-.modal-image-container {
+.productDisplay .modal-image-container {
     width: 100% !important;
     height: 100% !important;
     display: flex !important;
@@ -282,7 +285,7 @@
     box-sizing: border-box;
 }
 
-.modal-image {
+.productDisplay .modal-image {
     max-width: 100% !important;
     max-height: 100% !important;
     width: auto !important;
@@ -397,6 +400,8 @@
         font-size: 18px;
         font-weight: bold;
         margin-bottom: 10px;
+        overflow-wrap: break-word;
+        word-break: break-word;
     }
     
     .productDisplay .product-price {
@@ -525,25 +530,25 @@
     }
 
     /* Modal responsive - FIX MOBILE MODAL */
-    .image-modal-content {
+    .productDisplay .image-modal-content {
         width: 100vw !important;
         height: 100vh !important;
     }
 
-    .modal-close-btn {
+    .productDisplay .modal-close-btn {
         top: 15px;
         right: 15px;
         width: 40px;
         height: 40px;
     }
 
-    .modal-image-container {
+    .productDisplay .modal-image-container {
         padding: 60px 20px 100px 20px !important; /* Giảm padding cho mobile */
         width: 100% !important;
         height: 100% !important;
     }
 
-    .modal-image {
+    .productDisplay .modal-image {
         max-width: 100% !important;
         max-height: 100% !important;
         width: auto !important;
@@ -562,7 +567,7 @@
         font-size: 16px;
     }
 
-    .modal-image-counter {
+    .productDisplay .modal-image-counter {
         bottom: 20px;
         font-size: 12px;
         padding: 6px 12px;
@@ -581,6 +586,8 @@
     
     .productDisplay .product-name {
         font-size: 16px;
+        overflow-wrap: break-word;
+        word-break: break-word;
     }
     
     .productDisplay .product-price {
@@ -599,11 +606,11 @@
     }
 
     /* Modal cho mobile nhỏ */
-    .modal-image-container {
+    .productDisplay .modal-image-container {
         padding: 50px 15px 80px 15px !important; /* Giảm padding hơn nữa */
     }
     
-    .modal-close-btn {
+    .productDisplay .modal-close-btn {
         top: 10px;
         right: 10px;
         width: 35px;
@@ -616,7 +623,7 @@
         height: 35px;
     }
 
-    .modal-image-counter {
+    .productDisplay .modal-image-counter {
         bottom: 15px;
         font-size: 11px;
         padding: 5px 10px;

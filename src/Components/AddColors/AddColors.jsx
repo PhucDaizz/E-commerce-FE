@@ -17,11 +17,19 @@ const AddColors = ({
     const { deleteColor } = useProduct();
 
     const isColorInDatabase = (colorObj) => {
-        return colorObj.productSizes && colorObj.productSizes.length > 0;
+        return colorObj.productColorID && colorObj.productColorID !== undefined;
     };
 
     const countNewColors = () => {
         return colors.filter(color => !isColorInDatabase(color)).length;
+    };
+
+    const handleRemoveColorClick = async (colorObj) => {
+        if (isColorInDatabase(colorObj)) {
+            await handleRemoveColorInData(colorObj.productColorID, colorObj.colorHex);
+        } else {
+            handleRemoveColor(colorObj.colorHex);
+        }
     };
 
     useEffect(() => {
@@ -93,23 +101,13 @@ const AddColors = ({
                                             title={colorObj.colorName || colorObj.colorHex}
                                         />
                                         
-                                        {isColorInDatabase(colorObj) ? (
-                                            <button
-                                                className="remove-color-btn database-color"
-                                                onClick={() => handleRemoveColorInData(colorObj.productColorID, colorObj.colorHex)}
-                                                title="Xóa màu từ cơ sở dữ liệu"
-                                            >
-                                                <i className="fas fa-times"></i>
-                                            </button>
-                                        ) : (
-                                            <button
-                                                className="remove-color-btn new-color"
-                                                onClick={() => handleRemoveColor(colorObj.colorHex)}
-                                                title="Xóa màu mới"
-                                            >
-                                                <i className="fas fa-times"></i>
-                                            </button>
-                                        )}
+                                        <button
+                                            className={`remove-color-btn ${isColorInDatabase(colorObj) ? 'database-color' : 'new-color'}`}
+                                            onClick={() => handleRemoveColorClick(colorObj)}
+                                            title={isColorInDatabase(colorObj) ? "Xóa màu từ cơ sở dữ liệu" : "Xóa màu mới"}
+                                        >
+                                            <i className="fas fa-times"></i>
+                                        </button>
                                     </div>
                                     
                                     <div className="color-info">

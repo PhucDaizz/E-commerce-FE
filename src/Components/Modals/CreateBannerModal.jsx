@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const CreateBannerModal = ({ 
     show, 
@@ -21,7 +21,6 @@ const CreateBannerModal = ({
     const handleFormSubmit = (e) => {
         e.preventDefault();
         
-        // Validation cơ bản trước khi submit
         if (!newBanner.title.trim()) {
             alert('Vui lòng nhập tiêu đề banner');
             return;
@@ -32,7 +31,6 @@ const CreateBannerModal = ({
             return;
         }
         
-        // Nếu description trống, set giá trị mặc định
         const bannerToSubmit = {
             ...newBanner,
             description: newBanner.description.trim() || 'Banner description'
@@ -40,6 +38,7 @@ const CreateBannerModal = ({
         
         onSubmit(e, bannerToSubmit);
     };
+
 
     return (
         <div className="modal-overlay" onClick={handleOverlayClick}>
@@ -131,6 +130,32 @@ const CreateBannerModal = ({
                                             />
                                         </div>
                                     )}
+                                </div>
+                                
+                                <div className="mb-3">
+                                    <label className="form-label">Lưu trữ ảnh</label>
+                                    <div className="d-flex align-items-center">
+                                        <span className="me-2">Server</span>
+                                        <div className="form-check form-switch">
+                                            <input
+                                                className="form-check-input"
+                                                type="checkbox"
+                                                name="useCloudStorage"
+                                                checked={newBanner.useCloudStorage}
+                                                onChange={handleInputChange}
+                                                id="storageToggle"
+                                                style={{ width: '3em' }}
+                                            />
+                                            <label className="form-check-label" htmlFor="storageToggle">
+                                                Cloud
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <small className="text-muted">
+                                        {newBanner.useCloudStorage 
+                                            ? 'Ảnh sẽ được lưu trữ trên cloud storage' 
+                                            : 'Ảnh sẽ được lưu trữ trực tiếp trên server'}
+                                    </small>
                                 </div>
                                 
                                 <div className="mb-3">

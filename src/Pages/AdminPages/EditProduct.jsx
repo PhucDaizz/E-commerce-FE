@@ -105,9 +105,21 @@ const EditProducts = () => {
       setColors(colors.filter(colorObj => colorObj.colorHex !== colorHex));
     };
 
-    const handleRemoveColorInData = (colorID ,colorHex) => {
-      setColors(colors.filter(colorObj => colorObj.colorHex !== colorHex));
-      deleteColor(colorID)
+    const handleRemoveColorInData = async (colorID, colorHex) => {
+       try {
+            const response = await deleteColor(colorID);
+            console.log(response);
+            // Kiểm tra nếu response có productColorID (có nghĩa là xóa thành công)
+            if (response.status === 200 && response.data.productColorID) {
+                setColors(colors.filter(colorObj => colorObj.colorHex !== colorHex));
+                toast.success('Xóa màu thành công');
+            } else {
+                toast.error('Xóa màu thất bại');
+            }
+        } catch (error) {
+            console.error('Lỗi khi xóa màu:', error);
+            toast.error('Có lỗi xảy ra khi xóa màu');
+        }
     }
     
     // Chọn màu để thêm kích thước
