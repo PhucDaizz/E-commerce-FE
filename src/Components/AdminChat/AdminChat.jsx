@@ -66,7 +66,7 @@ const AdminChatComponent = ({ admin, token }) => {
   }, [token, admin]);
 
   useEffect(()=> {
-    console.log('activeConversations',activeConversations);
+    // console.log('activeConversations',activeConversations);
   },[activeConversations])
 
   // Auto scroll to bottom when new messages arrive
@@ -110,19 +110,19 @@ const AdminChatComponent = ({ admin, token }) => {
 
     // Receive pending conversations when admin connects
     chatService.on('ReceivePendingConversations', (conversations) => {
-      console.log('Received pending conversations:', conversations);
+      // console.log('Received pending conversations:', conversations);
       setPendingConversations(conversations);
     });
 
     // Receive active conversations when admin connects
     chatService.on('ReceiveActiveConversationList', (conversations) => {
-      console.log('Received active conversations:', conversations);
+      // console.log('Received active conversations:', conversations);
       setActiveConversations(conversations);
     });
 
     // New chat request from client
     chatService.on('NewChatRequest', (conversation) => {
-      console.log('New chat request:', conversation);
+      // console.log('New chat request:', conversation);
       setPendingConversations(prev => [...prev, conversation]);
       toast.info(`Có yêu cầu chat mới từ ${conversation.userName}`);
     });
@@ -137,13 +137,13 @@ const AdminChatComponent = ({ admin, token }) => {
 
     // Chat accepted by current admin
     chatService.on('ChatAcceptedByYou', (conversationId) => {
-      console.log('Chat accepted by you:', conversationId);
+      // console.log('Chat accepted by you:', conversationId);
       // Move from pending to active will be handled by LoadChatHistory
     });
 
     // Load chat history
     chatService.on('LoadChatHistory', (conversationId, history) => {
-      console.log('Loading chat history for:', conversationId, history);
+      // console.log('Loading chat history for:', conversationId, history);
       setMessages(history);
       setCurrentConversation(prev => ({
         ...prev,
@@ -153,7 +153,7 @@ const AdminChatComponent = ({ admin, token }) => {
 
     // Admin joined notification
     chatService.on('AdminJoined', (conversationId, adminName, adminId) => {
-      console.log('Admin joined:', conversationId, adminName, adminId);
+      // console.log('Admin joined:', conversationId, adminName, adminId);
       if (adminId === admin.id) {
         // Update active conversations
         const pendingConv = pendingConversations.find(c => c.conversationId === conversationId);
@@ -175,7 +175,7 @@ const AdminChatComponent = ({ admin, token }) => {
     });
 
     chatService.on('AddToActiveConversationList', (activeConversationInfo) => {
-      console.log('Received AddToActiveConversationList:', activeConversationInfo);
+      // console.log('Received AddToActiveConversationList:', activeConversationInfo);
       // Đảm bảo không bị trùng lặp nếu đã có từ ReceiveActiveConversationList ban đầu
       setPendingConversations(prev => 
         prev.filter(c => c.conversationId !== activeConversationInfo.conversationId)
@@ -209,12 +209,14 @@ const AdminChatComponent = ({ admin, token }) => {
 
     // FIX: Receive new message - chỉ xử lý 1 lần
     chatService.on('ReceiveMessage', (message) => {
-      console.log('Received message:', message);
+      // console.log('Received message:', message);
       
-      // Thêm tin nhắn vào messages
-      setMessages(prev => [...prev, message]);
+      // Only add to messages if it's for the current conversation
+      if (currentConversation && currentConversation.conversationId === message.conversationId) {
+        setMessages(prev => [...prev, message]);
+      }
 
-      // Cập nhật active conversations
+      // Update active conversations for any message
       setActiveConversations(prev =>
         prev.map(conv =>
           conv.conversationId === message.conversationId
@@ -231,19 +233,19 @@ const AdminChatComponent = ({ admin, token }) => {
 
     // Client reconnected
     chatService.on('ClientReconnected', (conversationId, clientUserId) => {
-      console.log('Client reconnected:', conversationId, clientUserId);
+      // console.log('Client reconnected:', conversationId, clientUserId);
       toast.info('Khách hàng đã kết nối lại');
     });
 
     // Client disconnected
     chatService.on('ClientDisconnected', (conversationId, clientUserId) => {
-      console.log('Client disconnected:', conversationId, clientUserId);
+      // console.log('Client disconnected:', conversationId, clientUserId);
       toast.warning('Khách hàng đã ngắt kết nối');
     });
 
     // Chat closed
     chatService.on('ChatClosed', (conversationId, message) => {
-      console.log('Chat closed:', conversationId, message);
+      // console.log('Chat closed:', conversationId, message);
       setActiveConversations(prev => 
         prev.filter(conv => conv.conversationId !== conversationId)
       );
@@ -261,7 +263,7 @@ const AdminChatComponent = ({ admin, token }) => {
     });
 
     chatService.on('ChatInfo', (info) => {
-      console.log('Chat info:', info);
+      // console.log('Chat info:', info);
       toast.info(info);
     });
 
@@ -313,12 +315,12 @@ const AdminChatComponent = ({ admin, token }) => {
     )?.isReadByAdmin;
 
     if (isAlreadyRead) {
-      console.log(`Conversation ${conversationId} already marked as read, skipping SignalR invoke`);
+      // console.log(`Conversation ${conversationId} already marked as read, skipping SignalR invoke`);
       return; 
     }
     try {
       await chatService.invoke('MarkMessagesAsRead', conversationId);
-      console.log(`Successfully invoked MarkMessagesAsRead for conversation: ${conversationId}`);
+      // console.log(`Successfully invoked MarkMessagesAsRead for conversation: ${conversationId}`);
       
       setActiveConversations(prev =>
         prev.map(conv =>
@@ -362,6 +364,9 @@ const AdminChatComponent = ({ admin, token }) => {
 
   const handleSelectActiveChat = async (conversation) => {
     try {
+      // Clear current messages before loading new ones
+      setMessages([]);
+      
       setCurrentConversation({
         conversationId: conversation.conversationId,
         clientUserName: conversation.clientUserName,
@@ -370,11 +375,9 @@ const AdminChatComponent = ({ admin, token }) => {
       
       // Request chat history
       await chatService.adminRequestChatHistory(conversation.conversationId);
-      // If admin is not read
+      
       if (!conversation.isReadByAdmin) {
-        await chatService.adminRequestChatHistory(conversation.conversationId);
         await markReadMessage(conversation.conversationId);
-
         setActiveConversations(prev =>
           prev.map(conv =>
             conv.conversationId === conversation.conversationId
@@ -557,9 +560,9 @@ const AdminChatComponent = ({ admin, token }) => {
                     activeConversations.map((conversation) => {
                       
                       const isUnread =  conversation.lastMessageUserId !== admin.id && !conversation.isReadByAdmin ;
-                      console.log('lastMessageAdmin: ', conversation.lastMessageUserId === admin.id);
-                      console.log('isAdminRead:' , conversation.isReadByAdmin);
-                      console.log('isUnread:' , conversation.lastMessageUserId !== admin.id || !conversation.isReadByAdmin);
+                      // console.log('lastMessageAdmin: ', conversation.lastMessageUserId === admin.id);
+                      // console.log('isAdminRead:' , conversation.isReadByAdmin);
+                      // console.log('isUnread:' , conversation.lastMessageUserId !== admin.id || !conversation.isReadByAdmin);
 
                       return (
                         <div

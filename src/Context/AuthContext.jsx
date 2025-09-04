@@ -39,33 +39,45 @@ const checkAuthStatus = () => {
         const decodedToken = jwtDecode(storedToken);
         // console.log('[AuthContext] checkAuthStatus: Token decoded:', decodedToken);
 
-        // Kiểm tra hạn token: decodedToken.exp đã là Unix timestamp (giây)
-        // Date.now() là milliseconds, nên cần nhân decodedToken.exp với 1000
+        // Kiểm tra hạn token
         if (decodedToken.exp * 1000 > Date.now()) {
             // console.log('[AuthContext] checkAuthStatus: Token is valid and not expired.');
             setToken(storedToken);
 
             const userRoles = decodedToken[ClaimTypes.role];
-            // Đảm bảo roles luôn là một mảng
             const rolesArray = Array.isArray(userRoles) ? userRoles : (userRoles ? [userRoles] : []);
 
-            setUser({
-                id: decodedToken[ClaimTypes.nameidentifier],
-                email: decodedToken[ClaimTypes.email],
-                userName: decodedToken[ClaimTypes.email], 
+            
+            const userId = decodedToken[ClaimTypes.nameidentifier] || decodedToken.sub || decodedToken.userId;
+            const userEmail = decodedToken[ClaimTypes.email] || decodedToken.email;
+            
+            // console.log('[AuthContext] Extracted user info:', {
+            //     userId,
+            //     userEmail,
+            //     roles: rolesArray
+            // });
+
+            const userInfo = {
+                id: userId, 
+                email: userEmail,
+                userName: userEmail, 
                 roles: rolesArray,
-                isAdmin: rolesArray.includes('Admin') 
-            });
+                isAdmin: rolesArray.includes('Admin') || rolesArray.includes('SuperAdmin')
+            };
+
+            // console.log('[AuthContext] Setting user:', userInfo);
+            setUser(userInfo);
             setIsAuthenticated(true);
+            setLoggedIn(true); 
         } else {
             // console.log('[AuthContext] checkAuthStatus: Token is expired.');
-            // logout();
+            logout();
         }
         } else {
         // console.log('[AuthContext] checkAuthStatus: No token found in localStorage.');
         }
     } catch (error) {
-        // console.error('[AuthContext] checkAuthStatus: Error during token processing:', error);
+        console.error('[AuthContext] checkAuthStatus: Error during token processing:', error);
         logout();
     } finally {
         // console.log('[AuthContext] checkAuthStatus: Setting isLoading to false.');
@@ -109,6 +121,9 @@ const checkAuthStatus = () => {
             if (response.data && response.data.token) {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('refreshToken', response.data.refreshToken);
+                
+                checkAuthStatus();
+                
                 return response.data.token;
             }
             return null;
@@ -235,20 +250,28 @@ const checkAuthStatus = () => {
                 localStorage.setItem('refreshToken', refreshToken);
                 const decodeToken = jwtDecode(token);
                 const roles = decodeToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+                
+                // FIX: Đảm bảo roles là array
+                const rolesArray = Array.isArray(roles) ? roles : (roles ? [roles] : []);
 
-                if (roles.includes("Admin") || roles.includes("SuperAdmin")) {
-                    localStorage.setItem('token', token);
+                if (rolesArray.includes("Admin") || rolesArray.includes("SuperAdmin")) {
+                    const userId = decodeToken[ClaimTypes.nameidentifier] || decodeToken.sub || decodeToken.userId;
+                    const userEmail = decodeToken[ClaimTypes.email] || decodeToken.email;
+                    
                     setToken(token);
-                    setUser({
-                        id: decodeToken.sub || decodeToken.userId,
-                        email: decodeToken.email,
-                        userName: decodeToken.userName || decodeToken.name,
-                        roles: decodeToken.roles || decodeToken.role || [],
+                    const userInfo = {
+                        id: userId,
+                        email: userEmail,
+                        userName: userEmail,
+                        roles: rolesArray,
                         isAdmin: true
-                    });
+                    };
+                    
+                    // console.log('[AuthContext] handleLogin - Setting user:', userInfo);
+                    setUser(userInfo);
                     setIsAuthenticated(true);
                     setIsLoading(false);
-
+                    setLoggedIn(true);
 
                     return true;
                   } else {
@@ -265,20 +288,26 @@ const checkAuthStatus = () => {
         localStorage.setItem('refreshToken', refreshToken);
         const decodeToken = jwtDecode(token);
         const roles = decodeToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        const rolesArray = Array.isArray(roles) ? roles : (roles ? [roles] : []);
 
-        if (roles.includes("Admin") || roles.includes("SuperAdmin")) {
-            localStorage.setItem('token', token);
+        if (rolesArray.includes("Admin") || rolesArray.includes("SuperAdmin")) {
+            const userId = decodeToken[ClaimTypes.nameidentifier] || decodeToken.sub || decodeToken.userId;
+            const userEmail = decodeToken[ClaimTypes.email] || decodeToken.email;
+            
             setToken(token);
-            setUser(
-            {
-                id: decodeToken.sub || decodeToken.userId,
-                email: decodeToken.email,
-                userName: decodeToken.userName || decodeToken.name,
-                roles: decodeToken.roles || decodeToken.role || [],
+            const userInfo = {
+                id: userId,
+                email: userEmail,
+                userName: userEmail,
+                roles: rolesArray,
                 isAdmin: true
-            });
+            };
+            
+            // console.log('[AuthContext] handleLoginGG - Setting user:', userInfo);
+            setUser(userInfo);
             setIsAuthenticated(true);
             setIsLoading(false);
+            setLoggedIn(true);
 
             return true;
         } else {
@@ -290,21 +319,31 @@ const checkAuthStatus = () => {
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
         setLoggedIn(true);
-        getCart();
 
         try {
-        const decodedToken = jwtDecode(token);
-        localStorage.setItem('token', token);
-        setToken(token);
-        setUser({
-            id: decodedToken.sub || decodedToken.userId,
-            email: decodedToken.email,
-            userName: decodedToken.userName || decodedToken.name,
-            roles: decodedToken.roles || decodedToken.role || [],
-            isAdmin: decodedToken.roles?.includes('Admin') || decodedToken.role?.includes('Admin') || false
-        });
-        setIsAuthenticated(true);
-        setIsLoading(false);
+            const decodedToken = jwtDecode(token);
+            // console.log('[AuthContext] login - Decoded token:', decodedToken);
+            
+            const userId = decodedToken[ClaimTypes.nameidentifier] || decodedToken.sub || decodedToken.userId;
+            const userEmail = decodedToken[ClaimTypes.email] || decodedToken.email;
+            const userRoles = decodedToken[ClaimTypes.role] || decodedToken.roles || decodedToken.role || [];
+            const rolesArray = Array.isArray(userRoles) ? userRoles : (userRoles ? [userRoles] : []);
+            
+            setToken(token);
+            const userInfo = {
+                id: userId, 
+                email: userEmail,
+                userName: userEmail,
+                roles: rolesArray,
+                isAdmin: rolesArray.includes('Admin') || rolesArray.includes('SuperAdmin')
+            };
+            
+            // console.log('[AuthContext] login - Setting user:', userInfo);
+            setUser(userInfo);
+            setIsAuthenticated(true);
+            setIsLoading(false);
+            
+            getCart();
         } catch (error) {
             console.error('Error decoding token:', error);
             localStorage.removeItem('token');
@@ -321,8 +360,6 @@ const checkAuthStatus = () => {
         setCart([]);
         setItemInCart(0);
 
-
-        localStorage.removeItem('token');
         setToken(null);
         setUser(null);
         setIsAuthenticated(false);
@@ -331,7 +368,7 @@ const checkAuthStatus = () => {
     const isAdminLogin = () => {
         const token = localStorage.getItem('token');
     
-        if (!token) return false; // Không logout ngay, chỉ trả về false
+        if (!token) return false;
     
         try {
             const decodeToken = jwtDecode(token);
@@ -349,7 +386,6 @@ const checkAuthStatus = () => {
     const handleUpdateItemCart = (cartItemID, productID, newQuantity, productSizeID) => {
         updateItemCart(cartItemID, productID, newQuantity, productSizeID);
     
-        // Cập nhật cart ngay lập tức để hiển thị thay đổi ngay
         setCart(prevCart => prevCart.map(item =>
             item.cartItemID === cartItemID
                 ? { ...item, quantity: newQuantity }
@@ -358,9 +394,8 @@ const checkAuthStatus = () => {
     };
 
     const handleRemoveItem = (cartItemID, productID, productSizeID) => {
-        updateItemCart(cartItemID, productID, 0, productSizeID); // Gửi API để xóa
+        updateItemCart(cartItemID, productID, 0, productSizeID); 
 
-        // Cập nhật cart ngay lập tức
         setCart(prevCart => prevCart.filter(item => item.cartItemID !== cartItemID));
     };
 
@@ -381,8 +416,10 @@ const checkAuthStatus = () => {
     }
 
     useEffect(() => {
-        getInforUser();
-    }, [])
+        if (isAuthenticated) {
+            getInforUser();
+        }
+    }, [isAuthenticated]) 
 
     const getInforById = async(userId) => {
         try {
@@ -416,7 +453,6 @@ const checkAuthStatus = () => {
                 data:  dataSend
             })
 
-            // const response = await axios.post('/api/Auth/RegisterAdmin', dataSend);
             if (response.status === 200) {
                 toast.success('Đăng ký thành công');
                 return response;
@@ -500,7 +536,7 @@ const checkAuthStatus = () => {
     const getAllUser = async(querySearch, searchField, page, itemInPage) => {
         try {
             let url;
-            if(querySearch == null) { // Kiểm tra cả null và undefined
+            if(querySearch == null) {
                 url = `/api/Auth/GetAllUser?searchField=${searchField}&page=${page}&itemInPage=${itemInPage}`;
             } else {
                 url = `/api/Auth/GetAllUser?querySearch=${querySearch}&searchField=${searchField}&page=${page}&itemInPage=${itemInPage}`;
@@ -516,11 +552,6 @@ const checkAuthStatus = () => {
             console.error("Lỗi khi lấy danh sách người dùng: ", error);
         }
     };
-
-    
-
-    
-    
 
     return (
         <AuthContext.Provider value={{

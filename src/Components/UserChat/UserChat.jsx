@@ -4,13 +4,14 @@ import { Send, MessageCircle, X, User, Clock, AlertCircle, Wifi, WifiOff } from 
 import './UserChat.css'
 import { toast } from 'react-toastify';
 import { useChat } from '../../Context/ChatContext';
+
 const UserChat = ({ user, token }) => {
     const {markReadMessage} = useChat();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([]);
     const [messageInput, setMessageInput] = useState('');
     const [conversationId, setConversationId] = useState(null);
-    const [chatStatus, setChatStatus] = useState('disconnected'); // disconnected, connecting, connected, no_conversation, pending, active, closed, error
+    const [chatStatus, setChatStatus] = useState('disconnected');
     const [adminInfo, setAdminInfo] = useState(null);
     const [isConnecting, setIsConnecting] = useState(false);
     const [connectionError, setConnectionError] = useState(null);
@@ -19,14 +20,20 @@ const UserChat = ({ user, token }) => {
     const eventListenersRegistered = useRef(false);
     
     const currentConversationId = useRef(null);
+    const currentUser = useRef(null); 
+
+    useEffect(() => {
+        currentUser.current = user;
+        // console.log('User updated in ref:', user);
+    }, [user]);
 
     useEffect(()=> {
-        console.log(user);
+        // console.log(user);
     },[])
 
     useEffect(() => {
         currentConversationId.current = conversationId;
-        console.log('ConversationId updated:', conversationId);
+        // console.log('ConversationId updated:', conversationId);
     }, [conversationId]);
 
     const scrollToBottom = useCallback(() => {
@@ -38,25 +45,24 @@ const UserChat = ({ user, token }) => {
     }, [messages, scrollToBottom]);
 
     useEffect(() => {
-    if (conversationId && user?.id && chatStatus === 'active') {
-        const markMessagesAsRead = async () => {
-            try {
-                await markReadMessage(conversationId, user.id);
-                setMessages(prevMessages =>
-                    prevMessages.map(message =>
-                        message.conversationId === conversationId &&
-                        message.senderUserId !== user.id // Tin nhắn từ admin
-                            ? { ...message, isReadByClient: true }
-                            : message
-                    )
-                );
-            } catch (error) {
-                console.error('Error marking messages as read:', error);
-                
-            }
-        };
-        markMessagesAsRead();
-    }
+        if (conversationId && user?.id && chatStatus === 'active') {
+            const markMessagesAsRead = async () => {
+                try {
+                    await markReadMessage(conversationId, user.id);
+                    setMessages(prevMessages =>
+                        prevMessages.map(message =>
+                            message.conversationId === conversationId &&
+                            message.senderUserId !== user.id
+                                ? { ...message, isReadByClient: true }
+                                : message
+                        )
+                    );
+                } catch (error) {
+                    console.error('Error marking messages as read:', error);
+                }
+            };
+            markMessagesAsRead();
+        }
     }, [conversationId, user?.id, chatStatus, markReadMessage]);
 
     // Initialize chat connection when opening
@@ -64,14 +70,6 @@ const UserChat = ({ user, token }) => {
         if (isOpen && !chatService.isConnectionActive() && token && !isConnecting) {
             initializeChat();
         }
-        
-        // // Cleanup on unmount
-        // return () => {
-        //     if (reconnectTimeoutRef.current) {
-        //         clearTimeout(reconnectTimeoutRef.current);
-        //     }
-        //     removeEventListeners();
-        // };
     }, [isOpen, token]);
 
     // Auto-reconnect on connection loss
@@ -106,7 +104,7 @@ const UserChat = ({ user, token }) => {
             }
             
             setChatStatus('connected');
-            console.log('Chat initialized successfully');
+            // console.log('Chat initialized successfully');
             
         } catch (error) {
             console.error('Failed to connect to chat:', error);
@@ -126,7 +124,7 @@ const UserChat = ({ user, token }) => {
     };
 
     const setupEventListeners = () => {
-        console.log('Setting up event listeners...');
+        // console.log('Setting up event listeners...');
 
         // Connection events
         chatService.on('ConnectionReconnecting', () => {
@@ -154,25 +152,23 @@ const UserChat = ({ user, token }) => {
 
         // Chat events
         chatService.on('LoadChatHistory', (convId, history) => {
-            console.log('Loading chat history:', convId, history);
+            // console.log('Loading chat history:', convId, history);
             setConversationId(convId);
-            // Đảm bảo history là array và có dữ liệu đúng format
             const historyArray = Array.isArray(history) ? history : [];
-            console.log('Processed history:', historyArray);
+            // console.log('Processed history:', historyArray);
             setMessages(historyArray);
             setChatStatus('active');
         });
 
         chatService.on('ChatRequestSent', (convId) => {
-            console.log('Chat request sent:', convId);
+            // console.log('Chat request sent:', convId);
             setConversationId(convId);
             setChatStatus('pending');
             toast.info('Yêu cầu chat đã được gửi, vui lòng chờ admin phản hồi');
         });
 
         chatService.on('AdminJoined', (convId, adminName, adminId) => {
-            console.log('Admin joined:', convId, adminName, adminId);
-            // Sử dụng ref để kiểm tra conversationId hiện tại
+            // console.log('Admin joined:', convId, adminName, adminId);
             if (convId === currentConversationId.current || !currentConversationId.current) {
                 setAdminInfo({ name: adminName, id: adminId });
                 setConversationId(convId);
@@ -182,14 +178,14 @@ const UserChat = ({ user, token }) => {
         });
 
         chatService.on('ChatStillPending', (convId) => {
-            console.log('Chat still pending:', convId);
+            // console.log('Chat still pending:', convId);
             setConversationId(convId);
             setChatStatus('pending');
             toast.info('Yêu cầu chat của bạn vẫn đang chờ xử lý');
         });
 
         chatService.on('NoActiveOrPendingConversationFound', () => {
-            console.log('NoActiveOrPendingConversationFound conversationId: ', currentConversationId.current);
+            // console.log('NoActiveOrPendingConversationFound conversationId: ', currentConversationId.current);
             console.log('No active or pending conversation found');
             setChatStatus('no_conversation');
             setConversationId(null);
@@ -198,28 +194,33 @@ const UserChat = ({ user, token }) => {
         });
 
         chatService.on('ReceiveMessage', (message) => {
-            console.log('Received message:', message);
-            // Kiểm tra message có đầy đủ thông tin không
+            // console.log('Received message:', message);
+            // console.log('Current user from ref:', currentUser.current);
+            
             if (message) {
-                if(message.senderUserId !== user.id){
+                // Sử dụng ref để lấy thông tin user hiện tại
+                const currentUserId = currentUser.current?.id;
+                // console.log('Comparing:', message.senderUserId, 'vs', currentUserId);
+                
+                if(message.senderUserId !== currentUserId){
                     playNotificationSound();
                 }
                 setMessages(prev => {
                     const newMessages = [...prev, message];
-                    console.log('Updated messages:', newMessages);
+                    // console.log('Updated messages:', newMessages);
                     return newMessages;
                 });
             } else {
-                console.log('Message rejected - invalid message');
+                // console.log('Message rejected - invalid message');
             }
         });
 
         chatService.on('ReceiveReadReceipt', (conversationId, readerUserId, dateTime) => {
-            console.log('Received read receipt:', conversationId, readerUserId, dateTime);
+            // console.log('Received read receipt:', conversationId, readerUserId, dateTime);
             setMessages(prevMessages =>
                 prevMessages.map(message =>
                     message.conversationId === conversationId &&
-                    message.senderUserId === user?.id // Tin nhắn từ user
+                    message.senderUserId === currentUser.current?.id // Sử dụng ref thay vì state
                         ? { ...message, isReadByAdmin: true }
                         : message
                 )
@@ -227,29 +228,27 @@ const UserChat = ({ user, token }) => {
         });
 
         chatService.on('ChatClosed', (convId, reason) => {
-            console.log('=== ChatClosed Event ===');
-            console.log('Server convId:', convId);
-            console.log('Current conversationId (state):', conversationId);
-            console.log('Current conversationId (ref):', currentConversationId.current);
-            console.log('Reason:', reason);
+            // console.log('=== ChatClosed Event ===');
+            // console.log('Server convId:', convId);
+            // console.log('Current conversationId (state):', conversationId);
+            // console.log('Current conversationId (ref):', currentConversationId.current);
+            // console.log('Reason:', reason);
             
-            // Sử dụng nhiều điều kiện để đảm bảo xử lý đúng
             const shouldCleanup = convId === currentConversationId.current || 
                                   convId === conversationId || 
                                   (!convId && currentConversationId.current) || 
                                   (!convId && conversationId);
                                   
-            console.log('Should cleanup:', shouldCleanup);
+            // console.log('Should cleanup:', shouldCleanup);
             
             if (shouldCleanup) {
-                console.log('Cleaning up chat state...');
+                // console.log('Cleaning up chat state...');
                 toast.info(reason || 'Cuộc trò chuyện đã được đóng bởi Admin.');
                 
-                // Dọn dẹp state của cuộc trò chuyện cũ
-                setMessages([]); // Xóa hết tin nhắn cũ
-                setAdminInfo(null); // Xóa thông tin admin
-                setConversationId(null); // Quan trọng: reset conversationId
-                currentConversationId.current = null; // Reset ref
+                setMessages([]);
+                setAdminInfo(null);
+                setConversationId(null);
+                currentConversationId.current = null;
                 
                 if (chatService.isConnectionActive()) {
                     setChatStatus('no_conversation');
@@ -257,7 +256,7 @@ const UserChat = ({ user, token }) => {
                     setChatStatus('disconnected'); 
                 }
             } else {
-                console.log('ChatClosed event ignored - conversation ID mismatch');
+                // console.log('ChatClosed event ignored - conversation ID mismatch');
             }
         });
 
@@ -267,7 +266,7 @@ const UserChat = ({ user, token }) => {
         });
 
         chatService.on('ChatInfo', (info) => {
-            console.log('Chat info:', info);
+            // console.log('Chat info:', info);
             toast.info(info);
         });
     };
@@ -275,7 +274,7 @@ const UserChat = ({ user, token }) => {
     const removeEventListeners = () => {
         if (!eventListenersRegistered.current) return;
         
-        console.log('Removing event listeners...');
+        // console.log('Removing event listeners...');
         
         // Connection events
         chatService.off('ConnectionReconnecting');
@@ -304,13 +303,13 @@ const UserChat = ({ user, token }) => {
         const lastUserMessage = userMessagesInConversation[userMessagesInConversation.length - 1];
 
         if (lastUserMessage?.isReadByClient) {
-            console.log(`Last user message in conversation ${conversationId} already read, skipping SignalR invoke`);
+            // console.log(`Last user message in conversation ${conversationId} already read, skipping SignalR invoke`);
             return; 
         }
 
         try {
             await chatService.invoke('MarkMessagesAsRead', conversationId);
-            console.log(`Successfully invoked MarkMessagesAsRead for conversation: ${conversationId}`);
+            // console.log(`Successfully invoked MarkMessagesAsRead for conversation: ${conversationId}`);
 
             setMessages(prevMessages =>
             prevMessages.map(message =>
@@ -322,24 +321,6 @@ const UserChat = ({ user, token }) => {
         } catch (error) {
             console.error('Error marking messages as read:', error);
         }
-
-        // await chatService.invoke('MarkMessagesAsRead', currentConversationId.current)
-        // setMessages(prevMessages => {
-        //     // Lọc ra các tin nhắn của user trong đoạn chat hiện tại
-        //     const userMessagesInConversation = prevMessages.filter(
-        //     msg => msg.conversationId === currentConversationId.current &&
-        //             msg.senderUserId === user?.id
-        //     );
-
-        //     // Lấy tin nhắn cuối cùng của user (theo thời gian)
-        //     const lastUserMessage = userMessagesInConversation[userMessagesInConversation.length - 1];
-
-        //     return prevMessages.map(message =>
-        //     message.id === lastUserMessage?.id
-        //         ? { ...message, isReadByAdmin: true }
-        //         : message
-        //     );
-        // });
     }
 
     const cleanupChatState = useCallback(() => {
@@ -362,11 +343,13 @@ const UserChat = ({ user, token }) => {
             return;
         }
 
+        // Sử dụng ref để đảm bảo có thông tin user chính xác
+        const currentUserId = currentUser.current?.id;
+        const currentUserName = currentUser.current?.userName || currentUser.current?.email || "Bạn";
+
         const tempClientMessage = {
-            // id: undefined, 
-            // conversationId: undefined, 
-            senderUserId: user?.id,
-            senderName: user?.userName || "Bạn",
+            senderUserId: currentUserId,
+            senderName: currentUserName,
             messageContent: messageInput.trim(),
             sentTimeUtc: new Date().toISOString(),
         };
@@ -377,6 +360,10 @@ const UserChat = ({ user, token }) => {
             setMessageInput('');
         } catch (error) {
             console.error('Failed to start chat:', error);
+            // Xóa tin nhắn tạm nếu gửi thất bại
+            setMessages(prevMessages => 
+                prevMessages.filter(msg => msg !== tempClientMessage)
+            );
         }
     };
 
@@ -429,7 +416,6 @@ const UserChat = ({ user, token }) => {
         return response;
     }
 
-
     const renderConnectionStatus = () => {
         if (chatStatus === 'connecting' || isConnecting) {
             return (
@@ -465,9 +451,6 @@ const UserChat = ({ user, token }) => {
                     <div className="apple-status-content">
                         <Wifi className="apple-status-icon" />
                         <span>Đã kết nối</span>
-                        {/* <span className="apple-debug-info">
-                            (ID: {conversationId ? conversationId.toString().substring(0, 8) + '...' : 'none'})
-                        </span> */}
                     </div>
                 </div>
             );
@@ -492,13 +475,6 @@ const UserChat = ({ user, token }) => {
                             <User className="apple-status-icon" />
                             <span>Đang trò chuyện với {adminInfo.name}</span>
                         </div>
-                        {/* <button
-                            onClick={cleanupChatState}
-                            className="apple-reset-btn"
-                            title="Dọn dẹp chat (Debug)"
-                        >
-                            Reset
-                        </button> */}
                     </div>
                 );
             case 'closed':
@@ -533,14 +509,22 @@ const UserChat = ({ user, token }) => {
         }
 
         return messages.map((message, index) => {
-    console.log('Rendering message:', message, 'User ID:', user?.id);
+            // Sử dụng ref để đảm bảo so sánh chính xác
+            const currentUserId = currentUser.current?.id;
+            const isOwnMessage = message.senderUserId === currentUserId;
 
-    const isOwnMessage = message.senderUserId === user?.id;
+            // Debug log
+            // console.log(`Message ${index}:`, {
+            //     senderUserId: message.senderUserId,
+            //     currentUserId: currentUserId,
+            //     isOwnMessage: isOwnMessage,
+            //     content: message.messageContent
+            // });
 
-    const isLastInSequence =
-        isOwnMessage && // Tin nhắn từ user
-        (index === messages.length - 1 || // Là tin nhắn cuối cùng trong danh sách
-         messages[index + 1]?.senderUserId !== user?.id); // Tin nhắn tiếp theo không phải từ user
+            const isLastInSequence =
+                isOwnMessage && 
+                (index === messages.length - 1 || 
+                 messages[index + 1]?.senderUserId !== currentUserId);
 
             return (
                 <div

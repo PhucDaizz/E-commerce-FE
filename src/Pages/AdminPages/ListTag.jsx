@@ -107,9 +107,9 @@ const TagList = () => {
                         <thead className="table-light">
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
+                            <th>Tên</th>
                             <th>Slug</th>
-                            <th>Actions</th>
+                            <th className='text-center'>Thao tác</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -122,7 +122,6 @@ const TagList = () => {
                                 <td style={{ verticalAlign: 'middle' }}>
                                     <div style={{ 
                                         display: 'flex', 
-                                        flexDirection: 'column', 
                                         alignItems: 'center',
                                         justifyContent: 'center', 
                                         gap: '0.5rem',
@@ -133,7 +132,7 @@ const TagList = () => {
                                             className="btn btn-sm btn-outline-primary"
                                             onClick={() => handleEditClick(tag)} 
                                         >
-                                            Edit
+                                            Sửa
                                         </button>
                                         <button 
                                             style={{ width: '120px' }} 
@@ -141,7 +140,7 @@ const TagList = () => {
                                             onClick={() => handleDeleteClick(tag)}
                                             disabled={loading}
                                         >
-                                            Delete
+                                            Xoá
                                         </button>
                                     </div>
                                 </td>

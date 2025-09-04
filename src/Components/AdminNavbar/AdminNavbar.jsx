@@ -105,14 +105,13 @@ const AdminNavbar = () => {
                     </div> */}
 
                     <div className="profile-container">
-                        <div className="profile-info">
+                        <div className="profile-info" onClick={() => navigate('/admin/account')}>
                             <div className="avatar">
                                 <i className="bi bi-person-circle"></i>
                             </div>
                             <div className="user-details">
                                 <span 
-                                    className="user-name" 
-                                    onClick={() => navigate('/admin/account')}
+                                    className="user-name"                                     
                                 >
                                     {inforUser.userName}
                                 </span>

@@ -126,7 +126,7 @@ const Checkout = () => {
                         />
                         <label htmlFor="vnpay" className="d-flex align-items-center w-100">
                             Thanh toán qua VNPAY-QR
-                            <img src='https://downloadlogomienphi.com/sites/default/files/logos/download-logo-vector-vnpay-mien-phi.jpg' 
+                            <img src='https://play-lh.googleusercontent.com/2WHgcuwhtbmfrDEF-D-lYQ4sAk0TlI-aFtqx7lJXK5KV7f8smnofaedP_Opcd3edR2c' 
                                 alt="VNPAY" style={{ marginLeft: "auto", width: 50 }} />
                         </label>
                     </div>

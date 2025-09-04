@@ -169,10 +169,10 @@ const Hero = () => {
                 key={banner.id} 
                 className={`carousel-item ${index === currentSlide ? 'active' : ''}`}
               >
-                <a 
+                {/* <a 
                   href={banner.redirectUrl} 
                   className="banner-link text-decoration-none"
-                >
+                > */}
                   <div className="banner-slide position-relative">
                     <div 
                       className="banner-background"
@@ -209,7 +209,7 @@ const Hero = () => {
                       </div>
                     </div>
                   </div>
-                </a>
+                {/* </a> */}
               </div>
             ))}
           </div>

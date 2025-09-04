@@ -15,9 +15,9 @@ const AuthCallback = () => {
     const refreshToken = searchParams.get('refreshToken');
     const error = searchParams.get('error');
 
-    console.log('Auth callback - token:', token ? 'exists' : 'null');
-    console.log('Auth callback - refreshToken:', refreshToken ? 'exists' : 'null');
-    console.log('Auth callback - error:', error);
+    // console.log('Auth callback - token:', token ? 'exists' : 'null');
+    // console.log('Auth callback - refreshToken:', refreshToken ? 'exists' : 'null');
+    // console.log('Auth callback - error:', error);
 
     if (error) {
       console.error('Login error:', error);
