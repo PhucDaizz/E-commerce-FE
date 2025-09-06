@@ -112,7 +112,7 @@ const Footer = () => {
         <div className="container">
           <div className="footer-bottom-content">
             <div className="copyright">
-              <p>&copy; {currentYear} Your Store Name. Tất cả quyền được bảo lưu.</p>
+              <p>&copy; {currentYear} PhucDai. Bản quyền trang web thuộc về PhucDai.</p>
             </div>
             <div className="footer-links">
               <a href="/privacy">Chính sách bảo mật</a>

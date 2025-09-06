@@ -195,14 +195,14 @@ const Hero = () => {
                               {banner.description && (
                                 <p className="banner-description">{banner.description}</p>
                               )}
-                              <div className="banner-actions">
+                              {/* <div className="banner-actions">
                                 <button className="btn btn-primary btn-lg me-3">
                                   Mua Ngay
                                 </button>
                                 <button className="btn btn-outline-light btn-lg">
                                   Xem Thêm
                                 </button>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                         </div>

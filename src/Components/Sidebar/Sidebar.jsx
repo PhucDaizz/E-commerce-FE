@@ -20,7 +20,7 @@ const Sidebar = () => {
         <div className="col-9">
           <img
             className="img-fluid fit-img"
-            src="https://yeuchaybo.com/wp-content/uploads/2014/09/adidas-logo.jpg"
+            src="/images/logo.jpg"
             alt="Logo"
           />
         </div>

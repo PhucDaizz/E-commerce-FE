@@ -27,7 +27,7 @@ export const AllProduct = () => {
                     params: {
                         isDESC: true,
                         page: page,
-                        itemInPage: 10,
+                        itemInPage: 20,
                         sortBy: 'CreatedAt'
                     }
                 })
@@ -46,6 +46,7 @@ export const AllProduct = () => {
 
     return (
         <div className='all-product'>
+            <img src='https://res.cloudinary.com/dwuetxxnt/image/upload/v1757147289/Gemini_Generated_Image_36osfa36osfa36os_xinakz.png' alt='' className='img-fluid' />
             <h3 className='d-flex justify-content-center'>
                 Tất cả sản phẩm
             </h3>

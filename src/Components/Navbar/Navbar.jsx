@@ -82,7 +82,7 @@ const Navbar = () => {
           </button>
           <Link to={'/'} onClick={() => setMenu('')}>
             <img
-              src="https://rubicmarketing.com/wp-content/uploads/2023/04/y-nghia-logo-adidas.jpg"
+              src="/images/logo.jpg"
               alt="Logo"
               className='navimg'
             />

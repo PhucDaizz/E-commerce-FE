@@ -3,6 +3,8 @@ import { useDashboard } from '../Context/DashboardContext';
 import { useProduct } from '../Context/ProductContext';
 import './CSS/Admin.css';
 import TrendChart from '../Components/TrendChart/TrendChart';
+import RevenueChart from '../Components/RevenueChart/RevenueChart';
+import CustomerLocationAnalysis from '../Components/CustomerLocationAnalysis/CustomerLocationAnalysis';
 
 const Admin = () => {
     const { getTotalRevenue, getReportOrder, getReportInventory, getReportUser } = useDashboard();
@@ -247,6 +249,12 @@ const Admin = () => {
                             </div>
                             <div className="chart-body">
                                 <TrendChart/>
+                            </div>
+                            <div style={{ padding: '20px' }}>
+                                <RevenueChart />
+                            </div>
+                            <div style={{ padding: '20px' }}>
+                                <CustomerLocationAnalysis/>
                             </div>
                         </div>
                     </div>

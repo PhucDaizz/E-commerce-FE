@@ -50,7 +50,7 @@ const AdminNavbar = () => {
                     )}
                     <div className="logo-container">
                         <img 
-                            src="https://yeuchaybo.com/wp-content/uploads/2014/09/adidas-logo.jpg" 
+                            src="/images/pmMZ2c01.svg" 
                             alt="Admin Logo" 
                             className="admin-logo"
                             onClick={() => navigate('/admin')}

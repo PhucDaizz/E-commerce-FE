@@ -65,7 +65,30 @@ export const DashboardProvider = ({children}) => {
         }
     }
 
+    const getReportRevenue = async(type) => {
+        try {
+            const endpoint = type === 'DAILY' ? '/api/Dashboard/daily' : '/api/Dashboard/monthly';
+            const response = await apiRequest({
+                method: 'get',
+                url: endpoint
+            })
+            return response;
+        } catch (error) {
+            console.error("Lỗi khi gọi thống kê doanh thu:", error)
+        }
+    }
 
+    const CustomerLocationAnalysis = async() => {
+        try {
+            const response = await apiRequest({
+                method: 'get',
+                url: '/api/Dashboard/top-locations?topN=10'
+            })
+            return response;
+        } catch (error) {
+            console.error("Lỗi khi gọi thống kê địa điểm khách hàng:", error)
+        }
+    }
 
     return (
         <DashboardContext.Provider
@@ -74,7 +97,9 @@ export const DashboardProvider = ({children}) => {
                 getReportOrder,
                 getReportInventory,
                 getReportUser,
-                getReportTopSelling
+                getReportTopSelling,
+                getReportRevenue,
+                CustomerLocationAnalysis
             }}
         >
             {children}

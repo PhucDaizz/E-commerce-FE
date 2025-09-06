@@ -18,6 +18,7 @@ import UpdateInfor from './Components/UpdateInfor/UpdateInfor'
 import ResultPayment from './Components/ResultPayment/ResultPayment'
 import Chat from './Pages/Chat'
 import AuthCallback from './Pages/AuthCallback'
+import NotFound from './Components/NotFound/NotFound'
   
 function AppContent() { // Tạo một component mới để sử dụng useLocation()
   const location = useLocation();
@@ -46,6 +47,7 @@ function AppContent() { // Tạo một component mới để sử dụng useLoca
         <Route path='/resetpassword' element={<ResetPassword/>}/>
         <Route path='/admin/*' element={<AdminRoutes />} />
         <Route path='/chat' element={<Chat/>}></Route>
+        <Route path='*' element={<NotFound/>}></Route>
       </Routes>
       <Chat/>
       <Footer />
