@@ -47,7 +47,7 @@ export const AllProduct = () => {
     return (
         <div className='all-product'>
             <img src='https://res.cloudinary.com/dwuetxxnt/image/upload/v1757147289/Gemini_Generated_Image_36osfa36osfa36os_xinakz.png' alt='' className='img-fluid' />
-            <h3 className='d-flex justify-content-center'>
+            <h3 className='d-flex justify-content-center mt-3'>
                 Tất cả sản phẩm
             </h3>
             <div className='shop-product'>
