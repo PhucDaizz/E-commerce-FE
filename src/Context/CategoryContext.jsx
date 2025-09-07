@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from '../api/axios';
-import { apiRequest } from '../utils/apiHelper';
+import { apiMultipartRequest, apiRequest } from '../utils/apiHelper';
 import { toast } from 'react-toastify';
 
 // Tạo Context
@@ -30,41 +30,75 @@ export const CategoryProvider = ({ children }) => {
   }, [])
 
 
-  const addCategory = async (categoryName, description) => {
-    try {
-      const response = await apiRequest({
-        method : 'post',
-        url: 'api/Category',
-        data: {
-          categoryName: categoryName,
-          description: description
-        }
-      });
-      if (response.status === 200) {
-        toast.success('Thêm danh mục thành công')
+  const addCategory = async (categoryName, description, imageFile, useCloudStorage, onSuccess) => {
+      try {
+          const formData = new FormData();
+          formData.append('CategoryName', categoryName);
+          formData.append('Description', description || '');
+          formData.append('UseCloudStorage', useCloudStorage.toString());
+          
+          if (imageFile) {
+              formData.append('ImageFile', imageFile);
+          }
+
+          const response = await apiMultipartRequest({
+              method: 'post',
+              url: 'api/Category',
+              data: formData
+          });
+
+          if (response.status === 200) {
+              toast.success('Thêm danh mục thành công');
+              
+              // Gọi hàm reset form khi thành công
+              if (onSuccess && typeof onSuccess === 'function') {
+                  onSuccess();
+              }
+          }
+      } catch (error) {
+          console.error('Lỗi khi thêm mục sản phẩm:', error);
+          if (error.response?.data) {
+              toast.error(error.response.data);
+          } else {
+              toast.error('Có lỗi xảy ra khi thêm danh mục');
+          }
       }
-    } catch (error) {
-      console.error('Lỗi khi thêm mục sản phẩm:', error);
-    }
   }
 
-  const editCategory = async (categoryID, categoryName, description) => {
-    try {
-      const response = await apiRequest({
-        method: 'put',
-        url: `/api/Category/${categoryID}`,
-        data: {
-          categoryName: categoryName,
-          description: description
-        }
-      })
-      if(response.status === 200) {
-        toast.success('Chỉnh sửa mục sp thành công')
+  const editCategory = async (categoryID, categoryName, description, imageFile, useCloudStorage, onSuccess) => {
+      try {
+          const formData = new FormData();
+          formData.append('CategoryName', categoryName);
+          formData.append('Description', description || '');
+          formData.append('UseCloudStorage', useCloudStorage.toString());
+          
+          if (imageFile) {
+              formData.append('ImageFile', imageFile);
+              // HasNewImage sẽ được server tự động tính từ việc có ImageFile
+          }
+
+          const response = await apiMultipartRequest({
+              method: 'put',
+              url: `/api/Category/${categoryID}`,
+              data: formData
+          });
+
+          if (response.status === 200) {
+              toast.success('Cập nhật danh mục thành công');
+              
+              if (onSuccess && typeof onSuccess === 'function') {
+                  onSuccess();
+              }
+          }
+      } catch (error) {
+          console.error('Lỗi khi cập nhật danh mục:', error);
+          if (error.response?.data) {
+              toast.error(error.response.data);
+          } else {
+              toast.error('Có lỗi xảy ra khi cập nhật danh mục');
+          }
       }
-    } catch (error) {
-      console.log('Lỗi khi thêm mục sp:', error)
-    }
-  } 
+  }
 
   const getDetailCategory = async(categoryID) => {
     try {
@@ -81,6 +115,7 @@ export const CategoryProvider = ({ children }) => {
         method: 'delete',
         url: `/api/Category/${categoryID}`
       })
+      console.log('Xoá mục sp thành công:', response);
       return response;
     } catch (error) {
       console.error('Lỗi khi xoá mục:' ,error);

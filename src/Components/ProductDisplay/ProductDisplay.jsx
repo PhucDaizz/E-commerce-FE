@@ -20,6 +20,7 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [modalSwiper, setModalSwiper] = useState(null);
+  const [hoveredColor, setHoveredColor] = useState(null); // State mới để theo dõi màu đang hover
   const {addToCart} = useAuth();
 
   const predefinedOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
@@ -198,16 +199,38 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
             <Rating rating = {averageRating === 0 ? 5 : Math.round(averageRating)} />
 
             <p className='product-price'>{formatCurrency(product.price)}</p>
+            
+            {/* Hiển thị tên màu đang được chọn */}
+            {selectedColor && (
+              <div className="selected-color-name">
+                Màu: <strong>{selectedColor.colorName}</strong>
+              </div>
+            )}
+            
             <p>Màu sắc</p>
-            <div className="product-color d-flex">
-              {colors.map((color, i) => (
+            <div className="product-color-container">
+              <div className="product-color d-flex">
+                {colors.map((color, i) => (
                   <div 
                     key={i}
-                    className={`color-circle ${selectedColor === color ? 'selected' : ''}`}
-                    style={{ backgroundColor: color.colorHex }} 
-                    onClick={() => handleColorClick(color)}
-                  ></div>
+                    className="color-item"
+                    onMouseEnter={() => setHoveredColor(color)}
+                    onMouseLeave={() => setHoveredColor(null)}
+                  >
+                    <div 
+                      className={`color-circle ${selectedColor === color ? 'selected' : ''}`}
+                      style={{ backgroundColor: color.colorHex }} 
+                      onClick={() => handleColorClick(color)}
+                    ></div>
+                    {/* Hiển thị tên màu khi hover */}
+                    {hoveredColor === color && (
+                      <div className="color-tooltip">
+                        {color.colorName}
+                      </div>
+                    )}
+                  </div>
                 ))}
+              </div>
             </div>
 
             {selectedColor?.productSizes?.length > 0 && ( 

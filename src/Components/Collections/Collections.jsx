@@ -13,11 +13,11 @@ const Collections = () => {
     const [totalPages, setTotalPages] = useState(1);
     const { selectedCategory } = useCategory();
     const { searchQuery } = useSearch();
+    const [currentCategory, setCurrentCategory] = useState(null);
     
-    // Hàm để xác định số lượng sản phẩm theo kích thước màn hình
     const getItemsPerPage = () => {
         if (typeof window !== 'undefined') {
-            return window.innerWidth >= 992 ? 50 : 20; // Large screen: 50, Small screen: 20
+            return window.innerWidth >= 992 ? 50 : 20;
         }
         return 20; 
     };
@@ -29,7 +29,21 @@ const Collections = () => {
         itemInPage: getItemsPerPage()
     });
 
-    
+    const fetchCategoryDetail = async (categoryId) => {
+        if (!categoryId) {
+            setCurrentCategory(null);
+            return;
+        }
+        
+        try {
+            const response = await axios.get(`/api/Category/${categoryId}`);
+            setCurrentCategory(response.data);
+        } catch (error) {
+            console.error('Error fetching category details:', error);
+            setCurrentCategory(null);
+        }
+    };
+
     useEffect(() => {
         const handleResize = () => {
             const newItemInPage = getItemsPerPage();
@@ -45,6 +59,10 @@ const Collections = () => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, [filters.itemInPage]);
+
+    useEffect(() => {
+        fetchCategoryDetail(selectedCategory);
+    }, [selectedCategory]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -70,6 +88,11 @@ const Collections = () => {
     
         fetchData();
     }, [page, selectedCategory, searchQuery, filters]);
+
+    const resolveImageUrl = (imageUrl) => {
+        if (!imageUrl) return '';
+        return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/${imageUrl}`;
+    };
 
     const handlePageChange = (newPage) => {
         setPage(newPage);
@@ -104,19 +127,40 @@ const Collections = () => {
         setPage(1);
     };
 
-    const resolveImageUrl = (imageUrl) => {
-        if (!imageUrl) return '';
-        return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/${imageUrl}`;
-    };
-
     return (
         <div className="collections-container">
-            <div className="collections all-product">
-                <div className="collections-header">
-                    <h3>
-                        {selectedCategory ? `Sản phẩm theo danh mục` : 'Tất cả sản phẩm'}
-                    </h3>
+            {/* Category Banner - CHIẾM TOÀN BỘ CHIỀU RỘNG */}
+            {currentCategory && currentCategory.imageURL && (
+                <div className="category-fullwidth-banner">
+                    <div className="category-banner-image-container">
+                        <img 
+                            src={resolveImageUrl(currentCategory.imageURL)} 
+                            alt={currentCategory.categoryName}
+                            className="category-banner-image"
+                        />
+                        <div className="category-banner-overlay"></div>
+                        <div className="category-banner-content">
+                            <h1 className="category-banner-title">{currentCategory.categoryName}</h1>
+                            {currentCategory.description && (
+                                <p className="category-banner-description">{currentCategory.description}</p>
+                            )}
+                        </div>
+                    </div>
                 </div>
+            )}
+
+            <div className="collections all-product">
+                {/* Header chỉ hiển thị khi không có banner */}
+                {(!currentCategory || !currentCategory.imageURL) && (
+                    <div className="collections-header">
+                        <h3>
+                            {selectedCategory && currentCategory 
+                                ? currentCategory.categoryName 
+                                : 'Tất cả sản phẩm'
+                            }
+                        </h3>
+                    </div>
+                )}
                 
                 {/* Filter Section */}
                 <div className="filters-section">
@@ -200,4 +244,4 @@ const Collections = () => {
     )
 }
 
-export default Collections
+export default Collections;
