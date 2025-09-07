@@ -1,6 +1,6 @@
 // Components/AdminChat/AdminChatComponent.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import { chatService } from '../../services/ChatService';
+import { chatService } from '../../Services/ChatService';
 import { toast } from 'react-toastify';
 import { 
   MessageCircle, 
