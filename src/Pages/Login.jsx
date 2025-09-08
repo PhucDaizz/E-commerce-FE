@@ -179,7 +179,7 @@ const Login = ({ onPage, setHideRegister, setIsSliding}) => {
               <button 
                 className="google-login-button" 
                 onClick={() => {
-                  window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google-login`; // URL API backend
+                  window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google-login?ngrok-skip-browser-warning=true`; // URL API backend
                 }}
               >
                 <img 
