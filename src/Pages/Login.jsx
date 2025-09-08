@@ -3,6 +3,7 @@ import './CSS/Login.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../Context/AuthContext';
 import { ToastContainer } from 'react-toastify';
+import axios from '../api/axios';
 
 const Login = ({ onPage, setHideRegister, setIsSliding}) => {
 
@@ -44,6 +45,18 @@ const Login = ({ onPage, setHideRegister, setIsSliding}) => {
     e.preventDefault();
     await forgotPassword(email);
   }
+
+  const handleGoogleLogin = async () => {
+    try {
+      const res = await axios.get("/auth/google-login", {
+        headers: { "ngrok-skip-browser-warning": "true" }
+      });
+      // Giả sử backend trả về { redirectUrl: "https://accounts.google.com/..." }
+      window.location.href = res.data.redirectUrl;
+    } catch (err) {
+      console.error("Google login error:", err);
+    }
+  };
 
   return (
     <div className="login-form-container"> 
@@ -178,9 +191,7 @@ const Login = ({ onPage, setHideRegister, setIsSliding}) => {
             <div className='d-flex justify-content-center align-items-center mt-3'>
               <button 
                 className="google-login-button" 
-                onClick={() => {
-                  window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google-login?ngrok-skip-browser-warning=true`; // URL API backend
-                }}
+                onClick={handleGoogleLogin}
               >
                 <img 
                   src="https://developers.google.com/identity/images/g-logo.png" 
