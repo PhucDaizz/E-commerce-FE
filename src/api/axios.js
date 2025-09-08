@@ -4,15 +4,13 @@ const BASE_URL = 'https://localhost:7295';
 
 export default axios.create({
     baseURL: apiUrl,
-    headers: { 'Content-Type': 'application/json',
-        "ngrok-skip-browser-warning": "true"
+    headers: { 'Content-Type': 'application/json'
      }
 });
 
 export const axiosPrivate = axios.create({
     baseURL: apiUrl,
-    headers: { 'Content-Type': 'application/json',
-        "ngrok-skip-browser-warning": "true"
+    headers: { 'Content-Type': 'application/json'
      },
     withCredentials: true
 })

@@ -22,7 +22,7 @@ const AdminChatComponent = ({ admin, token }) => {
   const {markReadMessage} = useChat();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [activeTab, setActiveTab] = useState('pending'); // 'pending' or 'active'
+  const [activeTab, setActiveTab] = useState('pending');
   
   // Chat state
   const [pendingConversations, setPendingConversations] = useState([]);
@@ -33,9 +33,12 @@ const AdminChatComponent = ({ admin, token }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // FIX: Thêm cache để lưu trữ tin nhắn của tất cả cuộc hội thoại
+  const [messagesCache, setMessagesCache] = useState(new Map());
+
   const messagesEndRef = useRef(null);
   const messageInputRef = useRef(null);
-  const isInitializedRef = useRef(false); // Thêm ref để track initialization
+  const isInitializedRef = useRef(false);
 
   // Initialize connection and event handlers - FIX: Chỉ chạy 1 lần
   useEffect(() => {
@@ -51,7 +54,7 @@ const AdminChatComponent = ({ admin, token }) => {
         isInitializedRef.current = false;
       }
     };
-  }, []); // FIX: Loại bỏ dependencies để chỉ chạy 1 lần
+  }, []);
 
   // FIX: Separate effect để handle token/admin changes
   useEffect(() => {
@@ -62,11 +65,12 @@ const AdminChatComponent = ({ admin, token }) => {
       setActiveConversations([]);
       setCurrentConversation(null);
       setMessages([]);
+      setMessagesCache(new Map());
     }
   }, [token, admin]);
 
   useEffect(()=> {
-    // console.log('activeConversations',activeConversations);
+    console.log('activeConversations',activeConversations);
   },[activeConversations])
 
   // Auto scroll to bottom when new messages arrive
@@ -74,16 +78,24 @@ const AdminChatComponent = ({ admin, token }) => {
     scrollToBottom();
   }, [messages]);
 
+  // FIX: Sync messages với cache khi currentConversation thay đổi
+  useEffect(() => {
+    if (currentConversation && currentConversation.conversationId) {
+      const cachedMessages = messagesCache.get(currentConversation.conversationId) || [];
+      setMessages(cachedMessages);
+    } else {
+      setMessages([]);
+    }
+  }, [currentConversation, messagesCache]);
+
   const initializeChat = async () => {
     try {
       setIsLoading(true);
       await chatService.startConnection(token);
       setIsConnected(true);
       setupEventHandlers();
-      // toast.success('Kết nối chat thành công!');
     } catch (error) {
       console.error('Failed to initialize chat:', error);
-      // toast.error('Không thể kết nối chat: ' + error.message);
       setIsConnected(false);
     } finally {
       setIsLoading(false);
@@ -110,19 +122,25 @@ const AdminChatComponent = ({ admin, token }) => {
 
     // Receive pending conversations when admin connects
     chatService.on('ReceivePendingConversations', (conversations) => {
-      // console.log('Received pending conversations:', conversations);
+      console.log('Received pending conversations:', conversations);
+      setPendingConversations(conversations);
+    });
+
+    // FIX: Thêm handler cho polling response (nếu backend implement)
+    chatService.on('RefreshPendingConversations', (conversations) => {
+      console.log('Refreshing pending conversations:', conversations);
       setPendingConversations(conversations);
     });
 
     // Receive active conversations when admin connects
     chatService.on('ReceiveActiveConversationList', (conversations) => {
-      // console.log('Received active conversations:', conversations);
+      console.log('Received active conversations:', conversations);
       setActiveConversations(conversations);
     });
 
     // New chat request from client
     chatService.on('NewChatRequest', (conversation) => {
-      // console.log('New chat request:', conversation);
+      console.log('New chat request:', conversation);
       setPendingConversations(prev => [...prev, conversation]);
       toast.info(`Có yêu cầu chat mới từ ${conversation.userName}`);
     });
@@ -137,14 +155,25 @@ const AdminChatComponent = ({ admin, token }) => {
 
     // Chat accepted by current admin
     chatService.on('ChatAcceptedByYou', (conversationId) => {
-      // console.log('Chat accepted by you:', conversationId);
-      // Move from pending to active will be handled by LoadChatHistory
+      console.log('Chat accepted by you:', conversationId);
     });
 
     // Load chat history
     chatService.on('LoadChatHistory', (conversationId, history) => {
-      // console.log('Loading chat history for:', conversationId, history);
-      setMessages(history);
+      console.log('Loading chat history for:', conversationId, history);
+      
+      // FIX: Cập nhật cache thay vì chỉ set messages
+      setMessagesCache(prev => {
+        const newCache = new Map(prev);
+        newCache.set(conversationId, history);
+        return newCache;
+      });
+      
+      // Chỉ update messages nếu đây là cuộc hội thoại hiện tại
+      if (currentConversation && currentConversation.conversationId === conversationId) {
+        setMessages(history);
+      }
+      
       setCurrentConversation(prev => ({
         ...prev,
         conversationId: conversationId
@@ -153,9 +182,8 @@ const AdminChatComponent = ({ admin, token }) => {
 
     // Admin joined notification
     chatService.on('AdminJoined', (conversationId, adminName, adminId) => {
-      // console.log('Admin joined:', conversationId, adminName, adminId);
+      console.log('Admin joined:', conversationId, adminName, adminId);
       if (adminId === admin.id) {
-        // Update active conversations
         const pendingConv = pendingConversations.find(c => c.conversationId === conversationId);
         if (pendingConv) {
           const activeConv = {
@@ -175,15 +203,13 @@ const AdminChatComponent = ({ admin, token }) => {
     });
 
     chatService.on('AddToActiveConversationList', (activeConversationInfo) => {
-      // console.log('Received AddToActiveConversationList:', activeConversationInfo);
-      // Đảm bảo không bị trùng lặp nếu đã có từ ReceiveActiveConversationList ban đầu
+      console.log('Received AddToActiveConversationList:', activeConversationInfo);
       setPendingConversations(prev => 
         prev.filter(c => c.conversationId !== activeConversationInfo.conversationId)
       );
       setActiveConversations(prev => {
         const existingIndex = prev.findIndex(c => c.conversationId === activeConversationInfo.conversationId);
         if (existingIndex > -1) {
-          // Nếu đã tồn tại, cập nhật thay vì thêm mới
           const updatedList = [...prev];
           updatedList[existingIndex] = {
             conversationId: activeConversationInfo.conversationId,
@@ -195,7 +221,6 @@ const AdminChatComponent = ({ admin, token }) => {
           };
           return updatedList;
         }
-        // Thêm mới nếu chưa có
         return [...prev, {
             conversationId: activeConversationInfo.conversationId,
             clientUserName: activeConversationInfo.clientUserName,
@@ -207,13 +232,41 @@ const AdminChatComponent = ({ admin, token }) => {
       });
     });
 
-    // FIX: Receive new message - chỉ xử lý 1 lần
+    // FIX: Receive new message - cập nhật cache và hiển thị
     chatService.on('ReceiveMessage', (message) => {
-      // console.log('Received message:', message);
+      console.log('Received message:', message);
       
-      // Only add to messages if it's for the current conversation
+      // FIX: Luôn cập nhật cache cho cuộc hội thoại tương ứng
+      setMessagesCache(prev => {
+        const newCache = new Map(prev);
+        const existingMessages = newCache.get(message.conversationId) || [];
+        
+        // Kiểm tra duplicate message (phòng trường hợp nhận trùng)
+        const isDuplicate = existingMessages.some(msg => 
+          msg.senderUserId === message.senderUserId && 
+          msg.messageContent === message.messageContent &&
+          Math.abs(new Date(msg.sentTimeUtc) - new Date(message.sentTimeUtc)) < 1000
+        );
+        
+        if (!isDuplicate) {
+          newCache.set(message.conversationId, [...existingMessages, message]);
+        }
+        
+        return newCache;
+      });
+      
+      // FIX: Chỉ cập nhật messages state nếu là cuộc hội thoại hiện tại
       if (currentConversation && currentConversation.conversationId === message.conversationId) {
-        setMessages(prev => [...prev, message]);
+        setMessages(prev => {
+          // Kiểm tra duplicate trong state hiện tại
+          const isDuplicate = prev.some(msg => 
+            msg.senderUserId === message.senderUserId && 
+            msg.messageContent === message.messageContent &&
+            Math.abs(new Date(msg.sentTimeUtc) - new Date(message.sentTimeUtc)) < 1000
+          );
+          
+          return isDuplicate ? prev : [...prev, message];
+        });
       }
 
       // Update active conversations for any message
@@ -233,19 +286,27 @@ const AdminChatComponent = ({ admin, token }) => {
 
     // Client reconnected
     chatService.on('ClientReconnected', (conversationId, clientUserId) => {
-      // console.log('Client reconnected:', conversationId, clientUserId);
+      console.log('Client reconnected:', conversationId, clientUserId);
       toast.info('Khách hàng đã kết nối lại');
     });
 
     // Client disconnected
     chatService.on('ClientDisconnected', (conversationId, clientUserId) => {
-      // console.log('Client disconnected:', conversationId, clientUserId);
+      console.log('Client disconnected:', conversationId, clientUserId);
       toast.warning('Khách hàng đã ngắt kết nối');
     });
 
     // Chat closed
     chatService.on('ChatClosed', (conversationId, message) => {
-      // console.log('Chat closed:', conversationId, message);
+      console.log('Chat closed:', conversationId, message);
+      
+      // FIX: Xóa khỏi cache khi chat đóng
+      setMessagesCache(prev => {
+        const newCache = new Map(prev);
+        newCache.delete(conversationId);
+        return newCache;
+      });
+      
       setActiveConversations(prev => 
         prev.filter(conv => conv.conversationId !== conversationId)
       );
@@ -263,20 +324,39 @@ const AdminChatComponent = ({ admin, token }) => {
     });
 
     chatService.on('ChatInfo', (info) => {
-      // console.log('Chat info:', info);
+      console.log('Chat info:', info);
       toast.info(info);
     });
 
     chatService.on('ReceiveReadReceipt', (conversationId, readerUserId, DateTime) => {
       if (readerUserId !== admin.id) {
-        setMessages(prevMessages =>
-          prevMessages.map(message =>
-            message.conversationId === conversationId &&
-            message.senderUserId === admin.id 
-              ? { ...message, isReadByClient: true }
-              : message
-          )
-        );
+        // FIX: Cập nhật cache
+        setMessagesCache(prev => {
+          const newCache = new Map(prev);
+          const messages = newCache.get(conversationId);
+          if (messages) {
+            const updatedMessages = messages.map(message =>
+              message.conversationId === conversationId &&
+              message.senderUserId === admin.id 
+                ? { ...message, isReadByClient: true }
+                : message
+            );
+            newCache.set(conversationId, updatedMessages);
+          }
+          return newCache;
+        });
+
+        // Cập nhật messages state nếu là cuộc hội thoại hiện tại
+        if (currentConversation && currentConversation.conversationId === conversationId) {
+          setMessages(prevMessages =>
+            prevMessages.map(message =>
+              message.conversationId === conversationId &&
+              message.senderUserId === admin.id 
+                ? { ...message, isReadByClient: true }
+                : message
+            )
+          );
+        }
       }
 
       if (readerUserId === admin.id) {
@@ -288,24 +368,6 @@ const AdminChatComponent = ({ admin, token }) => {
           )
         );
       }
-      
-      
-      // setMessages(prevMessages =>
-      //   prevMessages.map(message =>
-      //     message.conversationId === conversationId &&
-      //     message.senderUserId !== admin.id // Tin nhắn từ client
-      //       ? { ...message, isReadByClient: true }
-      //       : message
-      //   )
-      // );
-      // // Cập nhật activeConversations để phản ánh trạng thái đọc
-      // setActiveConversations(prev =>
-      //   prev.map(conv =>
-      //     conv.conversationId === conversationId
-      //       ? { ...conv, isReadByAdmin: true }
-      //       : conv
-      //   )
-      // );
     });
   };
 
@@ -315,12 +377,12 @@ const AdminChatComponent = ({ admin, token }) => {
     )?.isReadByAdmin;
 
     if (isAlreadyRead) {
-      // console.log(`Conversation ${conversationId} already marked as read, skipping SignalR invoke`);
+      console.log(`Conversation ${conversationId} already marked as read, skipping SignalR invoke`);
       return; 
     }
     try {
       await chatService.invoke('MarkMessagesAsRead', conversationId);
-      // console.log(`Successfully invoked MarkMessagesAsRead for conversation: ${conversationId}`);
+      console.log(`Successfully invoked MarkMessagesAsRead for conversation: ${conversationId}`);
       
       setActiveConversations(prev =>
         prev.map(conv =>
@@ -344,7 +406,6 @@ const AdminChatComponent = ({ admin, token }) => {
       setIsLoading(true);
       await chatService.adminAcceptChat(conversationId);
       
-      // Find the conversation to set as current
       const conversation = pendingConversations.find(c => c.conversationId === conversationId);
       if (conversation) {
         setCurrentConversation({
@@ -364,17 +425,18 @@ const AdminChatComponent = ({ admin, token }) => {
 
   const handleSelectActiveChat = async (conversation) => {
     try {
-      // Clear current messages before loading new ones
-      setMessages([]);
-      
+      // FIX: Không clear messages nữa, chỉ set currentConversation
       setCurrentConversation({
         conversationId: conversation.conversationId,
         clientUserName: conversation.clientUserName,
         clientUserId: conversation.clientUserId
       });
       
-      // Request chat history
-      await chatService.adminRequestChatHistory(conversation.conversationId);
+      // FIX: Chỉ request history nếu chưa có trong cache
+      const cachedMessages = messagesCache.get(conversation.conversationId);
+      if (!cachedMessages || cachedMessages.length === 0) {
+        await chatService.adminRequestChatHistory(conversation.conversationId);
+      }
       
       if (!conversation.isReadByAdmin) {
         await markReadMessage(conversation.conversationId);
@@ -558,11 +620,7 @@ const AdminChatComponent = ({ admin, token }) => {
                     </div>
                   ) : (
                     activeConversations.map((conversation) => {
-                      
-                      const isUnread =  conversation.lastMessageUserId !== admin.id && !conversation.isReadByAdmin ;
-                      // console.log('lastMessageAdmin: ', conversation.lastMessageUserId === admin.id);
-                      // console.log('isAdminRead:' , conversation.isReadByAdmin);
-                      // console.log('isUnread:' , conversation.lastMessageUserId !== admin.id || !conversation.isReadByAdmin);
+                      const isUnread = conversation.lastMessageUserId !== admin.id && !conversation.isReadByAdmin;
 
                       return (
                         <div
@@ -622,12 +680,11 @@ const AdminChatComponent = ({ admin, token }) => {
               {/* Messages */}
               <div className="apple-chat-messages">
                 {messages.map((message, index) => {
-                  // Kiểm tra xem đây có phải là tin nhắn cuối cùng trong chuỗi từ admin
                   const isLastInSequence =
-                    message.senderUserId === admin.id && // Tin nhắn từ admin
-                    (index === messages.length - 1 || // Là tin nhắn cuối cùng trong danh sách
-                    messages[index + 1]?.senderUserId !== admin.id || // Tin nhắn tiếp theo không phải từ admin
-                    messages[index + 1]?.senderUserId !== message.senderUserId); // Tin nhắn tiếp theo từ người gửi khác
+                    message.senderUserId === admin.id &&
+                    (index === messages.length - 1 ||
+                    messages[index + 1]?.senderUserId !== admin.id ||
+                    messages[index + 1]?.senderUserId !== message.senderUserId);
 
                   return (
                     <div
