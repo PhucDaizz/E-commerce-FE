@@ -149,7 +149,12 @@ const Navbar = () => {
                 onKeyDown={handleKeyDown}
               />
             </div>
-
+            <Link to={'/cart'}>
+              <i className="bi bi-bag"></i>
+              <div className='cart-container'>
+                <span className='cart-count'>{itemInCart}</span>
+              </div>
+            </Link>
             {!loggedIn ? (
               <div className="auth-buttons">
                 <Link to={'/register'}>
@@ -180,12 +185,12 @@ const Navbar = () => {
                     Xin chào, {inforUser.userName}!
                   </Link>
                 </span>
-                <Link to={'/cart'}>
+                {/* <Link to={'/cart'}>
                   <i className="bi bi-bag"></i>
                   <div className='cart-container'>
                     <span className='cart-count'>{itemInCart}</span>
                   </div>
-                </Link>
+                </Link> */}
                 <button className="auth-button logout" onClick={logout}>
                   Đăng xuất
                 </button>
@@ -244,6 +249,13 @@ const Navbar = () => {
           ))}
         </div>
 
+        <Link to={'/cart'} onClick={() => setIsMobileMenuOpen(false)}>
+          <div className="cart-link">
+            <i className="bi bi-bag"></i>
+            <span>Giỏ hàng ({itemInCart})</span>
+          </div>
+        </Link>
+
         {/* Mobile Auth */}
         <div className="mobile-auth">
           {!loggedIn ? (
@@ -264,12 +276,12 @@ const Navbar = () => {
               >
                 Xin chào, {inforUser.userName}!
               </Link>
-              <Link to={'/cart'} onClick={() => setIsMobileMenuOpen(false)}>
+              {/* <Link to={'/cart'} onClick={() => setIsMobileMenuOpen(false)}>
                 <div className="cart-link">
                   <i className="bi bi-bag"></i>
                   <span>Giỏ hàng ({itemInCart})</span>
                 </div>
-              </Link>
+              </Link> */}
               <button className="auth-button logout" onClick={() => {logout(); setIsMobileMenuOpen(false);}}>
                 Đăng xuất
               </button>

@@ -103,14 +103,18 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
   }
 
   const handleAddToCart = (product, quantity, selectedSize) => {
-    if( quantity <= selectedSize.stock) {
-      addToCart(product.productID, quantity, selectedSize.productSizeID);
+    if (!selectedSize) {
+      toast.error("Vui lòng chọn kích thước");
+      return;
     }
-    else{
-      addToCart(product.productID, selectedSize.stock, selectedSize.productSizeID);
-      toast.error("Xin lỗi bạn số lượng trong kho không đủ 😓")
+
+    if (quantity <= selectedSize.stock) {
+      addToCart(product, quantity, selectedSize, images, selectedColor);
+    } else {
+      addToCart(product, selectedSize.stock, selectedSize, images, selectedColor);
+      toast.error("Xin lỗi bạn số lượng trong kho không đủ 😓");
     }
-  }
+  };
 
   return (
     <div className="productDisplay">
@@ -254,7 +258,7 @@ const ProductDisplay = ({ images = [], product = {}, colors = [], averageRating 
               <button onClick={() => handleQuantityChange(1)}>+</button> 
             </div>
 
-            <button className='add-to-cart' onClick={() => handleAddToCart(product, quantity, selectedSize)}><span>THÊM VÀO GIỎ</span></button>
+            <button className='add-to-cart' onClick={() => handleAddToCart(product, quantity, selectedSize, images)}><span>THÊM VÀO GIỎ</span></button>
             <ToastContainer/>
             <p>{product?.description || 'No description available'}</p>
           </div>

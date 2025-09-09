@@ -19,6 +19,15 @@ const UpdateInfor = () => {
     const [detailLocaton, setDetailLocaton] = useState('');
     const [isFillFull, setIsFillFull] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [cooldown, setCooldown] = useState(0);
+    const [emailLoading, setEmailLoading] = useState(false);
+
+    useEffect(() => {
+        if (cooldown > 0) {
+            const timer = setInterval(() => setCooldown(prev => prev - 1), 1000);
+            return () => clearInterval(timer);
+        }
+    }, [cooldown]);
 
     useEffect(() => {
         getProvince();
@@ -162,11 +171,21 @@ const UpdateInfor = () => {
     };
 
     const handleConfirmEmail = async () => {
-        const response = await confirmEmail();
-        if (response.status === 200) {
+        if (cooldown > 0 || emailLoading) return;
+        try {
+            setEmailLoading(true);
+            const response = await confirmEmail();
+            if (response.status === 200) {
             toast.success('Vui lòng kiểm tra email của bạn để xác nhận');
-        } else {
+            setCooldown(60); // bắt đầu đếm ngược 60 giây
+            } else {
             toast.error('Có lỗi xảy ra khi xác nhận email, vui lòng thử lại');
+            }
+        } catch (error) {
+            toast.error('Lỗi kết nối, vui lòng thử lại sau');
+            console.error(error);
+        } finally {
+            setEmailLoading(false);
         }
     }; 
 
@@ -236,14 +255,23 @@ const UpdateInfor = () => {
                                                     </span>
                                                 </div>
                                             </div>
-                                            <button 
+                                           <button 
                                                 type="button" 
-                                                className={`button-secondary ${dataUser.emailConfirmed ? 'button-disabled' : ''}`}
                                                 onClick={handleConfirmEmail}
-                                                disabled={dataUser.emailConfirmed}
+                                                disabled={dataUser.emailConfirmed || cooldown > 0 || emailLoading}
+                                                className={`button-secondary ${
+                                                dataUser.emailConfirmed || cooldown > 0 || emailLoading ? 'button-disabled' : ''
+                                            }`}
                                             >
-                                                {dataUser.emailConfirmed ? 'Đã xác nhận' : 'Xác nhận'}
+                                                {dataUser.emailConfirmed 
+                                                    ? 'Đã xác nhận' 
+                                                    : emailLoading 
+                                                    ? 'Đang gửi...' 
+                                                    : cooldown > 0 
+                                                        ? `Gửi lại sau ${cooldown}s` 
+                                                        : 'Xác nhận'}
                                             </button>
+
                                         </div>
                                     </div>
 

@@ -17,12 +17,24 @@ const CartItem = () => {
     useEffect(() => {
         let cost = 0;
         cart.forEach(item => {
-            cost += item.productDTO.price * item.quantity;
+            cost += (item.price || item.productDTO.price) * item.quantity;
         });
         setTotalCost(cost);
     }, [cart]);
 
     const handleCheckout = () => {
+        const token = localStorage.getItem('token');
+        const refreshToken = localStorage.getItem('refreshToken');
+        
+        if (!token || !refreshToken) {
+            toast.error('Vui lòng đăng nhập để thanh toán');
+            setTimeout(() => {
+                navigate('/register', { state: { from: '/cart' } });
+            }, 5000);
+            return;
+            
+        }
+        
         if (totalCost === 0) {
             toast.error('Giỏ hàng của bạn đang trống');
         } else {
@@ -66,11 +78,15 @@ const CartItem = () => {
                                         <td>
                                             <img 
                                                 src={
-                                                    item.productDTO.images[0].imageURL
-                                                    ? item.productDTO.images[0].imageURL.includes("cloudinary.com")
-                                                        ? item.productDTO.images[0].imageURL
-                                                        : `${apiUrl}/${item.productDTO.images[0].imageURL}`
-                                                    : 'https://via.placeholder.com/80x80?text=No+Image'
+                                                item.imageURL // Đối với local cart
+                                                ? item.imageURL.includes("cloudinary.com")
+                                                    ? item.imageURL
+                                                    : `${apiUrl}/${item.imageURL}`
+                                                : item.productDTO?.images[0]?.imageURL // Đối với cart từ API
+                                                ? item.productDTO.images[0].imageURL.includes("cloudinary.com")
+                                                    ? item.productDTO.images[0].imageURL
+                                                    : `${apiUrl}/${item.productDTO.images[0].imageURL}`
+                                                : 'https://via.placeholder.com/80x80?text=No+Image'
                                                 }
                                                 alt="Product" 
                                                 className="img-fluid rounded"
@@ -79,10 +95,15 @@ const CartItem = () => {
                                         </td>
                                         {/* Tên sản phẩm */}
                                         <td className="text-start">
-                                            <Link to={`/product/${item.productID}`} className="text-decoration-none text-dark ">
-                                                {item.productDTO.productName}
+                                            <Link 
+                                                to={`/product/${item.productID}`} 
+                                                className="text-decoration-none text-dark"
+                                            >
+                                                {item.productName || item.productDTO?.productName}
                                                 <br />
-                                                <span className="text-muted">{item.productSizeDTO.size} - {item.colorName}</span>
+                                                <span className="text-muted">
+                                                    {item.size || item.productSizeDTO?.size} - {item.colorName || item.colorName}
+                                                </span>
                                             </Link>
                                         </td>
                                         {/* Số lượng */}
@@ -100,7 +121,7 @@ const CartItem = () => {
                                         </div>
                                         </td>
                                         {/* Giá tiền */}
-                                        <td className="">{formatCurrency(item.productDTO.price)}</td>
+                                        <td className="">{formatCurrency(item.price || item.productDTO.price)}</td>
                                         {/* Xóa sản phẩm */}
                                         <td>
                                         <div className="col d-flex justify-content-center align-items-center">
