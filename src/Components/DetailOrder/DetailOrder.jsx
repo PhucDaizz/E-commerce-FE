@@ -12,7 +12,7 @@ const DetailOrder = () => {
   const apiUrl = import.meta.env.VITE_BASE_API_URL;
   const { orderId } = useParams();
   const { getDetailOrder } = useAdmin(); 
-  const { formatCurrency, getInforCoupon, cancelOrder } = useProduct();
+  const { formatCurrency, getInforCoupon, cancelOrder, getInvoiceLink } = useProduct();
   const { printBillOfLading } = useShipping();
 
   const [showTab, setShowTab] = useState(false);
@@ -103,6 +103,18 @@ const DetailOrder = () => {
     setIsOrderProcessing(false);
   };
 
+  async function openInvoiceTab(orderId) {
+    const htmlContent = await getInvoiceLink(orderId);
+    if (htmlContent) {
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const invoiceWindow = window.open(url, '_blank', 'width=1024,height=768,scrollbars=yes,resizable=yes');
+      if (invoiceWindow) invoiceWindow.focus();
+      else alert('Không thể mở tab mới.');
+    
+  }
+}
+
   useEffect(() => {
     handleGetDataDetailOrder();
   }, [orderId]);
@@ -154,6 +166,11 @@ const DetailOrder = () => {
                   <button className='dropdown-item' onClick={() => handlePrintBill('52x70')}>52x70</button>
                 </div>
               )}
+            </div>
+          )}
+          {isApproved && (
+            <div>
+              <button className='btn btn-success m-3' onClick={() => openInvoiceTab(orderId)}>In hoá đơn</button>
             </div>
           )}
         </div>

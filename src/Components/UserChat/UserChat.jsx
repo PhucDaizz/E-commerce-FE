@@ -4,6 +4,7 @@ import { Send, MessageCircle, X, User, Clock, AlertCircle, Wifi, WifiOff } from 
 import './UserChat.css'
 import { toast } from 'react-toastify';
 import { useChat } from '../../Context/ChatContext';
+import SocialLinks from '../SocialLinks/SocialLinks';
 
 const UserChat = ({ user, token }) => {
     const {markReadMessage} = useChat();
@@ -596,6 +597,10 @@ const UserChat = ({ user, token }) => {
 
             {/* Chat Status */}
             {renderChatStatus()}
+
+            {(chatStatus === 'no_conversation' || chatStatus === 'error' || chatStatus === 'disconnected') && 
+                <SocialLinks variant="compact" />
+            }
 
             {/* Messages */}
             <div className="apple-messages-container">

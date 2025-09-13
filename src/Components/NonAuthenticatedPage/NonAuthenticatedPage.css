@@ -1,0 +1,64 @@
+.non-auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f3f4f6;
+    padding: 16px;
+}
+
+.non-auth-card {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    width: 100%;
+}
+
+.non-auth-icon {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.message-icon {
+    width: 64px;
+    height: 64px;
+    color: #3b82f6;
+    margin: 0 auto;
+}
+
+.non-auth-footer {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+.non-auth-footer p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.login-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .non-auth-card {
+        padding: 24px;
+        margin: 16px;
+    }
+    
+    .message-icon {
+        width: 48px;
+        height: 48px;
+    }
+}

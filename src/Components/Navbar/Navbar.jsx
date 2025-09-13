@@ -6,6 +6,7 @@ import { useSearch } from '../../Context/SearchContext';
 import axios from '../../api/axios';
 import './Navbar.css';
 import Login from '../../Pages/Login';
+import { ShoppingBasket, ShoppingCart } from 'lucide-react';
 
 const Navbar = () => {
   const [menu, setMenu] = useState("");
@@ -149,10 +150,10 @@ const Navbar = () => {
                 onKeyDown={handleKeyDown}
               />
             </div>
-            <Link to={'/cart'}>
-              <i className="bi bi-bag"></i>
-              <div className='cart-container'>
-                <span className='cart-count'>{itemInCart}</span>
+            <Link to={'/cart'} className="relative flex items-center">
+              <ShoppingCart className="w-6 h-6 text-black" />
+              <div className="cart-container absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="cart-count">{itemInCart}</span>
               </div>
             </Link>
             {!loggedIn ? (
@@ -250,8 +251,8 @@ const Navbar = () => {
         </div>
 
         <Link to={'/cart'} onClick={() => setIsMobileMenuOpen(false)}>
-          <div className="cart-link">
-            <i className="bi bi-bag"></i>
+          <div className="cart-link ms-3">
+            <ShoppingCart className="w-6 h-6 text-black" />
             <span>Giỏ hàng ({itemInCart})</span>
           </div>
         </Link>

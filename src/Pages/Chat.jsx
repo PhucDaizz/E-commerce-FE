@@ -1,13 +1,15 @@
+// Cập nhật Chat.js
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../Context/AuthContext';
 import AdminChatComponent from '../Components/AdminChat/AdminChat';
 import UserChat from '../Components/UserChat/UserChat';
+import GuestChatWidget from '../Components/GuestChatWidget/GuestChatWidget'; 
 
 const Chat = () => {
   const { user, token, isAuthenticated, isLoading } = useAuth();
-// console.log('Auth State in ChatExample:', { isLoading, isAuthenticated, user, token });
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -16,22 +18,19 @@ const Chat = () => {
     );
   }
 
-  if (!isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-100">
-
-      {user.isAdmin ? (
-        <AdminChatComponent admin={user} token={token} />
-      ) : (
-        <UserChat user={user} token={token}/>
+      {isAuthenticated && (
+        <>
+          {user.isAdmin ? (
+            <AdminChatComponent admin={user} token={token} />
+          ) : (
+            <UserChat user={user} token={token} />
+          )}
+        </>
       )}
+
+      {!isAuthenticated && <GuestChatWidget />}
 
       {/* Toast Notifications */}
       <ToastContainer

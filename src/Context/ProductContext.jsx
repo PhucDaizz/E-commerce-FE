@@ -480,6 +480,19 @@ export const ProductProvider  = ({children}) => {
         }
     }
 
+    const getInvoiceLink = async (orderId) => {
+        try {
+            const response = await apiRequest({
+                method: 'get',
+                url: `/api/Order/${orderId}/html`
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Lỗi khi lấy liên kết hóa đơn:', error);
+            return null;
+        }
+    }
+
     return (
         <ProductContext.Provider value={{
             handleAddProduct,
@@ -514,7 +527,8 @@ export const ProductProvider  = ({children}) => {
             getRecomendedProduct,
             validateCart,
             reserveInventory,
-            releaseReservation
+            releaseReservation,
+            getInvoiceLink
         }}>
             {children}
         </ProductContext.Provider>

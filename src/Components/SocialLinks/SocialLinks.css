@@ -1,0 +1,144 @@
+
+.social-links-compact {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, ffffff08 0%, ffffff08 100%);
+}
+
+.social-header-compact {
+    font-size: 12px;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.social-buttons-compact {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.social-btn-compact {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    min-width: 80px;
+    justify-content: center;
+}
+
+.facebook-compact {
+    background: #1877f2;
+    color: white;
+}
+
+.facebook-compact:hover {
+    background: #166fe5;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+}
+
+.zalo-compact {
+    background: #0068ff;
+    color: white;
+}
+
+.zalo-compact:hover {
+    background: #0056d6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 104, 255, 0.3);
+}
+
+.social-icon-compact {
+    width: 14px;
+    height: 14px;
+}
+
+/* Full version - cho trang không đăng nhập */
+.social-links-full {
+    width: 100%;
+    max-width: 400px;
+}
+
+.social-header-full {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.social-header-full h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.social-header-full p {
+    color: #6b7280;
+    font-size: 16px;
+}
+
+.social-buttons-full {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.social-btn-full {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+
+.facebook-full {
+    background: #1877f2;
+    color: white;
+}
+
+.facebook-full:hover {
+    background: #166fe5;
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(24, 119, 242, 0.3);
+}
+
+.zalo-full {
+    background: #0068ff;
+    color: white;
+}
+
+.zalo-full:hover {
+    background: #0056d6;
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 104, 255, 0.3);
+}
+
+.social-icon-full {
+    width: 20px;
+    height: 20px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .social-buttons-compact {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .social-btn-compact {
+        width: 100%;
+    }
+}
