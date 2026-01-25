@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useProduct } from '../../Context/ProductContext';
 import Item from '../Item/Item';
+import './ProductRecommendations.css';
+import { RefreshCw, LayoutGrid, Loader2 } from 'lucide-react';
 
 const ProductRecommendations = ({ productId }) => {
     const apiUrl = import.meta.env.VITE_BASE_API_URL;
@@ -12,30 +14,31 @@ const ProductRecommendations = ({ productId }) => {
     const [hasMore, setHasMore] = useState(true);
     const pageSize = 4;
 
-        const resolveImageUrl = (imageUrl) => {
-            return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/${imageUrl}`;
-        };
+    const resolveImageUrl = (imageUrl) => {
+        if (!imageUrl) return '';
+        return imageUrl.includes('cloudinary.com') ? imageUrl : `${apiUrl}/${imageUrl}`;
+    };
 
     const fetchProducts = useCallback(async (reset = false) => {
         if ((!hasMore && !reset) || loading) return;
 
         setLoading(true);
         setError(null);
-        
-        try {
-        const currentPage = reset ? 1 : pageIndex;
-        const response = await getRecomendedProduct(productId, currentPage, pageSize);
 
-        setProducts(prev => reset ? response.items : [...prev, ...response.items]);
-        setHasMore((reset ? response.items : products.concat(response.items)).length < response.totalCount);
-        setPageIndex(reset ? 2 : prev => prev + 1);
+        try {
+            const currentPage = reset ? 1 : pageIndex;
+            const response = await getRecomendedProduct(productId, currentPage, pageSize);
+
+            setProducts(prev => reset ? response.items : [...prev, ...response.items]);
+            setHasMore((reset ? response.items : products.concat(response.items)).length < response.totalCount);
+            setPageIndex(reset ? 2 : prev => prev + 1);
         } catch (err) {
-        setError('Không thể tải sản phẩm gợi ý');
-        console.error(err);
+            setError('Không thể tải sản phẩm gợi ý');
+            console.error(err);
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
-    }, [productId, pageIndex, hasMore, loading]);
+    }, [productId, pageIndex, hasMore, loading, products, getRecomendedProduct]);
 
     useEffect(() => {
         fetchProducts(true);
@@ -46,89 +49,67 @@ const ProductRecommendations = ({ productId }) => {
     };
 
     return (
-        <div className="container mt-5">
-        <h4 className="mb-4">Sản phẩm gợi ý</h4>
+        <div className="recommendations-premium">
+            <div className="container">
+                <div className="recommendations-header-center">
+                    <span className="recommendations-subtitle">You might also like</span>
+                    <h2 className="recommendations-title">Sản phẩm gợi ý</h2>
+                </div>
 
-        {error && (
-            <div className="alert alert-danger alert-dismissible fade show">
-            {error}
-            <button 
-                type="button" 
-                className="btn-close" 
-                onClick={() => setError(null)}
-            ></button>
-            <button
-                type="button"
-                className="btn btn-sm btn-outline-danger ms-2"
-                onClick={() => fetchProducts(true)}
-            >
-                Thử lại
-            </button>
-            </div>
-        )}
+                {error && (
+                    <div className="recommendations-alert error">
+                        <span>{error}</span>
+                        <button
+                            className="btn-retry"
+                            onClick={() => fetchProducts(true)}
+                        >
+                            <RefreshCw size={16} />
+                            Thử lại
+                        </button>
+                    </div>
+                )}
 
-        <div className="shop-product">
-            {products.map(product => {
-                const mainImage = product.images.find(img => img.isPrimary) || product.images[0];
-                const imageLink = mainImage ? resolveImageUrl(mainImage.imageURL) : '';
-                return (
-                    <Item key={product.productID} id={product.productID} name={product.productName} price={product.price} image={imageLink} />
-                    // <div key={product.productID} className="col-lg-3 col-md-4 col-sm-6 mb-4">
-                    //   <div className="card h-100">
-                    //     <img 
-                    //       src={mainImage?.imageURL || 'https://via.placeholder.com/300'} 
-                    //       className="card-img-top" 
-                    //       alt={product.productName}
-                    //       style={{ height: '200px', objectFit: 'cover' }}
-                    //     />
-                    //     <div className="card-body">
-                    //       <h5 className="card-title text-truncate">{product.productName}</h5>
-                    //       <p className="card-text text-danger fw-bold">
-                    //         {new Intl.NumberFormat('vi-VN', { 
-                    //           style: 'currency', 
-                    //           currency: 'VND' 
-                    //         }).format(product.price)}
-                    //       </p>
-                    //     </div>
-                    //     <div className="card-footer bg-white">
-                    //       <a 
-                    //         href={`/products/${product.productID}`} 
-                    //         className="btn btn-primary w-100"
-                    //       >
-                    //         Xem chi tiết
-                    //       </a>
-                    //     </div>
-                    //   </div>
-                    // </div>
-                );
-            })}
-        </div>
+                <div className="recommendations-grid">
+                    {products.map(product => {
+                        const mainImage = product.images.find(img => img.isPrimary) || product.images[0];
+                        const secondaryImage = product.images.find(img => !img.isPrimary) || (product.images.length > 1 ? product.images[1] : null);
+                        const imageLink = mainImage ? resolveImageUrl(mainImage.imageURL) : '';
+                        const hoverImageLink = secondaryImage ? resolveImageUrl(secondaryImage.imageURL) : '';
 
-        {loading && (
-            <div className="text-center my-4">
-            <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </div>
-            <p className="mt-2">Đang tải sản phẩm...</p>
-            </div>
-        )}
+                        return (
+                            <Item
+                                key={product.productID}
+                                id={product.productID}
+                                name={product.productName}
+                                price={product.price}
+                                image={imageLink}
+                                hoverImage={hoverImageLink}
+                            />
+                        );
+                    })}
+                </div>
 
-        {hasMore && !loading && products.length > 0 && (
-            <div className="text-center mt-3">
-            <button 
-                className="btn btn-outline-primary"
-                onClick={handleLoadMore}
-            >
-                Xem thêm sản phẩm
-            </button>
+                <div className="recommendations-actions">
+                    {loading ? (
+                        <div className="loading-indicator">
+                            <Loader2 className="animate-spin" size={32} />
+                            <span>Đang tải thêm...</span>
+                        </div>
+                    ) : hasMore ? (
+                        <button
+                            className="btn-load-more-premium"
+                            onClick={handleLoadMore}
+                        >
+                            <LayoutGrid size={18} />
+                            <span>Xem thêm sản phẩm</span>
+                        </button>
+                    ) : products.length > 0 ? (
+                        <div className="all-loaded-message">
+                            Đã hiển thị tất cả sản phẩm phù hợp.
+                        </div>
+                    ) : null}
+                </div>
             </div>
-        )}
-
-        {!hasMore && products.length > 0 && (
-            <div className="alert alert-info text-center mt-3">
-            Đã hiển thị tất cả sản phẩm gợi ý
-            </div>
-        )}
         </div>
     );
 };

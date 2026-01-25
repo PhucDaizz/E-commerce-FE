@@ -1,105 +1,108 @@
-import React from 'react'
-import './Footer.css'
+import React from 'react';
+import './Footer.css';
+import { MapPin, Phone, Mail, Facebook, Instagram, Youtube, Send, ArrowUp, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <footer className='footer mt-5'>
-      <div className="footer-main">
+    <footer className="modern-footer">
+      {/* Upper Footer - Trust Badges */}
+      <div className="footer-trust-bar">
         <div className="container">
-          <div className="footer-content">
-            {/* Store Information */}
-            <div className="footer-section">
-              <div className="section-header">
-                <i className="bi bi-geo-alt-fill"></i>
-                <h3 className='section-title text-white'>Hệ thống cửa hàng</h3>
-              </div>
-              <div className="section-content">
-                <div className="store-location">
-                  <div className="location-item">
-                    <i className="bi bi-shop"></i>
-                    <div className="location-details">
-                      <span className="location-name">Cửa hàng chính</span>
-                      <span className="location-address">Long Thành, Đồng Nai</span>
-                    </div>
-                  </div>
-                </div>
+          <div className="trust-grid">
+            <div className="trust-item">
+              <Truck size={24} />
+              <span>Giao hàng nhanh chóng</span>
+            </div>
+            <div className="trust-item">
+              <ShieldCheck size={24} />
+              <span>Bảo mật thanh toán</span>
+            </div>
+            <div className="trust-item">
+              <RotateCcw size={24} />
+              <span>7 ngày đổi trả</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="footer-main-content">
+        <div className="container">
+          <div className="footer-grid">
+            {/* Brand Section */}
+            <div className="footer-brand-column">
+              <Link to="/" className="footer-logo">
+                PHUCDAI<span>.STORE</span>
+              </Link>
+              <p className="brand-philosophy">
+                Nâng tầm phong cách sống với những sản phẩm thời trang cao cấp, tối giản và bền vững.
+              </p>
+              <div className="social-pill-group">
+                <a href="https://facebook.com" className="social-pill" aria-label="Facebook">
+                  <Facebook size={18} />
+                </a>
+                <a href="https://instagram.com" className="social-pill" aria-label="Instagram">
+                  <Instagram size={18} />
+                </a>
+                <a href="https://youtube.com" className="social-pill" aria-label="Youtube">
+                  <Youtube size={18} />
+                </a>
               </div>
             </div>
 
-            {/* Contact Information */}
-            <div className="footer-section">
-              <div className="section-header">
-                <i className="bi bi-telephone-fill"></i>
-                <h3 className='section-title text-white'>Thông tin liên hệ</h3>
-              </div>
-              <div className="section-content">
-                <div className="contact-item">
-                  <i className="bi bi-headset"></i>
-                  <div className="contact-details">
-                    <span className="contact-label">Hotline CSKH</span>
-                    <a href="tel:090974XXXX" className="contact-value">090974XXXX</a>
-                  </div>
-                </div>
-                <div className="contact-item">
-                  <i className="bi bi-envelope-fill"></i>
-                  <div className="contact-details">
-                    <span className="contact-label">Email</span>
-                    <a href="mailto:exemple@gmail.com" className="contact-value">exemple@gmail.com</a>
-                  </div>
-                </div>
-              </div>
+            {/* Quick Links */}
+            <div className="footer-links-column">
+              <h4 className="footer-heading">Khám phá</h4>
+              <ul className="footer-link-list">
+                <li><Link to="/shop">Cửa hàng</Link></li>
+                <li><Link to="/best-sellers">Bán chạy nhất</Link></li>
+                <li><Link to="/new-arrivals">Hàng mới về</Link></li>
+                <li><Link to="/collections">Bộ sưu tập</Link></li>
+              </ul>
             </div>
 
-            {/* Social Media */}
-            <div className="footer-section">
-              <div className="section-header">
-                <i className="bi bi-share-fill"></i>
-                <h3 className='section-title text-white'>Kết nối với chúng tôi</h3>
-              </div>
-              <div className="section-content">
-                <p className="social-description">
-                  Theo dõi chúng tôi để cập nhật những tin tức mới nhất
-                </p>
-                <div className="social-links">
-                  <a href='https://www.facebook.com' className="social-link facebook" aria-label="Facebook">
-                    <i className="bi bi-facebook"></i>
-                    <span>Facebook</span>
-                  </a>
-                  <a href='https://www.instagram.com' className="social-link instagram" aria-label="Instagram">
-                    <i className="bi bi-instagram"></i>
-                    <span>Instagram</span>
-                  </a>
-                  <a href='https://www.youtube.com' className="social-link youtube" aria-label="YouTube">
-                    <i className="bi bi-youtube"></i>
-                    <span>YouTube</span>
-                  </a>
-                </div>
-              </div>
+            {/* Customer Support */}
+            <div className="footer-links-column">
+              <h4 className="footer-heading">Hỗ trợ khách hàng</h4>
+              <ul className="footer-link-list">
+                <li><Link to="/track-order">Theo dõi đơn hàng</Link></li>
+                <li><Link to="/shipping-policy">Chính sách giao hàng</Link></li>
+                <li><Link to="/refund-policy">Chính sách đổi trả</Link></li>
+                <li><Link to="/faq">Câu hỏi thường gặp</Link></li>
+              </ul>
             </div>
 
-            {/* Newsletter Subscription */}
-            <div className="footer-section">
-              <div className="section-header">
-                <i className="bi bi-bell-fill"></i>
-                <h3 className='section-title text-white'>Đăng ký nhận tin</h3>
+            {/* Contact & Newsletter */}
+            <div className="footer-contact-column">
+              <h4 className="footer-heading">Liên hệ & Đăng ký</h4>
+              <div className="contact-info-list">
+                <div className="contact-info-item">
+                  <MapPin size={18} className="text-muted" />
+                  <span>Long Thành, Đồng Nai</span>
+                </div>
+                <div className="contact-info-item">
+                  <Phone size={18} className="text-muted" />
+                  <a href="tel:090974XXXX">090974XXXX</a>
+                </div>
+                <div className="contact-info-item">
+                  <Mail size={18} className="text-muted" />
+                  <a href="mailto:support@phucdai.com">support@phucdai.com</a>
+                </div>
               </div>
-              <div className="section-content">
-                <p className="newsletter-description">
-                  Đăng ký để nhận thông báo về sản phẩm mới và ưu đãi đặc biệt
-                </p>
-                <div className="newsletter-form">
-                  <div className="input-group">
-                    <input 
-                      type="email" 
-                      placeholder="Nhập email của bạn..."
-                      className="newsletter-input"
-                    />
-                    <button className="newsletter-button" type="button">
-                      <i className="bi bi-send-fill"></i>
-                    </button>
-                  </div>
+
+              <div className="footer-newsletter-box">
+                <p>Nhận thông báo ưu đãi sớm nhất</p>
+                <div className="newsletter-input-wrap">
+                  <input type="email" placeholder="Email của bạn" />
+                  <button aria-label="Subscribe">
+                    <Send size={18} />
+                  </button>
                 </div>
               </div>
             </div>
@@ -108,22 +111,24 @@ const Footer = () => {
       </div>
 
       {/* Footer Bottom */}
-      <div className="footer-bottom">
+      <div className="footer-bottom-bar">
         <div className="container">
-          <div className="footer-bottom-content">
-            <div className="copyright">
-              <p>&copy; {currentYear} PhucDai. Bản quyền trang web thuộc về PhucDai.</p>
+          <div className="bottom-bar-flex">
+            <div className="copyright-text">
+              &copy; {currentYear} PHUCDAI.
             </div>
-            <div className="footer-links">
-              <a href="/privacy">Chính sách bảo mật</a>
-              <a href="/terms">Điều khoản sử dụng</a>
-              <a href="/support">Hỗ trợ</a>
+            <div className="legal-links">
+              <Link to="/privacy">Bảo mật</Link>
+              <Link to="/terms">Điều khoản</Link>
             </div>
+            <button className="back-to-top-btn" onClick={scrollToTop} aria-label="Back to top">
+              <ArrowUp size={20} />
+            </button>
           </div>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

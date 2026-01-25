@@ -1,21 +1,153 @@
-.star-rating {
-    font-size: 1rem; /* Kích thước sao */
-    color: #ccc; /* Màu mặc định cho sao */
-    cursor: pointer; /* Con trỏ khi hover */
+.write-review-form-premium {
+    background: #fcfcfc;
+    border-radius: 24px;
+    padding: 40px;
+    margin-bottom: 60px;
+    border: 1px solid #f0f0f0;
 }
 
-.star {
-    transition: color 0.2s; /* Hiệu ứng chuyển đổi màu */
+.form-header-premium {
+    margin-bottom: 32px;
 }
 
-.star.filled {
-    color: #ffcc00; /* Màu vàng cho sao đã được chọn */
+.form-header-premium h3 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 8px;
 }
 
-.write-review .container { 
-    border-radius: 10px;
+.form-header-premium p {
+    color: #888;
+    font-size: 14px;
 }
 
-.write-review label {
+.rating-input-group {
+    margin-bottom: 32px;
+}
+
+.rating-input-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.star-input-list {
+    display: flex;
+    gap: 8px;
+}
+
+.star-btn {
+    font-size: 28px;
+    color: #ddd;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.star-btn.active {
+    color: #f59e0b;
+    /* Amber 500 */
+    transform: scale(1.1);
+}
+
+.star-btn:hover {
+    transform: scale(1.2);
+}
+
+.review-textarea-wrapper {
+    margin-bottom: 32px;
+}
+
+.review-textarea-wrapper label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.premium-textarea {
+    width: 100%;
+    background: #ffffff;
+    border: 1.5px solid #eee;
+    border-radius: 16px;
+    padding: 20px;
+    font-size: 15px;
+    font-family: inherit;
+    resize: none;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.premium-textarea:focus {
+    border-color: #000;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.03);
+}
+
+.form-actions-premium {
+    display: flex;
+    gap: 16px;
+}
+
+.btn-submit-review {
+    flex: 1;
+    background: #111;
+    color: #fff;
+    border: none;
+    height: 54px;
+    border-radius: 14px;
+    font-weight: 700;
     font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-submit-review:hover:not(:disabled) {
+    background: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-submit-review:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-cancel-review {
+    padding: 0 24px;
+    background: white;
+    color: #666;
+    border: 1.5px solid #eee;
+    border-radius: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cancel-review:hover {
+    background: #f9f9f9;
+    color: #111;
+    border-color: #ddd;
+}
+
+/* Error Alert */
+.review-error-alert {
+    background: #fff1f0;
+    border: 1px solid #ffa39e;
+    color: #cf1322;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 24px;
 }

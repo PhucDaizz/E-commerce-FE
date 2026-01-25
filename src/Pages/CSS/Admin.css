@@ -3,17 +3,24 @@
     min-height: 100vh;
     padding: 2rem 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    /* Added a light background for contrast with cards */
 }
 
 /* Dashboard Header */
 .dashboard-header {
-    background: rgba(255, 255, 255, 0.1);
+    /* Kept for structural base, but background will be overridden by admin-custom-header */
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 2rem;
     margin: 0 1rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-custom-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    color: white !important;
 }
 
 .dashboard-title {
@@ -232,17 +239,17 @@
     .dashboard-title {
         font-size: 2rem;
     }
-    
+
     .stats-value {
         font-size: 1.8rem;
     }
-    
+
     .stats-icon {
         width: 50px;
         height: 50px;
         font-size: 1.2rem;
     }
-    
+
     .stats-content {
         padding-right: 4rem;
     }
@@ -252,29 +259,29 @@
     .admin-dashboard {
         padding: 1rem 0;
     }
-    
+
     .dashboard-header {
         margin: 0 0.5rem;
         padding: 1.5rem;
         text-align: center;
     }
-    
+
     .dashboard-title {
         font-size: 1.8rem;
     }
-    
+
     .dashboard-date {
         margin-top: 1rem;
     }
-    
+
     .stats-card .card-body {
         padding: 1.5rem;
     }
-    
+
     .stats-content {
         padding-right: 0;
     }
-    
+
     .stats-icon {
         position: static;
         width: 40px;
@@ -282,22 +289,22 @@
         font-size: 1rem;
         margin-bottom: 1rem;
     }
-    
+
     .stats-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
     }
-    
+
     .stats-value {
         font-size: 1.6rem;
     }
-    
+
     .chart-header {
         padding: 1.5rem;
         text-align: center;
     }
-    
+
     .chart-title {
         font-size: 1.2rem;
     }
@@ -307,15 +314,15 @@
     .dashboard-title {
         font-size: 1.5rem;
     }
-    
+
     .dashboard-subtitle {
         font-size: 1rem;
     }
-    
+
     .stats-value {
         font-size: 1.4rem;
     }
-    
+
     .chart-title {
         font-size: 1.1rem;
     }
@@ -327,6 +334,7 @@
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -337,10 +345,21 @@
     animation: fadeInUp 0.6s ease-out;
 }
 
-.stats-card:nth-child(1) { animation-delay: 0.1s; }
-.stats-card:nth-child(2) { animation-delay: 0.2s; }
-.stats-card:nth-child(3) { animation-delay: 0.3s; }
-.stats-card:nth-child(4) { animation-delay: 0.4s; }
+.stats-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.stats-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.stats-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.stats-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
 
 .chart-container {
     animation: fadeInUp 0.6s ease-out 0.5s both;

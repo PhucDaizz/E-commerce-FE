@@ -1,23 +1,25 @@
-/* Hero.css */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-.hero-banner .hero-banner {
+.hero-banner {
   position: relative;
   overflow: hidden;
+  background: #fcfcfc;
 }
 
-.hero-banner .hero-carousel {
-  height: 70vh;
-  min-height: 500px;
+.hero-carousel {
+  height: 85vh;
+  /* Tăng chiều cao lên cho sang trọng */
+  min-height: 600px;
 }
 
-.hero-banner .banner-slide {
-  height: 70vh;
-  min-height: 500px;
+.banner-slide {
+  height: 85vh;
+  min-height: 600px;
   display: flex;
   align-items: center;
 }
 
-.hero-banner .banner-background {
+.banner-background {
   position: absolute;
   top: 0;
   left: 0;
@@ -26,312 +28,151 @@
   z-index: 1;
 }
 
-.hero-banner .banner-overlay {
+.banner-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  /* background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.6) 0%,
-    rgba(0, 0, 0, 0.3) 50%,
-    rgba(0, 0, 0, 0.1) 100%
-  ); */
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.4) 100%);
   z-index: 2;
 }
 
-.hero-banner .banner-content {
+.banner-content {
   top: 50%;
+  transform: translateY(-50%);
   left: 0;
   right: 0;
-  transform: translateY(-50%);
   z-index: 3;
   color: white;
 }
 
-.hero-banner .content-wrapper {
-  animation: slideInUp 1s ease-out;
+.content-wrapper {
+  max-width: 700px;
+  opacity: 0;
+  transform: translateY(30px);
 }
 
-.hero-banner .banner-title {
-  font-size: 3.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.active .content-wrapper {
+  animation: revealIn 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 }
 
-.hero-banner .banner-description {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
-  opacity: 0.95;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  line-height: 1.6;
-}
-
-.hero-banner .banner-actions {
-  margin-top: 2rem;
-}
-
-.hero-banner .btn-primary {
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-  border: none;
-  padding: 12px 30px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-}
-
-.hero-banner .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(0, 123, 255, 0.4);
-}
-
-.hero-banner .btn-outline-light {
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  color: white;
-  padding: 12px 30px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.hero-banner .btn-outline-light:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: white;
-  transform: translateY(-2px);
-}
-
-.hero-banner .carousel-indicators {
-  bottom: 30px;
-  z-index: 4;
-}
-
-.hero-banner .indicator-btn {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  background: transparent;
-  margin: 0 8px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.hero-banner .indicator-btn.active,
-.hero-banner .indicator-btn:hover {
-  background: white;
-  border-color: white;
-  transform: scale(1.2);
-}
-
-.hero-banner .carousel-control-prev,
-.hero-banner .carousel-control-next {
-  width: 60px;
-  height: 60px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 50%;
-  border: none;
-  top: 50%;
-  transform: translateY(-50%);
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  z-index: 4;
-  cursor: pointer;
-}
-
-.hero-banner .carousel-control-prev {
-  left: 30px;
-}
-
-.hero-banner .carousel-control-next {
-  right: 30px;
-}
-
-.hero-banner .carousel-control-prev:hover,
-.hero-banner .carousel-control-next:hover {
-  background: rgba(0, 0, 0, 0.5);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.hero-banner .carousel-control-prev-icon,
-.hero-banner .carousel-control-next-icon {
-  width: 20px;
-  height: 20px;
-  color: white;
-}
-
-.hero-banner .banner-link {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-}
-
-.hero-banner .banner-link:hover {
-  color: inherit;
-  text-decoration: none;
-}
-
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(50px);
-  }
+@keyframes revealIn {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.hero-banner .carousel-item {
-  transition: transform 0.8s ease-in-out;
+.banner-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 4.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  letter-spacing: -2px;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Loading and Error Styles */
-.hero-banner .hero-loading,
-.hero-banner .hero-error {
-  height: 70vh;
-  min-height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.banner-description {
+  font-size: 1.15rem;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-bottom: 40px;
+  max-width: 500px;
+  line-height: 1.6;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.hero-banner .spinner-border {
-  width: 3rem;
-  height: 3rem;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .hero-banner .hero-carousel,
-  .hero-banner .banner-slide {
-    height: 60vh;
-    min-height: 400px;
-  }
-
-  .hero-banner .banner-title {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .hero-banner .banner-description {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-banner .btn-lg {
-    font-size: 1rem;
-    padding: 10px 25px;
-  }
-
-  .hero-banner .carousel-control-prev,
-  .hero-banner .carousel-control-next {
-    width: 50px;
-    height: 50px;
-  }
-
-  .hero-banner .carousel-control-prev {
-    left: 15px;
-  }
-
-  .hero-banner .carousel-control-next {
-    right: 15px;
-  }
-}
-
-@media (max-width: 576px) {
-  .hero-banner .banner-title {
-    font-size: 2rem;
-  }
-
-  .hero-banner .banner-description {
-    font-size: 1rem;
-  }
-
-  .hero-banner .btn-lg {
-    font-size: 0.9rem;
-    padding: 8px 20px;
-    margin: 0.25rem;
-  }
-
-  .hero-banner .banner-actions {
-    margin-top: 1.5rem;
-  }
-
-  .hero-banner .content-wrapper {
-    text-align: center;
-  }
-}
-
+/* Custom indicators */
 .hero-banner .carousel-indicators {
-  display: flex;
-  justify-content: center;
-  padding: 10px 0;
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-  z-index: 10;
+  bottom: 40px;
+  margin-bottom: 0;
+  gap: 12px;
 }
 
 .hero-banner .indicator-btn {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.7);
-  background: transparent;
-  margin: 0 6px;
-  padding: 0;
-  transition: all 0.3s ease;
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  transition: all 0.4s ease;
   cursor: pointer;
-  outline: none;
-  box-sizing: border-box;
-  position: relative;
-}
-
-.hero-banner .indicator-btn:hover {
-  border-color: rgba(255, 255, 255, 0.9);
 }
 
 .hero-banner .indicator-btn.active {
-  background-color: white;
-  border-color: white;
-  transform: scale(1.1);
+  background: #ffffff;
+  width: 60px;
 }
 
-/* Thêm hiệu ứng khi active */
-.hero-banner .indicator-btn.active::after {
-  content: '';
-  position: absolute;
-  top: -3px;
-  left: -3px;
-  right: -3px;
-  bottom: -3px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+/* Controls */
+.hero-banner .carousel-control-prev,
+.hero-banner .carousel-control-next {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
   border-radius: 50%;
-  animation: pulse 1.5s infinite;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
+.hero-banner:hover .carousel-control-prev,
+.hero-banner:hover .carousel-control-next {
+  opacity: 1;
+}
+
+.hero-banner .carousel-control-prev {
+  left: 40px;
+}
+
+.hero-banner .carousel-control-next {
+  right: 40px;
+}
+
+.hero-banner .carousel-control-prev:hover,
+.hero-banner .carousel-control-next:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Loading state */
+.hero-loading {
+  height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 992px) {
+  .banner-title {
+    font-size: 3.5rem;
   }
-  70% {
-    transform: scale(1.5);
-    opacity: 0;
+
+  .content-wrapper {
+    text-align: center;
+    margin: 0 auto;
   }
-  100% {
-    transform: scale(1);
-    opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .banner-title {
+    font-size: 2.8rem;
+  }
+
+  .hero-carousel,
+  .banner-slide {
+    height: 60vh;
+    min-height: 450px;
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    display: none;
   }
 }

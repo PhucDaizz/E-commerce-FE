@@ -1,38 +1,67 @@
-.breadcrum {
-    min-height: 70px;
-    padding-top: 40px;
-    margin: 35px 150px;
-    gap: 8px;
-    color: #5e5e5e;
-    font-size: 16px;
-    font-weight: 600;
+.breadcrum-wrapper {
+  background-color: transparent;
+  padding: 12px 0;
+  margin-bottom: 5px;
 }
 
-.breadcrum a {
-    text-decoration: none;
-    color: #5e5e5e;
+.breadcrum-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #888;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
+.breadcrum-home {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none !important;
+  color: #1a1a1a !important;
+  transition: opacity 0.2s ease;
+  font-weight: 600;
+}
+
+.breadcrum-home:hover {
+  opacity: 0.7;
+}
+
+.breadcrum-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.separator {
+  color: #ccc;
+}
+
+.category-name {
+  color: #666;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.product-name {
+  color: #999;
+  font-weight: 400;
+}
+
+/* Mobile responsive */
 @media (max-width: 768px) {
-  .mobile-breadcrum {
-    margin: 0;
-    font-size: 12px;
+  .breadcrum-wrapper {
     padding: 10px 15px;
-    overflow-x: auto;
-    white-space: nowrap;
   }
-  
-  .mobile-breadcrum a {
-    color: #007bff;
-    text-decoration: none;
+
+  .breadcrum-content {
+    font-size: 11px;
+    flex-wrap: wrap;
+    gap: 6px;
   }
-  
-  .mobile-breadcrum .category-name,
-  .mobile-breadcrum .product-name {
-    display: inline-block;
-  }
-  
-  .mobile-breadcrum .product-name {
-    font-weight: 500;
+
+  .category-name {
+    font-size: 11px;
   }
 }

@@ -31,21 +31,21 @@ const Admin = () => {
 
     const handleGetReportOrder = async () => {
         const response = await getReportOrder();
-        if(response.status === 200) {
+        if (response.status === 200) {
             setDataReportOrder(response.data);
         }
     }
-    
+
     const handleGetReportInventory = async () => {
         const response = await getReportInventory();
-        if(response.status === 200) {
+        if (response.status === 200) {
             setDataReportInventory(response.data);
         }
     }
-    
+
     const handleGetReportUser = async () => {
         const response = await getReportUser();
-        if(response.status === 200) {
+        if (response.status === 200) {
             setDataReportUser(response.data);
         }
     }
@@ -62,36 +62,28 @@ const Admin = () => {
     };
 
     return (
-        <div className="admin-dashboard container mt-4">
+        <div className="admin-dashboard container-fluid px-4">
             {/* Header Section */}
-            <div className="dashboard-header mb-4 card-header">
-                <div className="container-fluid">
-                    <div className="row align-items-center">
-                        <div className="col-md-6">
-                            <h1 className="dashboard-title mb-0">
-                                {/* <i className="bi bi-speedometer2 me-3"></i> */}
-                                Dashboard Quản Trị
-                            </h1>
-                            {/* <p className="dashboard-subtitle text-muted mt-2 mb-0">
-                                Tổng quan hiệu suất kinh doanh
-                            </p> */}
-                        </div>
-                        <div className="col-md-6 text-md-end">
-                            <div className="dashboard-date">
-                                <i className="bi bi-calendar3 me-2"></i>
-                                {new Date().toLocaleDateString('vi-VN', { 
-                                    weekday: 'long', 
-                                    year: 'numeric', 
-                                    month: 'long', 
-                                    day: 'numeric' 
-                                })}
-                            </div>
+            <div className="dashboard-header mb-4 admin-custom-header">
+                <div className="row align-items-center">
+                    <div className="col-md-6">
+                        <h1 className="dashboard-title mb-0">
+                            Dashboard Quản Trị
+                        </h1>
+                    </div>
+                    <div className="col-md-6 text-md-end">
+                        <div className="dashboard-date">
+                            <i className="bi bi-calendar3 me-2"></i>
+                            {new Date().toLocaleDateString('vi-VN', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            })}
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="container-fluid">
                 {/* Stats Cards */}
                 <div className="row g-4 mb-5">
                     {/* Revenue Card */}
@@ -193,9 +185,9 @@ const Admin = () => {
                                                     {dataReportInventory.totalProductActive || 0}/{dataReportInventory.totalProduct || 0}
                                                 </small>
                                             </div>
-                                            <div className="progress" style={{height: '4px'}}>
-                                                <div 
-                                                    className="progress-bar bg-success" 
+                                            <div className="progress" style={{ height: '4px' }}>
+                                                <div
+                                                    className="progress-bar bg-success"
                                                     style={{
                                                         width: `${((dataReportInventory.totalProductActive || 0) / (dataReportInventory.totalProduct || 1)) * 100}%`
                                                     }}
@@ -248,13 +240,13 @@ const Admin = () => {
                                 <p className="chart-subtitle">Thống kê sản phẩm bán chạy nhất</p>
                             </div>
                             <div className="chart-body">
-                                <TrendChart/>
+                                <TrendChart />
                             </div>
                             <div style={{ padding: '20px' }}>
                                 <RevenueChart />
                             </div>
                             <div style={{ padding: '20px' }}>
-                                <CustomerLocationAnalysis/>
+                                <CustomerLocationAnalysis />
                             </div>
                         </div>
                     </div>

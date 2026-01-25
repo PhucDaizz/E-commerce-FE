@@ -1,43 +1,42 @@
 import React from 'react';
 import { Truck, RefreshCw, CreditCard, Phone } from 'lucide-react';
+import './ValuePropositionBar.css';
 
-// Dữ liệu cho từng mục trong thanh giá trị
 const propositions = [
   {
-    icon: <Truck size={30} />,
+    icon: <Truck size={24} strokeWidth={1.5} />,
     title: 'Miễn phí vận chuyển',
-    description: 'mọi đơn hàng',
+    description: 'Cho mọi đơn hàng',
   },
   {
-    icon: <RefreshCw size={30} />,
+    icon: <RefreshCw size={24} strokeWidth={1.5} />,
     title: 'Đổi hàng tận nhà',
-    description: 'trong vòng 15 ngày',
+    description: 'Trong vòng 15 ngày',
   },
   {
-    icon: <CreditCard size={30} />,
+    icon: <CreditCard size={24} strokeWidth={1.5} />,
     title: 'Thanh toán COD',
-    description: 'yên tâm mua sắm',
+    description: 'Yên tâm mua sắm',
   },
   {
-    icon: <Phone size={30} />,
-    title: 'Hotline: 028.73066.XXX',
-    description: 'Hỗ trợ bạn từ 8h30-24h00',
+    icon: <Phone size={24} strokeWidth={1.5} />,
+    title: 'Hotline Hỗ Trợ',
+    description: '028.73066.XXX',
   },
 ];
 
 const ValuePropositionBar = () => {
   return (
-    <div className="container-fluid py-3 border-top border-bottom">
-      <div className="d-flex row justify-content-center">
+    <div className="proposition-bar-container">
+      <div className="proposition-grid">
         {propositions.map((item, index) => (
-          <div key={index} className="col-lg-3 col-md-6 col-6 d-flex align-items-center my-2 justify-content-center">
-            {/* Đổi col-12 thành col-6 */}
-            <div className="text-primary me-3 d-flex align-items-center">
+          <div key={index} className="prop-item">
+            <div className="prop-icon-wrapper">
               {item.icon}
             </div>
-            <div className="text-center">
-              <p className="fw-bold mb-0">{item.title}</p>
-              <p className="text-muted mb-0">{item.description}</p>
+            <div className="prop-info">
+              <h4 className="prop-title">{item.title}</h4>
+              <p className="prop-desc">{item.description}</p>
             </div>
           </div>
         ))}

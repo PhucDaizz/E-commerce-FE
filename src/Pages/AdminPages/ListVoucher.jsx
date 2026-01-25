@@ -94,7 +94,7 @@ const ListVoucher = () => {
     return (
         <div className='list-voucher container card mt-4'>
             <ToastContainer/>
-           <div className='card shadow-sm mt-4 card-header d-flex justify-content-between align-items-center'>
+           <div className='card shadow-sm mt-4 admin-custom-header d-flex justify-content-between align-items-center'>
                 <h4 className="h4 mb-0">Danh sách voucher</h4>
                 <div className="btn-add mt-2 btn-add add-product-btn">
                     <button className="btn-primary btn-modern" onClick={() => navigate('/admin/voucher/add')}>

@@ -52,7 +52,7 @@ const ListUser = () => {
 
     return (
         <div className='card list-user container mt-4'>
-            <div className='card card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3'>
+            <div className='card admin-custom-header bg-primary text-white d-flex justify-content-between align-items-center mt-3'>
                 <h4>Tất cả người dùng</h4>
             </div>
             <div className='border p-3 bg-white mb-2'>

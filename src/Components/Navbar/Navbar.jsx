@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
 import { useCategory } from '../../Context/CategoryContext';
 import { useSearch } from '../../Context/SearchContext';
-import axios from '../../api/axios';
 import './Navbar.css';
-import Login from '../../Pages/Login';
-import { ShoppingBasket, ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Search, LogOut, User, Menu, X, ChevronDown, ChevronRight, LogIn, UserPlus } from 'lucide-react';
 
 const Navbar = () => {
   const [menu, setMenu] = useState("");
-  const [isLoginHovered, setIsLoginHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -18,17 +15,24 @@ const Navbar = () => {
   const { handleCategoryChange, categories, getCategory } = useCategory();
   const { searchQuery, setSearchQuery } = useSearch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Detect screen size
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    const checkMobile = () => setIsMobile(window.innerWidth <= 1024);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
+
   const handleSearch = () => {
     navigate('/shop');
+    setIsMobileMenuOpen(false);
   };
 
   const handleKeyDown = (e) => {
@@ -41,10 +45,6 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const toggleCategoryDropdown = () => {
-    setIsCategoryDropdownOpen(!isCategoryDropdownOpen);
-  };
-
   const handleCategoryClick = (categoryName, categoryID) => {
     setMenu(categoryName);
     handleCategoryChange(categoryID);
@@ -52,247 +52,204 @@ const Navbar = () => {
     setIsCategoryDropdownOpen(false);
   };
 
-  // Optimized API call for categories
   useEffect(() => {
-    // const fetchCategories = async () => {
-    //   try {
-    //     if (categories.length === 0) {
-    //       const response = await axios.get('/categories');
-    //       handleCategoryChange(null, response.data);
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching categories:', error);
-    //   }
-    // };
-
-    // fetchCategories();
     getCategory()
   }, []);
 
   return (
     <nav className='navbar'>
-      <div className="navbar-container container">
-        {/* Logo và Menu Toggle */}
-        <div className="navbar-logo">
-          <button 
+      <div className="navbar-container">
+        {/* Toggle Button (Mobile Only) */}
+        {isMobile && (
+          <button
             className="mobile-menu-toggle"
             onClick={toggleMobileMenu}
             aria-label="Toggle menu"
           >
-            <i className={`bi ${isMobileMenuOpen ? 'bi-x' : 'bi-list'}`}></i>
+            <Menu size={24} />
           </button>
+        )}
+
+        {/* Logo Section */}
+        <div className="navbar-logo">
           <Link to={'/'} onClick={() => setMenu('')}>
             <img
               src="/images/logo.jpg"
-              alt="Logo"
+              alt="Doris Logo"
               className='navimg'
             />
           </Link>
         </div>
 
-        {/* Desktop Categories - CHỈ HIỆN TRÊN DESKTOP */}
+        {/* Desktop Categories */}
         {!isMobile && (
-          <div className="navbar-categories desktop-categories">
-            <p onClick={() => {setMenu("shop"); handleCategoryChange(null);}} className='category-item'>
-              <Link style={{textDecoration: 'none'}} to={'/shop'}>
-                <strong>Shop</strong> {menu === "shop" && <hr/>}
-              </Link>
-            </p>
+          <div className="desktop-categories">
+            <div onClick={() => { setMenu("shop"); handleCategoryChange(null); }} className={`category-item ${menu === "shop" ? 'active' : ''}`}>
+              <Link to={'/shop'}>Tất cả</Link>
+              <hr />
+            </div>
             {categories.slice(0, 4).map((d) => (
-              <p 
+              <div
                 onClick={() => handleCategoryClick(d.categoryName, d.categoryID)}
                 key={d.categoryID}
-                className='category-item'
+                className={`category-item ${menu === d.categoryName ? 'active' : ''}`}
               >
-                <Link style={{textDecoration: 'none'}} to={'/shop'}>
-                  <strong>{d.categoryName}</strong>
-                </Link>
-                {menu === d.categoryName && <hr/>}
-              </p>
+                <Link to={'/shop'}>{d.categoryName}</Link>
+                <hr />
+              </div>
             ))}
             {categories.length > 4 && (
-              <div className="category-dropdown">
-                <p className='category-item dropdown-toggle' onClick={toggleCategoryDropdown}>
-                  <strong>Xem thêm</strong>
-                  <i className={`bi bi-chevron-${isCategoryDropdownOpen ? 'up' : 'down'} ms-1`}></i>
-                </p>
-                {isCategoryDropdownOpen && (
-                  <div className="dropdown-menu">
-                    {categories.slice(4).map((d) => (
-                      <p 
-                        onClick={() => handleCategoryClick(d.categoryName, d.categoryID)}
-                        key={d.categoryID}
-                        className='dropdown-item'
-                      >
-                        <Link style={{textDecoration: 'none'}} to={'/shop'}>
-                          <strong>{d.categoryName}</strong>
-                        </Link>
-                      </p>
-                    ))}
-                  </div>
-                )}
+              <div className="category-dropdown" onMouseEnter={() => setIsCategoryDropdownOpen(true)} onMouseLeave={() => setIsCategoryDropdownOpen(false)}>
+                <div className='dropdown-toggle'>
+                  <span>Khác</span>
+                  <ChevronDown size={14} />
+                </div>
+                <div className="dropdown-menu">
+                  {categories.slice(4).map((d) => (
+                    <div
+                      onClick={() => handleCategoryClick(d.categoryName, d.categoryID)}
+                      key={d.categoryID}
+                      className='dropdown-item'
+                    >
+                      <Link to={'/shop'}>{d.categoryName}</Link>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
         )}
 
-        {/* Desktop Actions - CHỈ HIỆN TRÊN DESKTOP */}
-        {!isMobile && (
-          <div className="navbar-actions desktop-actions">
+        {/* Actions */}
+        <div className="navbar-actions">
+          {!isMobile && (
             <div className="search-container">
-              <i className="bi bi-search" onClick={handleSearch}></i>
               <input
                 type="search"
-                placeholder='Tìm kiếm sản phẩm'
+                placeholder='Tìm kiếm đồ của bạn...'
                 className='search-input'
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
               />
+              <i onClick={handleSearch}><Search size={16} /></i>
             </div>
-            <Link to={'/cart'} className="relative flex items-center">
-              <ShoppingCart className="w-6 h-6 text-black" />
-              <div className="cart-container absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                <span className="cart-count">{itemInCart}</span>
+          )}
+
+          <Link to={'/cart'} className="cart-link-wrapper">
+            <ShoppingCart size={isMobile ? 24 : 20} className="cart-icon" />
+            {itemInCart > 0 && (
+              <div className="cart-badge">
+                <span>{itemInCart}</span>
               </div>
-            </Link>
-            {!loggedIn ? (
+            )}
+          </Link>
+
+          {!isMobile && (
+            !loggedIn ? (
               <div className="auth-buttons">
-                <Link to={'/register'}>
-                  <button className="auth-button">Đăng ký</button>
+                <Link to={'/login'}>
+                  <button className="auth-button">Đăng nhập</button>
                 </Link>
-                <div 
-                  className="login-container"
-                  onMouseEnter={() => setIsLoginHovered(true)}
-                  onMouseLeave={() => setIsLoginHovered(false)}
-                >
-                  <button className="auth-button">
-                    <Link to={'/login'} className='auth-link' style={{textDecoration: 'none'}}>
-                      Đăng nhập
-                    </Link>
-                  </button>
-                  {isLoginHovered && (
-                    <div className="login-form-popup">
-                      <div className='haha'></div>
-                      <Login onPage={false}/>
-                    </div>
-                  )}
-                </div>
+                <Link to={'/register'}>
+                  <button className="auth-button register">Đăng ký</button>
+                </Link>
               </div>
             ) : (
               <div className="user-info">
-                <span>
-                  <Link to='/account' className='text-black' style={{textDecoration: 'none', fontSize: '14px'}}>
-                    Xin chào, {inforUser.userName}!
-                  </Link>
-                </span>
-                {/* <Link to={'/cart'}>
-                  <i className="bi bi-bag"></i>
-                  <div className='cart-container'>
-                    <span className='cart-count'>{itemInCart}</span>
-                  </div>
-                </Link> */}
-                <button className="auth-button logout" onClick={logout}>
-                  Đăng xuất
+                <Link to='/account' className='user-link'>
+                  <User size={16} className="me-2" />
+                  <span>Hồ sơ</span>
+                </Link>
+                <button className="auth-button logout" onClick={logout} title="Đăng xuất">
+                  <LogOut size={16} />
                 </button>
               </div>
-            )}
-          </div>
-        )}
-
-        {/* Cart icon for mobile - CHỈ HIỆN TRÊN MOBILE */}
-        {isMobile && loggedIn && (
-          <div className="mobile-cart-icon">
-            <Link to={'/cart'}>
-              <i className="bi bi-bag"></i>
-              <div className='cart-container'>
-                <span className='cart-count'>{itemInCart}</span>
-              </div>
-            </Link>
-          </div>
-        )}
-      </div>
-
-      {/* Mobile Menu */}
-      <div className={`mobile-menu ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}>
-        {/* Mobile Search */}
-        <div className="mobile-search-container">
-          <div className="search-container">
-            <i className="bi bi-search" onClick={handleSearch}></i>
-            <input
-              type="search"
-              placeholder='Tìm kiếm sản phẩm'
-              className='search-input'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-          </div>
-        </div>
-
-        {/* Mobile Categories */}
-        <div className="mobile-categories">
-          <p onClick={() => handleCategoryClick("shop", null)} className='mobile-category-item'>
-            <Link style={{textDecoration: 'none'}} to={'/shop'}>
-              <strong>Shop</strong>
-            </Link>
-          </p>
-          {categories.map((d) => (
-            <p 
-              onClick={() => handleCategoryClick(d.categoryName, d.categoryID)}
-              key={d.categoryID}
-              className='mobile-category-item'
-            >
-              <Link style={{textDecoration: 'none'}} to={'/shop'}>
-                <strong>{d.categoryName}</strong>
-              </Link>
-            </p>
-          ))}
-        </div>
-
-        <Link to={'/cart'} onClick={() => setIsMobileMenuOpen(false)}>
-          <div className="cart-link ms-3">
-            <ShoppingCart className="w-6 h-6 text-black" />
-            <span>Giỏ hàng ({itemInCart})</span>
-          </div>
-        </Link>
-
-        {/* Mobile Auth */}
-        <div className="mobile-auth">
-          {!loggedIn ? (
-            <div className="mobile-auth-buttons">
-              <Link to={'/register'} onClick={() => setIsMobileMenuOpen(false)}>
-                <button className="auth-button">Đăng ký</button>
-              </Link>
-              <Link to={'/login'} onClick={() => setIsMobileMenuOpen(false)}>
-                <button className="auth-button">Đăng nhập</button>
-              </Link>
-            </div>
-          ) : (
-            <div className="mobile-user-info">
-              <Link 
-                to='/account' 
-                className='user-link' 
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Xin chào, {inforUser.userName}!
-              </Link>
-              {/* <Link to={'/cart'} onClick={() => setIsMobileMenuOpen(false)}>
-                <div className="cart-link">
-                  <i className="bi bi-bag"></i>
-                  <span>Giỏ hàng ({itemInCart})</span>
-                </div>
-              </Link> */}
-              <button className="auth-button logout" onClick={() => {logout(); setIsMobileMenuOpen(false);}}>
-                Đăng xuất
-              </button>
-            </div>
+            )
           )}
         </div>
       </div>
 
-      {/* Overlay */}
-      {isMobileMenuOpen && <div className="mobile-menu-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>}
+      {/* --- PREMIUM MOBILE DRAWER --- */}
+      <div className={`mobile-menu-overlay ${isMobileMenuOpen ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}></div>
+
+      <div className={`mobile-menu ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}>
+        <div className="mobile-menu-header">
+          <div className="mobile-menu-logo">
+            <img src="/images/logo.jpg" alt="Logo" />
+          </div>
+          <button className="mobile-menu-close" onClick={() => setIsMobileMenuOpen(false)}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="mobile-menu-content">
+          <div className="mobile-search-wrapper">
+            <div className="search-container">
+              <input
+                type="search"
+                placeholder='Tìm kiếm...'
+                className='search-input'
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+              <i onClick={handleSearch}><Search size={14} /></i>
+            </div>
+          </div>
+
+          <span className="mobile-section-label">Danh mục sản phẩm</span>
+          <div className="mobile-nav-list">
+            <Link to='/shop' onClick={() => handleCategoryClick("shop", null)} className="mobile-nav-item">
+              <span>Tất cả sản phẩm</span>
+              <ChevronRight size={16} />
+            </Link>
+            {categories.map((cat) => (
+              <Link
+                key={cat.categoryID}
+                to='/shop'
+                onClick={() => handleCategoryClick(cat.categoryName, cat.categoryID)}
+                className="mobile-nav-item"
+              >
+                <span>{cat.categoryName}</span>
+                <ChevronRight size={16} />
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="mobile-footer">
+          {!loggedIn ? (
+            <div className="mobile-auth-grid">
+              <Link to='/login' className="mobile-btn-primary">
+                <LogIn size={18} className="me-2" />
+                Đăng nhập
+              </Link>
+              <Link to='/register' className="mobile-btn-outline">
+                <UserPlus size={18} className="me-2" />
+                Tạo tài khoản
+              </Link>
+            </div>
+          ) : (
+            <>
+              <Link to='/account' className="mobile-user-card">
+                <div className="mobile-user-avatar">
+                  {inforUser.userName?.charAt(0).toUpperCase()}
+                </div>
+                <div className="mobile-user-info">
+                  <div className="mobile-user-name">{inforUser.userName}</div>
+                  <div className="small text-muted">Xem hồ sơ của bạn</div>
+                </div>
+                <ChevronRight size={16} className="ms-auto text-muted" />
+              </Link>
+              <button className="mobile-logout-btn" onClick={logout}>
+                <LogOut size={18} />
+                <span>Đăng xuất tài khoản</span>
+              </button>
+            </>
+          )}
+        </div>
+      </div>
     </nav>
   );
 };

@@ -6,8 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const AdminNavbar = () => {
     const navigate = useNavigate();
-    const {hideSideBar, handleHideSideBar} = useAdmin();
-    const {isAdminLogin, logout, inforUser} = useAuth();
+    const { hideSideBar, handleHideSideBar } = useAdmin();
+    const { isAdminLogin, logout, inforUser } = useAuth();
     const [isAdmin, setIsAdmin] = useState(false);
     const [notificationCount, setNotificationCount] = useState(5); // Số thông báo mẫu
     const [showNotifications, setShowNotifications] = useState(false);
@@ -17,13 +17,13 @@ const AdminNavbar = () => {
             const result = await isAdminLogin();
             setIsAdmin(result);
             if (!result) {
-                logout(); 
+                logout();
                 navigate('/');
             }
         };
         checkAdmin();
     }, [navigate]);
-    
+
     const handleLogout = () => {
         logout();
         navigate('/');
@@ -39,19 +39,19 @@ const AdminNavbar = () => {
     }
 
     return (
-        <div className='navbar'>
-            <div className='navbar-container container'>
-                <div className="navbar-left">
+        <div className='admin-navbar'>
+            <div className='admin-navbar-container container'>
+                <div className="admin-navbar-left">
                     {hideSideBar && (
-                        <i 
-                            onClick={() => handleHideSideBar()} 
+                        <i
+                            onClick={() => handleHideSideBar()}
                             className="bi bi-list menu-toggle"
                         ></i>
                     )}
                     <div className="logo-container">
-                        <img 
-                            src="/images/pmMZ2c01.svg" 
-                            alt="Admin Logo" 
+                        <img
+                            src="/images/pmMZ2c01.svg"
+                            alt="Admin Logo"
                             className="admin-logo"
                             onClick={() => navigate('/admin')}
                         />
@@ -59,7 +59,7 @@ const AdminNavbar = () => {
                     </div>
                 </div>
 
-                <div className="navbar-right">
+                <div className="admin-navbar-right">
                     {/* <div className="notification-container">
                         <div className="notification-bell" onClick={toggleNotifications}>
                             <i className="bi bi-bell"></i>
@@ -110,8 +110,8 @@ const AdminNavbar = () => {
                                 <i className="bi bi-person-circle"></i>
                             </div>
                             <div className="user-details">
-                                <span 
-                                    className="user-name"                                     
+                                <span
+                                    className="user-name"
                                 >
                                     {inforUser.userName}
                                 </span>

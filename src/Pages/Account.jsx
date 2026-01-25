@@ -5,6 +5,7 @@ import { useProduct } from '../Context/ProductContext';
 import CancelOrderModal from '../Components/Modals/CancelOrderModal';
 import './CSS/Account.css';
 import { toast, ToastContainer } from 'react-toastify';
+import { Package, User, ChevronRight, X, ExternalLink, MapPin, CreditCard, ShoppingBag } from 'lucide-react';
 
 const Account = () => {
   const location = useLocation();
@@ -41,30 +42,27 @@ const Account = () => {
       }
     };
     fetchData();
-  }, [getListOrder]);
+  }, []);
 
   const formatDateTime = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleString('vi-VN', {
+    return date.toLocaleDateString('vi-VN', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
+      year: 'numeric'
     });
   };
 
   const statusMapping = {
-    0: 'Đang đóng gói hàng',
-    1: 'Chưa giải quyết',
+    0: 'Đang đóng gói',
+    1: 'Chờ xử lý',
     2: 'Đã xác nhận',
     3: 'Đã hủy',
     4: 'Hoàn thành'
   };
 
   const paymentMethod = {
-    1: 'VnPay', 
+    1: 'VnPay',
     2: 'COD',
     3: 'PayPal',
   };
@@ -87,7 +85,7 @@ const Account = () => {
   const handleCancelOrder = async () => {
     setIsCancelling(true);
     setCancelError(null);
-    
+
     try {
       const result = await cancelOrder(orderDetail.orderId);
       if (result) {
@@ -95,6 +93,7 @@ const Account = () => {
         setDataOrder(responseOrder.data);
         setShowCancelModal(false);
         setShowDetail(false);
+        toast.success("Đã hủy đơn hàng thành công");
       }
     } catch (error) {
       setCancelError(error.message || 'Không thể hủy đơn hàng');
@@ -103,184 +102,165 @@ const Account = () => {
     }
   };
 
-  if (error) return <div className="error-container">Error: {error.message}</div>;
-  if (!inforUser) return <div className="loading-container">Loading...</div>;
+  if (error) return <div className="error-container">Lỗi: {error.message}</div>;
+  if (!inforUser && !error) return <div className="loading-container">Đang tải...</div>;
 
   return (
-    <div className='account'>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        style={{ zIndex: 999999 }} 
-      />
+    <div className='account-page-premium'>
+      <ToastContainer position="top-right" autoClose={3000} style={{ zIndex: 999999 }} />
+
       {!isHidden && (
-        <div className='account-container'>
-          <div className="account-content">
-            <div className="account-main">
-              <div className="account-header">
-                <div className="header-line"></div>
-                <h1 className="account-title">TÀI KHOẢN CỦA TÔI</h1>
-                <p className="welcome-text">Xin chào, <span className="username">{inforUser.userName}</span></p>
-              </div>
-
-              <div className="orders-section">
-                <h2 className="section-title">ĐƠN HÀNG GẦN ĐÂY</h2>
-                
-                <div className="orders-table">
-                  <div className="table-header">
-                    <div className="header-cell order-id">MÃ ĐƠN</div>
-                    <div className="header-cell date">NGÀY</div>
-                    <div className="header-cell address">ĐỊA CHỈ</div>
-                    <div className="header-cell amount">TỔNG</div>
-                    <div className="header-cell payment">THANH TOÁN</div>
-                    <div className="header-cell status">TRẠNG THÁI</div>
-                  </div>
-
-                  <div className="table-body">
-                    {dataOrder.length > 0 ? (
-                      dataOrder.map(order => (
-                        <div key={order.orderID} className="table-row">
-                          <div 
-                            className="cell order-id-cell" 
-                            onClick={() => getOrdDetail(order.orderID, order.status, order.paymentMethodID)}
-                          >
-                            #{order.orderID}
-                          </div>
-                          <div className="cell date-cell">{formatDateTime(order.orderDate)}</div>
-                          <div className="cell address-cell">{order.shipping.shippingAddress}</div>
-                          <div className="cell amount-cell">{order.totalAmount.toLocaleString()} VND</div>
-                          <div className="cell payment-cell">{paymentMethod[order.paymentMethodID]}</div>
-                          <div className="cell status-cell">
-                            <span className={`status-badge status-${order.status}`}>
-                              {statusMapping[order.status]}
-                            </span>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="no-orders">
-                        <div className="no-orders-icon">📦</div>
-                        <p>Không có đơn hàng nào</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="account-sidebar">
-              <div className="sidebar-content">
-                <h3 className="sidebar-title">CÀI ĐẶT TÀI KHOẢN</h3>
-                <div className="sidebar-divider"></div>
-                <button 
-                  className="update-btn" 
-                  onClick={() => navigate('/account/update')}
-                >
-                  <span className="btn-text">CHỈNH SỬA</span>
-                  <div className="btn-arrow">→</div>
-                </button>
-              </div>
+        <div className='container'>
+          {/* Header Section */}
+          <div className="account-hero-header">
+            <div className="account-welcome-group">
+              <h1>Tài khoản của tôi</h1>
+              <p>Chào mừng trở lại, <strong>{inforUser.userName}</strong>. Đây là nơi quản lý đơn hàng của bạn.</p>
             </div>
           </div>
 
-          {/* Order Detail Modal */}
+          <div className="account-grid">
+            {/* Main Content: Orders */}
+            <div className="orders-list-wrapper">
+              <div className="d-flex align-items-center gap-3 mb-4">
+                <div className="p-2 bg-light rounded">
+                  <Package size={20} className="text-dark" />
+                </div>
+                <h2 className="m-0">Đơn hàng gần đây</h2>
+              </div>
+
+              <div className="premium-order-table-header">
+                <div>Mã đơn</div>
+                <div>Ngày đặt</div>
+                <div>Giao đến</div>
+                <div>Tổng tiền</div>
+                <div>Trạng thái</div>
+              </div>
+
+              <div className="orders-list">
+                {dataOrder.length > 0 ? (
+                  dataOrder.map(order => (
+                    <div key={order.orderID} className="order-row-lux">
+                      <div className="order-id-lux" onClick={() => getOrdDetail(order.orderID, order.status, order.paymentMethodID)}>
+                        #{order.orderID}
+                      </div>
+                      <div className="order-date-lux">{formatDateTime(order.orderDate)}</div>
+                      <div className="order-address-lux" title={order.shipping.shippingAddress}>
+                        {order.shipping.shippingAddress}
+                      </div>
+                      <div className="order-total-lux">
+                        {order.totalAmount.toLocaleString()}₫
+                      </div>
+                      <div className="order-status-lux">
+                        <span className={`badge-lux badge-lux-${order.status}`}>
+                          {statusMapping[order.status]}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-5">
+                    <ShoppingBag size={48} strokeWidth={1} className="text-muted mb-3" />
+                    <p className="text-muted">Bạn chưa có đơn hàng nào.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Sidebar: Settings */}
+            <div className="account-settings-sidebar">
+              <div className="d-flex align-items-center gap-3 mb-4">
+                <User size={20} />
+                <h3 className="m-0">Thiết lập</h3>
+              </div>
+              <p className="small opacity-75 mb-4">Cập nhật thông tin cá nhân và địa chỉ giao hàng của bạn.</p>
+
+              <button
+                className="btn-update-account"
+                onClick={() => navigate('/account/update')}
+              >
+                <span>Chỉnh sửa hồ sơ</span>
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+
+          {/* Detailed Order Modal */}
           {showDetail && (
             <div className="order-detail-modal">
-              <div 
-                className={`modal-backdrop ${showCancelModal ? 'confirmation-active' : ''}`} 
-                onClick={() => showCancelModal ? setShowCancelModal(false) : setShowDetail(false)}
+              <div
+                className={`modal-backdrop ${showCancelModal ? 'confirmation-active' : ''}`}
+                onClick={() => !showCancelModal && setShowDetail(false)}
               />
-              
-              <div className="order-detail-content">
-                <div className="modal-header">
-                  <h2 className="modal-title">CHI TIẾT ĐƠN HÀNG</h2>
-                  <button 
-                    className="close-btn" 
-                    onClick={() => setShowDetail(false)}
-                    disabled={isCancelling}
-                  >
-                    <span className="close-icon">✕</span>
+
+              <div className="order-detail-content" style={{ borderRadius: '24px' }}>
+                <div className="lux-modal-header">
+                  <h2>Chi tiết đơn hàng #{orderDetail.orderId}</h2>
+                  <button className="lux-close-btn" onClick={() => setShowDetail(false)}>
+                    <X size={20} />
                   </button>
                 </div>
 
-                <div className="order-items">
-                  <div className="items-header">
-                    <div className="item-header product">SẢN PHẨM</div>
-                    <div className="item-header quantity">SỐ LƯỢNG</div>
-                    <div className="item-header price">GIÁ</div>
-                  </div>
-
-                  <div className="items-list">
+                <div className="lux-modal-body">
+                  <div className="order-items-lux-list">
                     {orderDetail.items.map((item) => (
-                      <div key={item.orderDetailID} className="order-item">
-                        <div className="item-product">
-                          <Link 
-                            className="product-link" 
-                            to={`/product/${item.productDTO.productID}`}
-                          >
-                            {item.productDTO.productName}
-                            <br/>
-                            <span className='fw-normal'>{item.productSizeDTO.colorName} - {item.productSizeDTO.size}</span>
+                      <div key={item.orderDetailID} className="order-item-lux-card">
+                        <div className="item-info-lux">
+                          <Link to={`/product/${item.productDTO.productID}`} className="text-dark text-decoration-none">
+                            <h4 className="item-name-lux">{item.productDTO.productName}</h4>
                           </Link>
+                          <div className="item-meta-lux">
+                            Màu: {item.productSizeDTO.colorName} • Size: {item.productSizeDTO.size}
+                          </div>
                         </div>
-                        <div className="item-quantity">{item.quantity}</div>
-                        <div className="item-price">{item.unitPrice.toLocaleString()} VND</div>
+                        <div className="item-pricing-lux">
+                          <div className="fw-bold">{item.unitPrice.toLocaleString()}₫</div>
+                          <div className="small text-muted">x{item.quantity}</div>
+                        </div>
                       </div>
                     ))}
                   </div>
-                </div>
-                
-                {orderDetail.status === 0 && orderDetail.paymentMethodID !== 1 && (
-                  <div className='container cancel-button-container d-flex align-items-center justify-content-center mt-4'>
-                    <button 
-                      className='cancel-order-btn bg-danger button-primary'
-                      onClick={() => setShowCancelModal(true)}
-                      disabled={isCancelling}
-                    >
-                      Huỷ đơn hàng
-                    </button>
-                  </div>
-                )}
 
-                {orderDetail.status === 0 && orderDetail.paymentMethodID === 1 && (
-                  <div className='container cancel-button-container d-flex align-items-center justify-content-center mt-4'>
-                    <button 
-                      className='cancel-order-btn bg-danger button-primary'
-                      onClick={() => toast.error('Xin lỗi, đơn hàng của bạn không thể hủy vì đã thanh toán rồi')}
-                    >
-                      Huỷ đơn hàng
-                    </button>
+                  <div className="lux-summary-box">
+                    <div className="summary-row-lux">
+                      <span>Tạm tính</span>
+                      <span>{orderDetail.items.reduce((total, item) => total + (item.unitPrice * item.quantity), 0).toLocaleString()}₫</span>
+                    </div>
+                    <div className="summary-row-lux">
+                      <span>Phí vận chuyển</span>
+                      <span>30.000₫</span>
+                    </div>
+                    <div className="summary-row-lux total">
+                      <span>Tổng cộng</span>
+                      <span>{(orderDetail.items.reduce((total, item) => total + (item.unitPrice * item.quantity), 0) + 30000).toLocaleString()}₫</span>
+                    </div>
                   </div>
-                )}
-                
-                <div className="order-summary mt-2 container">
-                  <div className="summary-item">
-                    <span className="summary-label">Tổng tiền: </span>
-                    <span className="summary-value">
-                      {orderDetail.items.reduce((total, item) => total + (item.unitPrice * item.quantity), 0).toLocaleString()} VND
-                    </span>
-                  </div>
-                  <div className="summary-item">
-                    <span className="summary-label">Phí vận chuyển: </span>
-                    <span className="summary-value">30.000 VND</span>
-                  </div>
-                  <div className="summary-item">
-                    <span className="summary-label">Tổng cộng: </span>
-                    <span className="summary-value">
-                      {(orderDetail.items.reduce((total, item) => total + (item.unitPrice * item.quantity), 0) + 30000).toLocaleString()} VND
-                    </span>
-                  </div>
+
+                  {orderDetail.status === 0 && (
+                    <div className="mt-5">
+                      {orderDetail.paymentMethodID !== 1 ? (
+                        <button
+                          className="btn btn-danger w-100 py-3 fw-bold"
+                          style={{ borderRadius: '12px' }}
+                          onClick={() => setShowCancelModal(true)}
+                          disabled={isCancelling}
+                        >
+                          {isCancelling ? 'Đang xử lý...' : 'Hủy đơn hàng này'}
+                        </button>
+                      ) : (
+                        <button
+                          className="btn btn-secondary w-100 py-3 fw-bold opacity-50"
+                          style={{ borderRadius: '12px' }}
+                          onClick={() => toast.info('Đơn hàng đã thanh toán không thể hủy tự động. Vui lòng liên hệ CSKH.')}
+                        >
+                          Không thể hủy đơn này
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
-              
-              {/* Cancel Order Confirmation Modal */}
+
               <CancelOrderModal
                 showCancelModal={showCancelModal}
                 setShowCancelModal={setShowCancelModal}

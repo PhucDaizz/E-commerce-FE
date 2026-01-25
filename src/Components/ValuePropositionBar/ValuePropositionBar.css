@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.proposition-bar-container {
+    padding: 30px 0;
+    background: #ffffff;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    overflow: hidden;
+}
+
+.proposition-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.prop-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px;
+    transition: transform 0.3s ease;
+}
+
+.prop-item:hover {
+    transform: translateY(-2px);
+}
+
+.prop-icon-wrapper {
+    width: 52px;
+    height: 52px;
+    background: #f8f8f8;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a1a1a;
+    transition: all 0.3s ease;
+}
+
+.prop-item:hover .prop-icon-wrapper {
+    background: #1a1a1a;
+    color: #ffffff;
+}
+
+.prop-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.prop-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    margin-bottom: 2px;
+}
+
+.prop-desc {
+    font-size: 13px;
+    color: #888;
+    margin: 0;
+    font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+    .proposition-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+}
+
+@media (max-width: 600px) {
+    .proposition-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .prop-item {
+        justify-content: center;
+    }
+}

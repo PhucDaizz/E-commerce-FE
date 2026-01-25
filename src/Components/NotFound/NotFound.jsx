@@ -1,32 +1,42 @@
-// components/NotFound/NotFound.jsx
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Home, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Home, ArrowLeft, Search } from 'lucide-react';
 import './NotFound.css';
 
 const NotFound = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="not-found-container">
-      <div className="not-found-content">
-        <div className="not-found-icon">
-          <AlertTriangle size={64} />
+    <div className="not-found-wrapper">
+      <div className="not-found-inner">
+        {/* Visual Element */}
+        <div className="not-found-visual">
+          <div className="big-404">404</div>
+          <div className="not-found-icon-overlay">
+            <Search size={40} strokeWidth={1.5} />
+          </div>
         </div>
-        <h1 className="not-found-title">404 - Trang không tồn tại</h1>
-        <p className="not-found-message">
-          Xin lỗi, trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.
-        </p>
-        <div className="not-found-actions">
-          <Link to="/" className="not-found-button primary">
-            <Home size={20} />
-            <span>Về trang chủ</span>
-          </Link>
-          <button 
-            onClick={() => window.history.back()} 
-            className="not-found-button secondary"
-          >
-            <ArrowLeft size={20} />
-            <span>Quay lại</span>
-          </button>
+
+        {/* Info Section */}
+        <div className="not-found-info">
+          <h1>Trang không tìm thấy</h1>
+          <p>
+            Có vẻ như liên kết đã bị hỏng hoặc trang này không còn tồn tại trên hệ thống của chúng tôi.
+          </p>
+
+          <div className="not-found-buttons">
+            <Link to="/" className="nf-btn nf-btn-primary">
+              <Home size={18} />
+              <span>Về trang chủ</span>
+            </Link>
+            <button
+              onClick={() => navigate(-1)}
+              className="nf-btn nf-btn-secondary"
+            >
+              <ArrowLeft size={18} />
+              <span>Quay lại trang cũ</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

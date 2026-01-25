@@ -5,6 +5,7 @@ import Pagination from '../Pagination/Pagination'
 import { useCategory } from '../../Context/CategoryContext'
 import { useSearch } from '../../Context/SearchContext'
 import axios from '../../api/axios'
+import { ArrowUpDown, ListFilter, CircleDollarSign } from 'lucide-react'
 
 const Collections = () => {
     const apiUrl = import.meta.env.VITE_BASE_API_URL;
@@ -14,12 +15,12 @@ const Collections = () => {
     const { selectedCategory } = useCategory();
     const { searchQuery } = useSearch();
     const [currentCategory, setCurrentCategory] = useState(null);
-    
+
     const getItemsPerPage = () => {
         if (typeof window !== 'undefined') {
             return window.innerWidth >= 992 ? 50 : 20;
         }
-        return 20; 
+        return 20;
     };
 
     const [filters, setFilters] = useState({
@@ -34,7 +35,7 @@ const Collections = () => {
             setCurrentCategory(null);
             return;
         }
-        
+
         try {
             const response = await axios.get(`/api/Category/${categoryId}`);
             setCurrentCategory(response.data);
@@ -52,7 +53,7 @@ const Collections = () => {
                     ...prev,
                     itemInPage: newItemInPage
                 }));
-                setPage(1); 
+                setPage(1);
             }
         };
 
@@ -66,26 +67,26 @@ const Collections = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-          try {
-            const response = await axios.get(`/api/Product/GetAll`, {
-                params: {
-                    productName: searchQuery || '',
-                    isDESC: filters.isDESC,
-                    page: page,
-                    itemInPage: filters.itemInPage,
-                    sortBy: filters.sortBy,
-                    categoryId: selectedCategory || '',
-                    minPrice: filters.priceRange[0],
-                    maxPrice: filters.priceRange[1]
-                }
-            })
-            setData(response.data.items);
-            setTotalPages(response.data.pageSize);
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
+            try {
+                const response = await axios.get(`/api/Product/GetAll`, {
+                    params: {
+                        productName: searchQuery || '',
+                        isDESC: filters.isDESC,
+                        page: page,
+                        itemInPage: filters.itemInPage,
+                        sortBy: filters.sortBy,
+                        categoryId: selectedCategory || '',
+                        minPrice: filters.priceRange[0],
+                        maxPrice: filters.priceRange[1]
+                    }
+                })
+                setData(response.data.items);
+                setTotalPages(response.data.pageSize);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         };
-    
+
         fetchData();
     }, [page, selectedCategory, searchQuery, filters]);
 
@@ -133,8 +134,8 @@ const Collections = () => {
             {currentCategory && currentCategory.imageURL && (
                 <div className="category-fullwidth-banner">
                     <div className="category-banner-image-container">
-                        <img 
-                            src={resolveImageUrl(currentCategory.imageURL)} 
+                        <img
+                            src={resolveImageUrl(currentCategory.imageURL)}
                             alt={currentCategory.categoryName}
                             className="category-banner-image"
                         />
@@ -150,83 +151,98 @@ const Collections = () => {
             )}
 
             <div className="collections all-product">
-                {/* Header chỉ hiển thị khi không có banner */}
+                {/* Header Section - Modern Hero Style */}
                 {(!currentCategory || !currentCategory.imageURL) && (
-                    <div className="collections-header">
-                        <h3>
-                            {selectedCategory && currentCategory 
-                                ? currentCategory.categoryName 
-                                : 'Tất cả sản phẩm'
-                            }
-                        </h3>
-                    </div>
-                )}
-                
-                {/* Filter Section */}
-                <div className="filters-section">
-                    <div className="filter-group">
-                        <label className="filter-label">Sắp xếp theo</label>
-                        <select 
-                            name="sortBy" 
-                            className="filter-select"
-                            value={filters.sortBy} 
-                            onChange={handleFilterChange}
-                        >
-                            <option value="CreatedAt">Mới nhất</option>
-                            <option value="Price">Giá</option>
-                            <option value="Name">Tên</option>
-                        </select>
-                    </div>
-
-                    <div className="filter-group">
-                        <label className="filter-label">Thứ tự</label>
-                        <div className="sort-direction-toggle">
-                            <label className="toggle-switch">
-                                <input
-                                    type="checkbox"
-                                    checked={filters.isDESC}
-                                    onChange={handleSortDirectionChange}
-                                />
-                                <span className="toggle-slider"></span>
-                                <span className="toggle-text">
-                                    {filters.isDESC ? 'Giảm dần' : 'Tăng dần'}
-                                </span>
-                            </label>
+                    <div className="shop-hero-premium">
+                        <div className="hero-background-patterns">
+                            <div className="pattern-circle"></div>
+                            <div className="pattern-dots"></div>
+                        </div>
+                        <div className="hero-content">
+                            <span className="hero-subtitle">Discover our collection</span>
+                            <h1 className="hero-title">
+                                {selectedCategory && currentCategory
+                                    ? currentCategory.categoryName
+                                    : 'Tất cả sản phẩm'
+                                }
+                            </h1>
+                            <div className="hero-divider-premium"></div>
+                            <p className="hero-description">
+                                Khám phá những dòng sản phẩm chất lượng cao được tuyển chọn khắt khe nhất dành riêng cho bạn.
+                            </p>
                         </div>
                     </div>
+                )}
 
-                    <div className="filter-group price-range-group">
-                        <label className="filter-label">Khoảng giá</label>
-                        <div className="price-inputs">
-                            <input
-                                type="number"
-                                name="minPrice"
-                                className="price-input pe-0"
-                                placeholder="Từ"
-                                value={filters.priceRange[0]}
-                                onChange={handlePriceRangeChange}
-                            />
-                            <span className="price-separator">-</span>
-                            <input
-                                type="number"
-                                name="maxPrice"
-                                className="price-input pe-0"
-                                placeholder="Đến"
-                                value={filters.priceRange[1]}
-                                onChange={handlePriceRangeChange}
-                            />
+                {/* Filter Section */}
+                <div className="filters-section">
+                    <div className="filters-wrapper">
+                        {/* Sort Select */}
+                        <div className="filter-pill">
+                            <div className="pill-icon"><ArrowUpDown size={16} /></div>
+                            <div className="pill-content">
+                                <span className="pill-label">Sắp xếp</span>
+                                <select
+                                    name="sortBy"
+                                    className="pill-select"
+                                    value={filters.sortBy}
+                                    onChange={handleFilterChange}
+                                >
+                                    <option value="CreatedAt">Mới nhất</option>
+                                    <option value="Price">Giá tiền</option>
+                                    <option value="Name">Tên sản phẩm</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Order Toggle */}
+                        <div className="filter-pill clickable" onClick={handleSortDirectionChange}>
+                            <div className="pill-icon"><ListFilter size={16} /></div>
+                            <div className="pill-content">
+                                <span className="pill-label">Thứ tự</span>
+                                <span className="pill-value">
+                                    {filters.isDESC ? 'Giảm dần' : 'Tăng dần'}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Price Range */}
+                        <div className="filter-pill price-pill">
+                            <div className="pill-icon"><CircleDollarSign size={16} /></div>
+                            <div className="pill-content">
+                                <span className="pill-label">Khoảng giá</span>
+                                <div className="pill-inputs">
+                                    <input
+                                        type="number"
+                                        name="minPrice"
+                                        placeholder="Từ"
+                                        value={filters.priceRange[0]}
+                                        onChange={handlePriceRangeChange}
+                                    />
+                                    <span className="pill-sep">-</span>
+                                    <input
+                                        type="number"
+                                        name="maxPrice"
+                                        placeholder="Đến"
+                                        value={filters.priceRange[1]}
+                                        onChange={handlePriceRangeChange}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div className="shop-product">
-                    {data && data.length > 0 ? 
-                        (data.map((item) => { 
-                            const primaryImage = item.images.find(image => image.isPrimary); 
+                    {data && data.length > 0 ?
+                        (data.map((item) => {
+                            const primaryImage = item.images.find(image => image.isPrimary);
+                            const secondaryImage = item.images.find(image => !image.isPrimary) || item.images[1];
                             const imageLink = resolveImageUrl(primaryImage?.imageURL);
+                            const hoverImageLink = secondaryImage ? resolveImageUrl(secondaryImage.imageURL) : '';
 
-                            return <Item key={item.productID} id={item.productID} name={item.productName} price={item.price} image={imageLink} />; 
-                        })) 
+                            return <Item key={item.productID} id={item.productID} name={item.productName} price={item.price} image={imageLink} hoverImage={hoverImageLink} />;
+                        }))
                         : (
                             <div className='noresult'>
                                 <div className="no-result-content">

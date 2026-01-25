@@ -1,16 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { useAuth } from '../../Context/AuthContext';
+import { User, Mail, Lock, Phone, UserPlus, ShieldCheck, ArrowRight } from 'lucide-react';
+import './RegisterAdmin.css';
 
 const RegisterAdmin = () => {
   const { registerAdmin } = useAuth();
-
-//   useEffect(() => {
-//     const token = localStorage.getItem('token');
-//     if (token) {
-//       navigate('/');
-//     }
-//   }, []);
 
   const [formData, setFormData] = useState({
     userName: '',
@@ -21,10 +16,15 @@ const RegisterAdmin = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
+    // Clear error when typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const validateForm = () => {
@@ -36,12 +36,14 @@ const RegisterAdmin = () => {
 
     if (!formData.email) {
       newErrors.email = 'Email là bắt buộc';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email không hợp lệ';
     }
 
     if (!formData.password) {
       newErrors.password = 'Mật khẩu là bắt buộc';
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Mật khẩu phải có ít nhất 8 ký tự';
+      newErrors.password = 'Mật khẩu phải từ 8 ký tự';
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -49,7 +51,9 @@ const RegisterAdmin = () => {
     }
 
     if (!formData.phone) {
-      newErrors.phone = 'Số điện thoại là bắt buộc';
+      newErrors.phone = 'SĐT là bắt buộc';
+    } else if (!/^\d{10,11}$/.test(formData.phone)) {
+      newErrors.phone = 'SĐT không hợp lệ';
     }
 
     setErrors(newErrors);
@@ -60,6 +64,7 @@ const RegisterAdmin = () => {
     event.preventDefault();
 
     if (validateForm()) {
+      setIsSubmitting(true);
       const dataSend = {
         userName: formData.userName,
         email: formData.email,
@@ -67,50 +72,129 @@ const RegisterAdmin = () => {
         phoneNumber: formData.phone,
       };
 
-      const response = await registerAdmin(dataSend);
-      if (response.status === 200) {
-        setFormData({ userName: '', email: '', password: '', confirmPassword: '', phone: '' });
-        setErrors({});
+      try {
+        const response = await registerAdmin(dataSend);
+        if (response.status === 200) {
+          setFormData({ userName: '', email: '', password: '', confirmPassword: '', phone: '' });
+          setErrors({});
+        }
+      } catch (error) {
+        console.error("Registration error:", error);
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
 
   return (
-    <div className='Register container mt-4 border bg-white shadow' >
-      <ToastContainer />
-      <div className="row" style={{ minHeight: '700px' }}>
-        <div className="col d-flex flex-column align-items-center justify-content-center">
-          <h1>Đăng ký Admin</h1>
-          <div className='border border-0 w-25 bg-black' style={{ height: '2px' }}></div>
+    <div className='register-admin-page'>
+      <ToastContainer position="top-right" autoClose={3000} />
+
+      <div className="register-admin-card">
+        {/* Left Side - Visual Decoration */}
+        <div className="register-admin-left">
+          <div className="admin-status-badge">
+            <ShieldCheck size={48} strokeWidth={1.5} />
+          </div>
+          <h1>Quản Trị Viên</h1>
+          <p>Thiết lập tài khoản quản trị mới để bắt đầu quản lý hệ thống cửa hàng của bạn.</p>
         </div>
-        <div className="col">
-          <form onSubmit={handleSubmit} className="mb-4 mt-5 p-4">
-            <div className='mb-3'>
-              <label className='form-label'>Họ tên:</label>
-              <input type="text" name='userName' className='form-control' value={formData.userName} onChange={handleChange} />
-              {errors.userName && <div className="text-danger">{errors.userName}</div>}
+
+        {/* Right Side - Form */}
+        <div className="register-admin-right">
+          <div className="admin-form-header">
+            <h2>Đăng Ký Tài Khoản</h2>
+            <p>Vui lòng điền đầy đủ các thông tin bên dưới</p>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <div className="form-grid">
+              <div className='form-field full-width'>
+                <label>Họ và tên</label>
+                <div className="input-wrapper">
+                  <i><User size={18} /></i>
+                  <input
+                    type="text"
+                    name='userName'
+                    placeholder="Nhập họ và tên admin"
+                    value={formData.userName}
+                    onChange={handleChange}
+                  />
+                </div>
+                {errors.userName && <span className="error-text">{errors.userName}</span>}
+              </div>
+
+              <div className="form-field full-width">
+                <label>Email liên hệ</label>
+                <div className="input-wrapper">
+                  <i><Mail size={18} /></i>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="admin@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
+                </div>
+                {errors.email && <span className="error-text">{errors.email}</span>}
+              </div>
+
+              <div className="form-field">
+                <label>Mật mã</label>
+                <div className="input-wrapper">
+                  <i><Lock size={18} /></i>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
+                </div>
+                {errors.password && <span className="error-text">{errors.password}</span>}
+              </div>
+
+              <div className="form-field">
+                <label>Xác nhận</label>
+                <div className="input-wrapper">
+                  <i><ShieldCheck size={18} /></i>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                  />
+                </div>
+                {errors.confirmPassword && <span className="error-text">{errors.confirmPassword}</span>}
+              </div>
+
+              <div className="form-field full-width">
+                <label>Số điện thoại</label>
+                <div className="input-wrapper">
+                  <i><Phone size={18} /></i>
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="09xx xxx xxx"
+                    value={formData.phone}
+                    onChange={handleChange}
+                  />
+                </div>
+                {errors.phone && <span className="error-text">{errors.phone}</span>}
+              </div>
             </div>
-            <div className="mb-3">
-              <label className='form-label'>Email:</label>
-              <input type="email" name="email" className="form-control" value={formData.email} onChange={handleChange} />
-              {errors.email && <div className="text-danger">{errors.email}</div>}
-            </div>
-            <div className="mb-3">
-              <label className='form-label'>Mật mã:</label>
-              <input type="password" name="password" className="form-control" value={formData.password} onChange={handleChange} />
-              {errors.password && <div className="text-danger">{errors.password}</div>}
-            </div>
-            <div className="mb-3">
-              <label className='form-label'>Nhập lại mật mã:</label>
-              <input type="password" name="confirmPassword" className="form-control" value={formData.confirmPassword} onChange={handleChange} />
-              {errors.confirmPassword && <div className="text-danger">{errors.confirmPassword}</div>}
-            </div>
-            <div className="mb-3">
-              <label className='form-label'>SĐT:</label>
-              <input type="tel" name="phone" className="form-control" value={formData.phone} onChange={handleChange} />
-              {errors.phone && <div className="text-danger">{errors.phone}</div>}
-            </div>
-            <button type="submit" className="btn btn-outline-dark rounded-0 w-25">Đăng ký Admin</button>
+
+            <button type="submit" className="admin-submit-btn" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <span>Đang xử lý...</span>
+              ) : (
+                <>
+                  <span>Khởi tạo tài khoản Admin</span>
+                  <ArrowRight size={20} />
+                </>
+              )}
+            </button>
           </form>
         </div>
       </div>

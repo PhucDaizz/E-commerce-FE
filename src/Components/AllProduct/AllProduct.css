@@ -1,145 +1,120 @@
-.all-product {
-    padding: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+.all-product-premium {
+    padding: 80px 0;
+    background: #ffffff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.all-product h3 {
-    margin-bottom: 30px;
-    font-size: 2rem;
-    color: #333;
+.all-product-banner-wrapper {
+    margin-bottom: 60px;
+    border-radius: 32px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
 }
 
-.all-product .shop-product {
-    display: grid !important;
-    grid-template-columns: repeat(5, 1fr) !important;
-    gap: 20px !important;
-    justify-items: center;
-    margin-bottom: 40px;
-    margin: 20px 15px 40px 15px !important;
-    row-gap: 20px !important;
+.all-product-banner-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.8s ease;
 }
 
-/* Large Desktop - 5 sản phẩm */
-@media (min-width: 1200px) {
-    .all-product .shop-product {
-        grid-template-columns: repeat(5, 1fr) !important;
-        gap: 20px !important;
-        margin: 20px 15px !important;
-        display: grid !important;
-        row-gap: 20px !important;
-    }
+.all-product-banner-wrapper:hover img {
+    transform: scale(1.02);
 }
 
-/* Desktop - 4 sản phẩm */
-@media (max-width: 1199px) and (min-width: 992px) {
-    .all-product .shop-product {
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 18px !important;
-        margin: 20px 10px !important;
-        display: grid !important;
-        row-gap: 18px !important;
-    }
+.all-product-header {
+    text-align: center;
+    margin-bottom: 60px;
 }
 
-/* Tablet - 3 sản phẩm */
-@media (max-width: 991px) and (min-width: 769px) {
-    .all-product {
-        padding: 15px;
-    }
-    
-    .all-product h3 {
-        font-size: 1.7rem;
-        margin-bottom: 25px;
-    }
-    
-    .all-product .shop-product {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 15px !important;
-        margin: 15px 10px !important;
-        display: grid !important;
-        row-gap: 15px !important;
-    }
+.all-product-subtitle {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #888;
+    margin-bottom: 12px;
 }
 
-/* Mobile - 2 sản phẩm */
-@media (max-width: 768px) {
-    .all-product {
-        padding: 10px;
-    }
-    
-    .all-product h3 {
-        font-size: 1.4rem;
-        margin-bottom: 20px;
-    }
-    
-    .all-product .shop-product {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
-        margin: 10px 5px !important;
-        display: grid !important;
-        row-gap: 10px !important;
-    }
+.all-product-title {
+    font-size: 42px;
+    font-weight: 800;
+    color: #000;
+    margin: 0;
+    letter-spacing: -1.5px;
+    position: relative;
+    display: inline-block;
 }
 
-/* Pagination responsive */
-.pagination {
+.all-product-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: #000;
+    border-radius: 10px;
+}
+
+.all-product-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+/* Pagination container spacing */
+.all-product-pagination {
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin: 20px 0;
+    margin-top: 40px;
+}
+
+@media (max-width: 1400px) {
+    .all-product-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .all-product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .all-product-title {
+        font-size: 36px;
+    }
 }
 
 @media (max-width: 768px) {
-    .pagination {
-        flex-wrap: wrap;
-        gap: 5px;
-        margin: 15px 0;
+    .all-product-premium {
+        padding: 50px 0;
     }
-    
-    .pagination button {
-        min-width: 32px;
-        height: 32px;
-        font-size: 13px;
-        margin: 2px;
+
+    .all-product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
     }
-}
 
-/* CSS Override cho trường hợp có CSS conflict */
-.all-product .shop-product.shop-product {
-    display: grid !important;
-}
+    .all-product-title {
+        font-size: 28px;
+    }
 
-@media (max-width: 768px) {
-    .all-product .shop-product.shop-product {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
-        margin: 10px 5px !important;
-        row-gap: 10px !important;
+    .all-product-banner-wrapper {
+        border-radius: 20px;
+        margin-bottom: 40px;
     }
 }
 
-@media (max-width: 991px) and (min-width: 769px) {
-    .all-product .shop-product.shop-product {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 15px !important;
-        margin: 15px 10px !important;
-        row-gap: 15px !important;
-    }
-}
-
-@media (max-width: 1199px) and (min-width: 992px) {
-    .all-product .shop-product.shop-product {
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 18px !important;
-        margin: 20px 10px !important;
-        row-gap: 18px !important;
-    }
-}
-
-@media (min-width: 1200px) {
-    .all-product .shop-product.shop-product {
-        grid-template-columns: repeat(5, 1fr) !important;
-        gap: 20px !important;
-        margin: 20px 15px !important;
-        row-gap: 20px !important;
+@media (max-width: 480px) {
+    .all-product-grid {
+        grid-template-columns: 1fr;
     }
 }

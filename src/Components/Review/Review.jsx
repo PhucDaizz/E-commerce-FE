@@ -1,77 +1,108 @@
-// Review.js
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './Review.css';
 import Rating from '../Rating/Rating';
 import WriteReview from '../WriteReview/WriteReview';
+import { MessageSquare, PenLine, X, User } from 'lucide-react';
 
 const Review = ({ reviews = [], productId, onNewReview }) => {
-  const [hideReview, setHideReview] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  
-  useEffect(() => {
-    setHideReview(true);
-    
-    const checkIsMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkIsMobile();
-    window.addEventListener('resize', checkIsMobile);
-    
-    return () => window.removeEventListener('resize', checkIsMobile);
-  }, []);
+  const [isWriting, setIsWriting] = useState(false);
 
-  const handleHide = () => {
-    setHideReview(!hideReview);
-  }
+  const toggleWriteReview = () => {
+    setIsWriting(!isWriting);
+  };
 
-  const convertToYMD = (YMD) => { 
-    const dateOnly = YMD.split("T")[0]; 
-    return dateOnly; 
-  }
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
 
-  // const maskEmail = (email) => { 
-  //   const [username, domain] = email.split("@"); 
-  //   const maskedUsername = username.slice(0, 2) + "***" + username.slice(-1); 
-  //   return maskedUsername + "@" + domain; 
-  // }
+  const getInitials = (name) => {
+    if (!name) return <User size={20} />;
+    return name.charAt(0).toUpperCase();
+  };
+
+  const averageRating = reviews.length > 0
+    ? (reviews.reduce((acc, curr) => acc + curr.rating, 0) / reviews.length).toFixed(1)
+    : 0;
 
   return (
-    <div className={`review ${isMobile ? 'mobile-review' : ''}`}>
+    <div className="reviews-section-premium">
       <div className="container">
-        <h4 className={`d-flex justify-content-center opacity-75 ${isMobile ? 'mobile-review-title' : ''}`}>Bài đánh giá của khách hàng</h4> 
-        <button onClick={handleHide} className={`btn btn-primary opacity-75 ${isMobile ? 'mobile-review-btn' : ''}`}>
-          {hideReview ? 'Viết đánh giá' : 'Đóng'}
-        </button>
-        <hr></hr>
-        <div> 
-          {!hideReview && (
-            <WriteReview 
-              productId={productId} 
-              onNewReview={onNewReview}
-              onClose={() => setHideReview(true)}
-            />
-          )}
-        </div>
-        {reviews.length > 0 ? (
-          reviews.map((item, i) => (
-            <div key={i} className={`review-item ${isMobile ? 'mobile-review-item' : ''}`}>
-              <p className={`infor-review ${isMobile ? 'mobile-info-review' : ''}`}>
-                {(item.username)} - {convertToYMD(item.createdAt)}
-              </p> 
-              <div className='review-body'>
-                <Rating rating={item.rating}/>
-                <i className='opacity-75'>
-                  <p className={isMobile ? 'mobile-review-comment' : ''}>{item.comment}</p>
-                </i>
-              </div>
+        {/* Header Section */}
+        <div className="reviews-header">
+          <div className="reviews-title-group">
+            <h2>Đánh giá từ khách hàng</h2>
+            <div className="reviews-summary">
+              {reviews.length > 0 && (
+                <>
+                  <span className="avg-rating-value">{averageRating}</span>
+                  <Rating rating={Math.round(parseFloat(averageRating))} />
+                  <span className="dot-separator">•</span>
+                </>
+              )}
+              <span className="reviews-count">{reviews.length} nhận xét</span>
             </div>
-          ))
-        ) : (
-          <div className="text-center py-4">
-            <p className="text-muted">Chưa có đánh giá nào</p>
+          </div>
+
+          <button
+            onClick={toggleWriteReview}
+            className={`write-review-trigger ${isWriting ? 'active' : ''}`}
+          >
+            {isWriting ? (
+              <>
+                <X size={18} />
+                <span>Hủy bỏ</span>
+              </>
+            ) : (
+              <>
+                <PenLine size={18} />
+                <span>Viết đánh giá</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Write Review Component */}
+        {isWriting && (
+          <div className="write-review-container">
+            <WriteReview
+              productId={productId}
+              onNewReview={onNewReview}
+              onClose={() => setIsWriting(false)}
+            />
           </div>
         )}
+
+        {/* Review List */}
+        <div className="reviews-list">
+          {reviews.length > 0 ? (
+            reviews.map((item, i) => (
+              <div key={i} className="review-card-modern">
+                <div className="reviewer-avatar">
+                  {getInitials(item.username)}
+                </div>
+                <div className="review-card-content">
+                  <div className="review-meta-top">
+                    <h4 className="reviewer-name">{item.username}</h4>
+                    <span className="review-date">{formatDate(item.createdAt)}</span>
+                  </div>
+                  <Rating rating={item.rating} />
+                  <p className="review-comment-text">{item.comment}</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="empty-reviews-state">
+              <MessageSquare size={48} strokeWidth={1} />
+              <p>Chưa có đánh giá nào cho sản phẩm này.<br />Hãy là người đầu tiên chia sẻ cảm nhận!</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

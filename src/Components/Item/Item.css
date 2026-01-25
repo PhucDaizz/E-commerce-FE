@@ -1,41 +1,196 @@
-.item {
+.item-card {
     width: 100%;
-    border: #ffffff 1px solid;
-    border-radius: 14px;
-    overflow: hidden; /* Ẩn phần thừa ra ngoài */
-    position: relative; /* Để có thể sử dụng cho các phần tử con */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Thêm bóng cho phần tử */
-    transition: transform 0.3s, box-shadow 0.3s; /* Hiệu ứng chuyển đổi cho bóng */
-    background-color: #ffffff; /* Màu nền sáng hơn */
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
 }
 
-.item:hover {
+.item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Image Wrapper */
+.image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    aspect-ratio: 3/4;
+}
+
+/* Fallback for browsers that don't support aspect-ratio */
+@supports not (aspect-ratio: 3/4) {
+    .image-wrapper {
+        padding-top: 133.33%;
+    }
+}
+
+.image-wrapper a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* Absolute positioning for images to ensure they fill the aspect-ratio container */
+.item-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.5s ease;
+    display: block;
+}
+
+.hover-image {
+    opacity: 0;
+}
+
+.item-card:hover .primary-image {
+    opacity: 0;
+}
+
+.item-card:hover .hover-image {
+    opacity: 1;
     transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Tăng độ bóng khi hover */
 }
 
-.item .item-image {
-    height: 300px;
-    width: 100%;
-    object-fit: cover; /* Đảm bảo hình ảnh được cắt đúng tỷ lệ */
-}
-
-.item p {
-    margin: 6px 0;
-}
-
-.item .item-name {
+/* Action Buttons */
+.item-actions {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
     display: flex;
-    justify-content: center; /* Căn giữa tên sản phẩm */
-    gap: 20px;
-    font-weight: bold; /* Làm cho tên sản phẩm nổi bật hơn */
-    color: #333; /* Màu chữ tối hơn */
+    gap: 8px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 5;
 }
 
-.item .item-price {
+.item-card:hover .item-actions {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.action-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    color: #333;
     display: flex;
-    justify-content: center; /* Căn giữa giá sản phẩm */
-    color: #000000; /* Màu chữ cho giá sản phẩm */
-    font-size: 18px;
-    font-weight: 600;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background: #000;
+    color: #fff;
+}
+
+.action-btn.main-action {
+    background: #000;
+    color: #fff;
+}
+
+/* Info Section */
+.item-info {
+    padding: 12px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: white;
+}
+
+.item-link {
+    text-decoration: none;
+    display: block;
+}
+
+.item-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.item-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 !important;
+}
+
+.item-tags {
+    display: flex;
+}
+
+.tag {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #f0f0f0;
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: #999;
+}
+
+/* Base Responsive */
+@media (max-width: 1200px) {
+    .item-name {
+        font-size: 13px;
+    }
+
+    .item-price {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .item-actions {
+        display: none;
+    }
+
+    .item-info {
+        padding: 8px;
+    }
+
+    .item-name {
+        font-size: 12px;
+    }
+
+    .item-price {
+        font-size: 13px;
+    }
 }

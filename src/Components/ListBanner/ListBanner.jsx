@@ -9,11 +9,11 @@ import EditBannerModal from '../Modals/EditBannerModal';
 const ListBanner = () => {
     const { bannersAdmin = [], getAllBannersAdmin, deleteBanner, createBanner, changeStatusBanner, isLoading, error } = useBannerContext();
     const apiUrl = import.meta.env.VITE_BASE_API_URL;
-    
+
     // State for delete modal
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedBanner, setSelectedBanner] = useState(null);
-    
+
     // State for create modal
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newBanner, setNewBanner] = useState({
@@ -41,7 +41,7 @@ const ListBanner = () => {
                 console.error('Error loading banners:', error);
             }
         };
-        
+
         fetchBanners();
     }, []);
 
@@ -58,7 +58,7 @@ const ListBanner = () => {
 
     // Hàm xử lý sau khi cập nhật thành công
     const handleUpdateSuccess = () => {
-        
+
     };
 
     // Delete functions
@@ -101,7 +101,7 @@ const ListBanner = () => {
                 ...prev,
                 imageFile: file
             }));
-            
+
             // Create preview
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -155,7 +155,7 @@ const ListBanner = () => {
                 onConfirm={handleConfirmDelete}
                 bannerTitle={selectedBanner?.title || ''}
             />
-            
+
             <CreateBannerModal
                 show={showCreateModal}
                 onHide={() => {
@@ -176,12 +176,12 @@ const ListBanner = () => {
                 bannerId={editingBannerId}
                 onUpdateSuccess={handleUpdateSuccess}
             />
-            
+
             <div className="card shadow-sm">
-                <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <div className="admin-custom-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h1 className="h4 mb-0">Danh sách Banner</h1>
                     <div className='btn-add add-product-btn'>
-                        <button 
+                        <button
                             className="btn-primary btn-modern"
                             onClick={handleCreateClick}
                             disabled={isLoading}
@@ -190,7 +190,7 @@ const ListBanner = () => {
                         </button>
                     </div>
                 </div>
-                
+
                 <div className="card-body">
                     {isLoading ? (
                         <div className="text-center py-4">
@@ -224,9 +224,9 @@ const ListBanner = () => {
                                                 <td>{banner.title}</td>
                                                 <td>
                                                     {banner.imageUrl && (
-                                                        <img 
+                                                        <img
                                                             src={resolveImageUrl(banner.imageUrl)}
-                                                            alt={banner.title} 
+                                                            alt={banner.title}
                                                             style={{ width: '100px', height: 'auto' }}
                                                             className="img-thumbnail"
                                                             onError={(e) => {
@@ -246,8 +246,8 @@ const ListBanner = () => {
                                                             id={`toggle-${banner.id}`}
                                                             style={{ width: '2em', height: '1em' }}
                                                         />
-                                                        <label 
-                                                            className="form-check-label ms-2" 
+                                                        <label
+                                                            className="form-check-label ms-2"
                                                             htmlFor={`toggle-${banner.id}`}
                                                         >
                                                             {banner.isActive ? 'Công khai' : 'Riêng tư'}
@@ -258,17 +258,17 @@ const ListBanner = () => {
                                                 <td>{banner.endDate ? new Date(banner.endDate).toLocaleDateString() : 'Không giới hạn'}</td>
                                                 <td>{banner.displayOrder}</td>
                                                 <td style={{ verticalAlign: 'middle' }}>
-                                                    <div style={{ 
-                                                        display: 'flex', 
-                                                        flexDirection: 'column', 
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
                                                         alignItems: 'center',
                                                         gap: '0.5rem'
                                                     }}>
-                                                        <button style={{ width: '120px' }} className="btn btn-sm btn-outline-primary" 
+                                                        <button style={{ width: '120px' }} className="btn btn-sm btn-outline-primary"
                                                             onClick={() => handleEditClick(banner.id)}>
                                                             Sửa
                                                         </button>
-                                                        <button 
+                                                        <button
                                                             className="btn btn-sm btn-outline-danger w-75"
                                                             onClick={() => handleDeleteClick(banner)}
                                                             disabled={isLoading}

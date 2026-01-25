@@ -1,13 +1,19 @@
-.rating-stars {
+.modern-rating-display {
     display: flex;
-    gap: 4px; /* Khoảng cách giữa các sao */
+    gap: 4px;
+    align-items: center;
 }
-  
-.star {
-    font-size: 20px; /* Kích thước sao */
-    color: #ccc; /* Màu mặc định cho sao rỗng */
+
+.rating-star-icon {
+    transition: all 0.2s ease;
 }
-  
-.star.filled {
-    color: #f39c12; /* Màu vàng cho sao được tô */
+
+.rating-star-icon.filled {
+    color: #f59e0b;
+    /* Amber 500 */
+}
+
+.rating-star-icon.empty {
+    color: #e5e7eb;
+    /* Gray 200 */
 }
