@@ -1,4 +1,284 @@
-.require-info {
-    background-color: #d1ecf1;
-    color: #0c5460;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+.checkout-container {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1a1a1a;
+}
+
+/* Card Styling */
+.checkout-card {
+    background: #ffffff;
+    border-radius: 16px;
+    /* Slightly sharper corners */
+    border: 1px solid #eaeaea;
+    /* Light border instead of shadow for clean look */
+    /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); Removed soft shadow */
+    height: 100%;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.checkout-card:hover {
+    border-color: #000;
+    /* Darker border on hover to encourage focus */
+}
+
+/* Distinct styling for the summary column */
+.summary-card {
+    background-color: #f8f9fa;
+    /* Light gray background */
+    border: 1px solid #e5e7eb;
+}
+
+/* Section Titles */
+.section-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    /* Bolder for hierarchy */
+    color: #000;
+    letter-spacing: -0.03em;
+    display: flex;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #000;
+    /* Bold black underline */
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    /* Stylish touch */
+}
+
+.section-title i {
+    color: #000000;
+    font-size: 1.25rem;
+}
+
+/* Input Fields */
+.custom-input {
+    background-color: #fff;
+    border: 1px solid #d4d4d4;
+    border-radius: 8px;
+    /* Standard radius */
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #000;
+    transition: all 0.2s ease;
+}
+
+.custom-input:focus {
+    background-color: #fff;
+    border-color: #000000;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+    /* Tactile focus state */
+    outline: none;
+}
+
+.custom-input:disabled {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    cursor: not-allowed;
+    border-color: #e5e7eb;
+}
+
+/* Buttons */
+.btn-outline-primary {
+    border-color: #000000;
+    /* Changed to Black */
+    color: #000000;
+    /* Changed to Black */
+    font-weight: 600;
+    padding: 10px 20px;
+    border-width: 1.5px;
+}
+
+.btn-outline-primary:hover {
+    background-color: #000000;
+    /* Changed to Black */
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    /* Changed shadow to black */
+}
+
+.btn-outline-dark {
+    border-color: #000000;
+    color: #000000;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-width: 2px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.btn-outline-dark:hover {
+    background-color: #000000;
+    color: white;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+    transform: translate(-2px, -2px);
+}
+
+.btn-dark {
+    background-color: #000000;
+    border-color: #000000;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 8px;
+    letter-spacing: 0.02em;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.btn-dark:hover,
+.btn-dark:active {
+    background-color: #222;
+    border-color: #222;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+    /* Hard shadow pop */
+    transform: translate(-2px, -2px);
+}
+
+.btn-dark:disabled {
+    background-color: #555;
+    border-color: #555;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Shipping Selection */
+.shipping-method-selected {
+    background-color: #fff;
+    border: 2px solid #000;
+    /* Bold border */
+    color: #000;
+}
+
+/* Payment Options */
+.payment-methods {
+    width: 100%;
+}
+
+.payment-option {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.payment-option:hover {
+    border-color: #000;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.payment-option.active {
+    border: 2px solid #000;
+    /* Strong active border */
+    background-color: #fff;
+}
+
+/* Add a visual marker for active state */
+.payment-option.active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-top: 20px solid #000;
+    border-left: 20px solid transparent;
+}
+
+.payment-logo {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(100%);
+    /* Make logos B&W for consistency */
+    transition: filter 0.3s;
+}
+
+.payment-option:hover .payment-logo,
+.payment-option.active .payment-logo {
+    filter: grayscale(0%);
+    /* Reveal color on interaction */
+}
+
+.payment-desc {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed #ccc;
+    /* Dashed line for texture */
+    font-size: 0.85rem;
+    color: #444;
+    line-height: 1.5;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom Radio Button */
+.custom-radio {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    background: #fff;
+}
+
+.payment-option.active .custom-radio {
+    border-color: #000000;
+    background: #fff;
+}
+
+/* Inner dot */
+.radio-dot {
+    width: 10px;
+    height: 10px;
+    background: #000;
+    /* Black dot */
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.payment-option.active .radio-dot {
+    transform: scale(1);
+}
+
+/* Cart Checkout Overrides (Wrapper) */
+/* Assuming CartCheckout is a separate component, 
+   we style its container to match the card look */
+
+/* Warning Alerts */
+.alert-warning {
+    background-color: #fffbeb;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+    border-radius: 12px;
+    font-size: 0.95rem;
+}
+
+/* Responsive Tweaks */
+@media (max-width: 992px) {
+    .checkout-card {
+        padding: 24px;
+    }
 }

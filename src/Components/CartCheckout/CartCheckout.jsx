@@ -23,7 +23,7 @@ const CartCheckout = ({ dataCoupon, setDataCoupon, selectedMethod, note }) => {
 
     useEffect(() => {
         getCart();
-        
+
         return () => {
             // Cleanup khi component unmount
             const releaseBeforeUnmount = async () => {
@@ -88,7 +88,7 @@ const CartCheckout = ({ dataCoupon, setDataCoupon, selectedMethod, note }) => {
 
     const handleRemoveItemFromModal = async (itemToRemove) => {
         await handleRemoveItem(itemToRemove.cartItemID, itemToRemove.productID, itemToRemove.productSizeID);
-        
+
         setValidationResult(prevResult => {
             const updatedItems = prevResult.validatedItems.filter(
                 item => item.cartItemID !== itemToRemove.cartItemID
@@ -126,19 +126,19 @@ const CartCheckout = ({ dataCoupon, setDataCoupon, selectedMethod, note }) => {
         toast.success("Giỏ hàng của bạn đã được cập nhật. Vui lòng kiểm tra lại đơn hàng.");
         setIsValidationModalOpen(false);
         setValidationResult(null);
-        getCart(); 
+        getCart();
     };
 
     // --- HÀM "ĐẶT HÀNG" CHÍNH ---
     const handlePlaceOrder = async () => {
         const validationData = await validateCart();
-        
+
         if (!validationData) return;
 
         if (validationData.wasAdjusted) {
             setValidationResult(validationData);
             setIsValidationModalOpen(true);
-            return; 
+            return;
         }
 
         const isFillFullInfor = await getInforUser();
@@ -165,157 +165,181 @@ const CartCheckout = ({ dataCoupon, setDataCoupon, selectedMethod, note }) => {
     };
 
     return (
-        <div className='cartcheckout bg-light p-2' style={{ minHeight: '80vh' }}>
+        <div className="cart-checkout-wrapper h-100 d-flex flex-column">
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
 
-            {/* --- MODAL KIỂM TRA TỒN KHO VÀ CHO PHÉP XÓA --- */}
+            {/* --- MODAL KIỂM TRA TỒN KHO --- */}
             {isValidationModalOpen && validationResult && (
                 <div className="cart-item-overlay">
-                    <div className='border bg-white shadow cart-item-modal'>
-                        <div className='d-flex align-items-center'>
-                            <h4 className='mb-0'><i className="bi bi-exclamation-triangle-fill text-warning me-2"></i> Cập nhật giỏ hàng</h4>
+                    <div className='cart-item-modal'>
+                        <div className='d-flex align-items-center mb-3'>
+                            <i className="bi bi-exclamation-triangle-fill text-warning me-2 fs-4"></i>
+                            <h5 className='mb-0 fw-bold'>Cập nhật giỏ hàng</h5>
                         </div>
-                        <hr/>
-                        <p style={{ fontSize: '15px' }}>
-                            Một số sản phẩm không còn đủ số lượng. Giỏ hàng của bạn cần được cập nhật để tiếp tục:
-                        </p>
+                        <div className="alert alert-light border mb-3">
+                            <small className="text-secondary">Một số sản phẩm không đủ số lượng tồn kho. Vui lòng xem lại thay đổi bên dưới.</small>
+                        </div>
+
                         <div className='cart-item-update'>
                             {validationResult.validatedItems.map((item) => (
-                                <div key={item.cartItemID} className='d-flex mb-3 align-items-center'>
-                                    <div className="row w-100">
-                                        <div className="col-3">
-                                            <img
-                                                className="img-fluid rounded-1 border"
-                                                src={item.imageUrl ? (item.imageUrl.includes("cloudinary.com") ? item.imageUrl : `${apiUrl}${item.imageUrl}`) : 'https://via.placeholder.com/80x80?text=No+Image'}
-                                                alt={item.productName}
-                                                style={{ maxHeight: '80px' }}
-                                            />
-                                        </div>
-                                        <div className="col-5 d-flex flex-column justify-content-center">
-                                            <Link to={`/product/${item.productID}`} className="text-decoration-none text-black" style={{ fontSize: '15px' }}>
-                                                {item.productName}
-                                            </Link>
-                                            <div className='mt-1' style={{ fontSize: '14px', color: 'gray' }}>
-                                                Size: {item.size}
-                                            </div>
-                                            <br/>
-                                        </div>
-                                        <div className="col-4 d-flex flex-column align-items-center justify-content-center" style={{ fontSize: '15px' }}>
-                                            <div className='d-flex align-items-center'>
-                                                <span className='me-1 text-muted text-decoration-line-through'>{item.originalQuantity}</span>
-                                                <i className="bi bi-arrow-right"></i>
-                                                <span className='ms-1 fw-bold text-danger'>{item.adjustedQuantity}</span>
-                                                <i 
-                                                    className="ms-3 bi bi-x-circle-fill text-secondary cancel" 
-                                                    style={{ cursor: 'pointer' }}
-                                                    onClick={() => handleRemoveItemFromModal(item)}
-                                                    title="Xóa sản phẩm này"
-                                                ></i>
-                                            </div>
-                                            <small className='text-muted'>(Chỉ còn: {item.availableStock})</small>
+                                <div key={item.cartItemID} className='d-flex mb-3 align-items-center p-2 border rounded-3 bg-light'>
+                                    <div className="me-3">
+                                        <img
+                                            className="rounded-2 border"
+                                            src={item.imageUrl ? (item.imageUrl.includes("cloudinary.com") ? item.imageUrl : `${apiUrl}${item.imageUrl}`) : 'https://via.placeholder.com/60'}
+                                            alt={item.productName}
+                                            style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                                        />
+                                    </div>
+                                    <div className="flex-grow-1">
+                                        <Link to={`/product/${item.productID}`} className="text-decoration-none text-dark fw-medium d-block text-truncate" style={{ maxWidth: '200px' }}>
+                                            {item.productName}
+                                        </Link>
+                                        <div className="d-flex align-items-center small mt-1">
+                                            <span className="text-muted me-2">Size: {item.size}</span>
+                                            <span className="text-decoration-line-through text-muted ms-auto me-2">{item.originalQuantity}</span>
+                                            <i className="bi bi-arrow-right small text-muted me-2"></i>
+                                            <span className="fw-bold text-danger">{item.adjustedQuantity}</span>
                                         </div>
                                     </div>
+                                    <button
+                                        className="btn btn-link text-secondary p-0 ms-3"
+                                        onClick={() => handleRemoveItemFromModal(item)}
+                                        title="Xóa khỏi giỏ"
+                                    >
+                                        <i className="bi bi-x-circle-fill fs-5"></i>
+                                    </button>
                                 </div>
                             ))}
                         </div>
-                        <div className="d-flex justify-content-end mt-3">
-                            <button className='btn btn-outline-secondary me-2' onClick={() => setIsValidationModalOpen(false)}>
+                        <div className="d-flex justify-content-end gap-2 mt-4">
+                            <button className='btn btn-light' onClick={() => setIsValidationModalOpen(false)}>
                                 Quay lại
                             </button>
-                            <button className='btn btn-primary' onClick={handleConfirmCartUpdate}>
-                                Cập nhật tất cả
+                            <button className='btn btn-dark' onClick={handleConfirmCartUpdate}>
+                                Cập nhật & Tiếp tục
                             </button>
                         </div>
                     </div>
                 </div>
             )}
-            
-            <h5>Đơn hàng ({cart.length} sản phẩm)</h5>
-            <hr />
-            {cart.length > 0 ? (
-                cart.map((item) => (
-                    <div key={item.cartItemID} className='d-flex mb-3'>
-                         <div className="row w-100">
-                            <div className="col-3 position-relative">
+
+            <div className="p-4 border-bottom">
+                <h5 className="section-title mb-0">
+                    Đơn hàng <span className="text-muted fw-normal ms-1">({cart.length} sản phẩm)</span>
+                </h5>
+            </div>
+
+            <div className="order-items p-4 flex-grow-1" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                {cart.length > 0 ? (
+                    cart.map((item) => (
+                        <div key={item.cartItemID} className="d-flex mb-4 align-items-center">
+                            <div className="position-relative me-3">
                                 <img
-                                    className="img-fluid rounded-1 border"
+                                    className="rounded-3 border"
                                     src={
                                         item.productDTO.images[0]?.imageURL
-                                        ? item.productDTO.images[0].imageURL.includes("cloudinary.com")
-                                            ? item.productDTO.images[0].imageURL
-                                            : `${apiUrl}${item.productDTO.images[0].imageURL}`
-                                        : 'https://via.placeholder.com/80x80?text=No+Image'
+                                            ? item.productDTO.images[0].imageURL.includes("cloudinary.com")
+                                                ? item.productDTO.images[0].imageURL
+                                                : `${apiUrl}${item.productDTO.images[0].imageURL}`
+                                            : 'https://via.placeholder.com/80x80?text=No+Image'
                                     }
-                                    alt={item.productDTO.productName} 
-                                    style={{ maxHeight: '50px' }}
+                                    alt={item.productDTO.productName}
+                                    style={{ width: '64px', height: '64px', objectFit: 'cover' }}
                                 />
+                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary" style={{ fontSize: '0.7rem' }}>
+                                    {item.quantity}
+                                </span>
                             </div>
-                            <div className="col-6 d-flex align-items-center">
-                                <Link to={`/product/${item.productID}`} className="text-decoration-none text-black" style={{fontSize: '13px'}}>
-                                    {item.productDTO.productName}<span className='ms-2' style={{ fontSize: '13px' }}>x{item.quantity}</span>
+                            <div className="flex-grow-1">
+                                <Link to={`/product/${item.productID}`} className="text-decoration-none text-dark fw-medium line-clamp-2 small mb-1">
+                                    {item.productDTO.productName}
                                 </Link>
+                                <div className="text-muted small">
+                                    {formatCurrency(item.productDTO.price)}
+                                </div>
                             </div>
-                            <div className="col-3 d-flex align-items-center justify-content-center" style={{fontSize: '13px'}}>
-                                {formatCurrency(item.productDTO.price)}
+                            <div className="fw-semibold small ms-2">
+                                {formatCurrency(item.productDTO.price * item.quantity)}
                             </div>
                         </div>
+                    ))
+                ) : (
+                    <div className="text-center py-5">
+                        <i className="bi bi-cart-x fs-1 text-muted mb-3 d-block"></i>
+                        <p className="text-muted">Giỏ hàng trống</p>
                     </div>
-                ))
-            ) : (
-                <p className="text-center">Giỏ hàng của bạn đang trống.</p>
-            )}
-            <hr />
-            <div className="d-flex" style={{ fontSize: '13px' }}>
-                <input type="text" 
-                    className={`p-2 w-75 me-2 border ${couponError ? ' border-danger' : ''}`}
-                    placeholder='Nhập mã giảm giá' 
-                    value={coupon}
-                    onChange={handleChange}
-                />
-                <button 
-                    className='w-25 btn btn-primary' 
-                    style={{ fontSize: '13px' }}
-                    disabled={!coupon} 
-                    onClick={() => handleApplyCoupon(coupon)}
-                >Áp dụng</button>
+                )}
             </div>
-            {couponError && (
-                <p className='ms-2 text-danger pb-0' style={{ fontSize: '13px' }}>Mã khuyến mãi không hợp lệ</p>
-            )}
-            <div className=' opacity-75 justify-content-md-between p-3 pb-0' style={{ fontSize: '15px' }}>
-                <div className="d-flex justify-content-between">
-                    <p>Tạm tính</p>
-                    <p className=''>{formatCurrency(totalCost)}</p>
+
+            <div className="discount-section px-4 pb-2">
+                <div className="input-group">
+                    <span className="input-group-text bg-white border-end-0">
+                        <i className="bi bi-ticket-perforated text-dark"></i>
+                    </span>
+                    <input type="text"
+                        className={`form-control border-start-0 ps-0 ${couponError ? 'is-invalid' : ''}`}
+                        placeholder='Mã giảm giá'
+                        value={coupon}
+                        onChange={handleChange}
+                    />
+                    <button
+                        className='btn btn-dark'
+                        disabled={!coupon}
+                        onClick={() => handleApplyCoupon(coupon)}
+                    >Áp dụng</button>
                 </div>
-                <div className="d-flex justify-content-between">
-                    <p>Phí vận chuyển</p>
-                    <p className=''>{formatCurrency(30000)}</p>
+                {couponError && (
+                    <div className="text-danger small mt-1 ms-1">
+                        <i className="bi bi-exclamation-circle me-1"></i>Mã không hợp lệ
+                    </div>
+                )}
+            </div>
+
+            <div className="summary-section p-4 pt-2 bg-light bg-opacity-50 mt-auto rounded-bottom-4">
+                <div className="d-flex justify-content-between mb-2 small text-secondary">
+                    <span>Tạm tính</span>
+                    <span>{formatCurrency(totalCost)}</span>
                 </div>
-                {dataCoupon?.discountValue ? (
-                    <div className="d-flex justify-content-between">
-                        <p>Giảm giá</p>
-                        <p className=''>
-                            {dataCoupon.discountType === 1 
+                <div className="d-flex justify-content-between mb-2 small text-secondary">
+                    <span>Phí vận chuyển</span>
+                    <span>{formatCurrency(30000)}</span>
+                </div>
+                {dataCoupon?.discountValue && (
+                    <div className="d-flex justify-content-between mb-2 small text-success">
+                        <span><i className="bi bi-tag-fill me-1"></i>Giảm giá</span>
+                        <span>
+                            {dataCoupon.discountType === 1
                                 ? `-${formatCurrency(dataCoupon.discountValue)}`
                                 : `-${dataCoupon.discountValue}%`}
-                        </p>
+                        </span>
                     </div>
-                ) : null}
-            </div>
-            <hr className=' pt-0 mb-1 mt-1'/>
-            <div className='opacity-75 justify-content-md-between p-3 pt-1' style={{ fontSize: '15px' }}>
-                <div className='d-flex justify-content-between' style={{fontSize: '17px'}}>
-                    <p>Tổng cộng </p>
-                    <p className=' fw-bold text-primary'>{formatCurrency(totalAmount)}</p>
+                )}
+
+                <hr className="my-3 border-secondary border-opacity-10" />
+
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <span className="fw-bold fs-5">Tổng cộng</span>
+                    <span className="fw-bold fs-4 text-dark">{formatCurrency(totalAmount)}</span>
                 </div>
-                <div className='d-flex justify-content-between align-items-center'>
-                    <p className=' text-primary' 
-                        style={{ fontSize: '13px', cursor: 'pointer'}}
+
+                <button
+                    className='btn btn-dark w-100 py-3 rounded-3 fw-bold shadow-sm mb-3'
+                    onClick={handlePlaceOrder}
+                    disabled={cart.length === 0}
+                >
+                    ĐẶT HÀNG NGAY
+                </button>
+
+                <div className="text-center">
+                    <span
+                        className="text-dark text-decoration-none small fw-medium cursor-pointer link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
                         onClick={handleBackToCart}
+                        style={{ cursor: 'pointer' }}
                     >
-                        <i className="bi bi-chevron-left small" ></i>Quay về giỏ hàng
-                    </p>
-                    <button className='btn btn-primary' onClick={handlePlaceOrder}>Đặt hàng</button>
+                        <i className="bi bi-arrow-left me-1"></i>
+                        Quay về giỏ hàng
+                    </span>
                 </div>
             </div>
         </div>
