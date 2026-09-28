@@ -8,13 +8,14 @@ import { toast, ToastContainer } from 'react-toastify';
 const CartCheckout = ({ dataCoupon, setDataCoupon, selectedMethod, note }) => {
     const apiUrl = import.meta.env.VITE_BASE_API_URL;
     const { getCart, cart, getInforUser, handleRemoveItem, handleUpdateItemCart } = useAuth();
-    const { formatCurrency, applyCoupon, createURLPayment, processPaymentCOD, validateCart, reserveInventory, releaseReservation } = useProduct();
+    const { formatCurrency, applyCoupon, prepareBankingPayment, processPaymentCOD, validateCart, reserveInventory } = useProduct();
     const navigate = useNavigate();
 
     const [coupon, setCoupon] = useState('');
     const [couponError, setCouponError] = useState(false);
     const [totalCost, setTotalCost] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
+    const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
     // --- STATE ĐỂ QUẢN LÝ VIỆC KIỂM TRA TỒN KHO ---
     const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
@@ -23,18 +24,6 @@ const CartCheckout = ({ dataCoupon, setDataCoupon, selectedMethod, note }) => {
 
     useEffect(() => {
         getCart();
-
-        return () => {
-            // Cleanup khi component unmount
-            const releaseBeforeUnmount = async () => {
-                try {
-                    await releaseReservation();
-                } catch (error) {
-                    console.error('Lỗi khi release reservation:', error);
-                }
-            };
-            releaseBeforeUnmount();
-        };
     }, []);
 
     useEffect(() => {
@@ -76,13 +65,8 @@ const CartCheckout = ({ dataCoupon, setDataCoupon, selectedMethod, note }) => {
     };
 
     const handleBackToCart = async () => {
-        try {
-            await releaseReservation();
-        } catch (error) {
-            console.error("Lỗi khi release reservation:", error);
-        } finally {
-            navigate('/cart');
-        }
+        // Chưa tạo hold ở bước này nên chỉ cần điều hướng (hold hết hạn tự giải phóng sau 15p)
+        navigate('/cart');
     };
     // --- HÀM XỬ LÝ SỰ KIỆN TRÊN MODAL ---
 
@@ -131,36 +115,55 @@ const CartCheckout = ({ dataCoupon, setDataCoupon, selectedMethod, note }) => {
 
     // --- HÀM "ĐẶT HÀNG" CHÍNH ---
     const handlePlaceOrder = async () => {
-        const validationData = await validateCart();
+        if (isPlacingOrder) return;
+        setIsPlacingOrder(true);
+        try {
+            const validationData = await validateCart();
 
-        if (!validationData) return;
+            if (!validationData) return;
 
-        if (validationData.wasAdjusted) {
-            setValidationResult(validationData);
-            setIsValidationModalOpen(true);
-            return;
-        }
-
-        const isFillFullInfor = await getInforUser();
-        if (isFillFullInfor.phoneNumber === null || isFillFullInfor.address === null) {
-            toast.error('Bạn chưa điền đầy đủ thông tin cá nhân.');
-            return;
-        }
-
-        const reservationResult = await reserveInventory();
-        if (!reservationResult || reservationResult.status !== 200) return;
-
-        if (selectedMethod === "vnpay") {
-            const response = await createURLPayment(totalAmount, note, dataCoupon?.discountID);
-            if (response?.data) {
-                window.location.href = response.data;
+            if (validationData.wasAdjusted) {
+                setValidationResult(validationData);
+                setIsValidationModalOpen(true);
+                return;
             }
-        } else if (selectedMethod === "cod") {
-            const response = await processPaymentCOD(dataCoupon?.discountID);
-            if (response.status === 200) {
-                toast.success('Đơn hàng của bạn đã được tạo thành công!');
-                setTimeout(() => navigate("/"), 3000);
+
+            const isFillFullInfor = await getInforUser();
+            if (isFillFullInfor.phoneNumber === null || isFillFullInfor.address === null) {
+                toast.error('Bạn chưa điền đầy đủ thông tin cá nhân.');
+                return;
             }
+
+            if (selectedMethod === "vnpay") {
+                // 1 bước duy nhất: tạo đơn nháp + giữ hàng + sinh URL (chống double-submit phía server)
+                let response;
+                try {
+                    response = await prepareBankingPayment(note, dataCoupon?.discountID);
+                } catch (error) {
+                    const serverValidation = error?.response?.data?.validation;
+                    if (serverValidation?.wasAdjusted) {
+                        setValidationResult(serverValidation);
+                        setIsValidationModalOpen(true);
+                        return;
+                    }
+                    toast.error(error?.response?.data?.message || 'Không thể tạo thanh toán. Vui lòng thử lại.');
+                    return;
+                }
+                if (response?.data?.paymentUrl) {
+                    window.location.href = response.data.paymentUrl;
+                }
+            } else if (selectedMethod === "cod") {
+                const reservationResult = await reserveInventory();
+                if (!reservationResult || reservationResult.status !== 200) return;
+
+                const response = await processPaymentCOD(dataCoupon?.discountID);
+                if (response.status === 200) {
+                    toast.success('Đơn hàng của bạn đã được tạo thành công!');
+                    setTimeout(() => navigate("/"), 3000);
+                }
+            }
+        } finally {
+            setIsPlacingOrder(false);
         }
     };
 
@@ -326,9 +329,9 @@ const CartCheckout = ({ dataCoupon, setDataCoupon, selectedMethod, note }) => {
                 <button
                     className='btn btn-dark w-100 py-3 rounded-3 fw-bold shadow-sm mb-3'
                     onClick={handlePlaceOrder}
-                    disabled={cart.length === 0}
+                    disabled={cart.length === 0 || isPlacingOrder}
                 >
-                    ĐẶT HÀNG NGAY
+                    {isPlacingOrder ? 'ĐANG XỬ LÝ...' : 'ĐẶT HÀNG NGAY'}
                 </button>
 
                 <div className="text-center">

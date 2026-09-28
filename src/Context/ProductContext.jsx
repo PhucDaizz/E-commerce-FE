@@ -329,32 +329,30 @@ export const ProductProvider  = ({children}) => {
         }
     }
 
-    const processBankingPay = async()=> {
-        
+    const prepareBankingPayment = async (note, discountId) => {
         try {
-            const resonse = apiRequest({
-                method: 'get',
-                url: '/api/Payment/IpnAction'
-            })
-            return resonse;
-        } catch (error) {
-            console.log('Lỗi khi thanh toán: ', error);
-        }
-    }
-
-    const createURLPayment = async (amount, description, discountId) => {
-        try {
-            const url = discountId 
-                ? `/api/Payment/CreatePaymentUrl?moneyToPay=${amount}&description=${description}&discountId=${discountId}`
-                : `/api/Payment/CreatePaymentUrl?moneyToPay=${amount}&description=${description}`;
-    
             const response = await apiRequest({
-                method: 'get',
-                url: url
+                method: 'post',
+                url: '/api/Payment/PrepareBankingPayment',
+                data: { note, discountId }
             });
             return response;
         } catch (error) {
-            console.log('Lỗi khi tạo URL thanh toán:', error);
+            console.log('Lỗi khi chuẩn bị thanh toán:', error);
+            throw error;
+        }
+    };
+
+    const getBankingPaymentStatus = async (txnRef) => {
+        try {
+            const response = await apiRequest({
+                method: 'get',
+                url: `/api/Payment/StatusByTxn/${txnRef}`
+            });
+            return response.data;
+        } catch (error) {
+            console.log('Lỗi khi lấy trạng thái thanh toán:', error);
+            return null;
         }
     };
     
@@ -462,22 +460,6 @@ export const ProductProvider  = ({children}) => {
             toast.error("Không thể đặt hàng. Vui lòng thử lại.");
             return null;
         }
-    } 
-
-    const releaseReservation = async () => {
-        try {
-            const response = await apiRequest({
-                method: 'post',
-                url: 'api/InventoryReservation/ReleaseReservation'
-            })
-            console.log("Inventory reservation released successfully:", response);
-            return response;
-
-        } catch (error) {
-            console.error("Error releasing inventory reservation:", error);
-            toast.error("Không thể hủy đặt hàng. Vui lòng thử lại.");
-            return null;
-        }
     }
 
     const getInvoiceLink = async (orderId) => {
@@ -514,8 +496,8 @@ export const ProductProvider  = ({children}) => {
             getListOrder,
             getOrderDetail,
             applyCoupon,
-            processBankingPay,
-            createURLPayment,
+            prepareBankingPayment,
+            getBankingPaymentStatus,
             getInforCoupon,
             processPaymentCOD,
             getAllVoucher,
@@ -527,7 +509,6 @@ export const ProductProvider  = ({children}) => {
             getRecomendedProduct,
             validateCart,
             reserveInventory,
-            releaseReservation,
             getInvoiceLink
         }}>
             {children}
